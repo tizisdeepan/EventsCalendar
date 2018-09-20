@@ -1,4 +1,4 @@
-package com.event.calendar
+package com.events.calendarsample
 
 import android.content.Context
 import android.graphics.Typeface

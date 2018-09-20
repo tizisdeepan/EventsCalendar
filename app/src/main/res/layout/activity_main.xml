@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.event.calendar.eventcalendar.views.EventCalendar
-            android:id="@+id/calendar_view_pager"
+        <com.events.calendar.views.EventsCalendar
+            android:id="@+id/eventsCalendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#000000"
