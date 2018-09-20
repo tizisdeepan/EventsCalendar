@@ -192,11 +192,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
         try {
-            if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) {
-                mCurrentItem = (adapter as WeekPageAdapter).getItem(currentItem)
-            } else {
-                mCurrentItem = (adapter as MonthPagerAdapter).getItem(currentItem)
-            }
+            mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) (adapter as WeekPageAdapter).getItem(currentItem)
+            else (adapter as MonthPagerAdapter).getItem(currentItem)
             mCurrentItemHeight = mCurrentItem!!.measuredHeight
         } catch (e: NullPointerException) {
             e.printStackTrace()
