@@ -5,11 +5,10 @@ import android.text.format.DateFormat
 import android.util.MonthDisplayHelper
 import java.util.*
 
-object ZMailCalendarUtil {
+object EventsCalendarUtil {
     val WEEK_MODE = 0
     val MONTH_MODE = 1
     private val MONTHS_IN_YEAR = 12
-
     val YYYY_MM_DD = 10
     val DD_MM_YYYY = 20
     val MM_DD_YYYY = 30
@@ -24,18 +23,17 @@ object ZMailCalendarUtil {
     val DEFAULT_NO_OF_MONTHS = 480
     var primaryTextColor: Int = 0
     var secondaryTextColor: Int = 0
-    var datesTypeface: Typeface? = null
-    var monthTitleTypeface: Typeface? =null
-    var weekHeaderTypeface: Typeface? = null
-    var isBoldTextOnSelectionEnabled: Boolean = true
-    var monthTitleColor: Int = 0
-    var weekHeaderColor: Int = 0
     var selectedTextColor: Int = 0
     var selectionColor: Int = 0
     var eventDotColor: Int = 0
-
+    var monthTitleColor: Int = 0
+    var weekHeaderColor: Int = 0
     var selectedDate = Calendar.getInstance()
     var monthPos = 0
+    var datesTypeface: Typeface? = null
+    var monthTitleTypeface: Typeface? = null
+    var weekHeaderTypeface: Typeface? = null
+    var isBoldTextOnSelectionEnabled: Boolean = false
 
     fun areDatesSame(date1: Calendar?, date2: Calendar?): Boolean = date1 != null && date2 != null && date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) && date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) && date1.get(Calendar.DATE) == date2.get(Calendar.DATE)
 
@@ -45,16 +43,12 @@ object ZMailCalendarUtil {
         if (date.get(Calendar.YEAR) < today.get(Calendar.YEAR)) return true
         else if (date.get(Calendar.YEAR) == today.get(Calendar.YEAR)) {
             if (date.get(Calendar.MONTH) < today.get(Calendar.MONTH)) return true
-            else if (date.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
-                if (date.get(Calendar.DATE) < today.get(Calendar.DATE)) return true
-            }
+            else if (date.get(Calendar.MONTH) == today.get(Calendar.MONTH)) if (date.get(Calendar.DATE) < today.get(Calendar.DATE)) return true
         }
         return false
     }
 
-    fun isToday(date: Calendar): Boolean {
-        return areDatesSame(today, date)
-    }
+    fun isToday(date: Calendar): Boolean = areDatesSame(today, date)
 
     fun isFutureDay(date: Calendar): Boolean {
         if (date.get(Calendar.YEAR) > today.get(Calendar.YEAR)) return true
@@ -66,25 +60,22 @@ object ZMailCalendarUtil {
     }
 
     fun setCurrentSelectedDate(selectedDate: Calendar): Boolean {
-        if (!ZMailCalendarUtil.areDatesSame(currentSelectedDate, selectedDate) || currentSelectedDate == null) {
-            currentSelectedDate?.timeInMillis = selectedDate.timeInMillis
+        if (!EventsCalendarUtil.areDatesSame(currentSelectedDate, selectedDate) || currentSelectedDate == null) {
+            currentSelectedDate = selectedDate.clone() as Calendar
             return true
         }
         return false
     }
 
-    fun getMonthCount(startMonth: Calendar?, endMonth: Calendar?): Int {
-        val diffYear = endMonth?.get(Calendar.YEAR) ?: Calendar.getInstance().get(Calendar.YEAR)
-        -(startMonth?.get(Calendar.YEAR) ?: Calendar.getInstance().get(Calendar.YEAR))
-        val diffMonth = endMonth?.get(Calendar.MONTH) ?: Calendar.getInstance().get(Calendar.MONTH)
-        -(startMonth?.get(Calendar.MONTH) ?: Calendar.getInstance().get(Calendar.MONTH))
+    fun getMonthCount(startMonth: Calendar, endMonth: Calendar): Int {
+        val diffYear = endMonth.get(Calendar.YEAR) - startMonth.get(Calendar.YEAR)
+        val diffMonth = endMonth.get(Calendar.MONTH) - startMonth.get(Calendar.MONTH)
         return diffMonth + MONTHS_IN_YEAR * diffYear + 1
     }
 
     fun getWeekCount(startDay: Calendar, endDay: Calendar): Int {
         var noOfWeeks = 0
         var finished = false
-
         val helper = MonthDisplayHelper(startDay.get(Calendar.YEAR), startDay.get(Calendar.MONTH), weekStartDay)
         while (!finished) {
             noOfWeeks += Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
@@ -141,24 +132,19 @@ object ZMailCalendarUtil {
             if (helper.month == day.get(Calendar.MONTH) && helper.year == day.get(Calendar.YEAR)) {
                 noOfWeeks += helper.getRowOf(day.get(Calendar.DATE))
                 finished = true
-            } else {
-                noOfWeeks += Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
-            }
+            } else noOfWeeks += Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
             helper.nextMonth()
         }
         return noOfWeeks
     }
 
-    fun getCurrentSelectedDate(): Calendar? {
-        return currentSelectedDate
-    }
+    fun getCurrentSelectedDate(): Calendar? = currentSelectedDate
 
-    fun getCalendar(dateStr: String, format: Int): Calendar {
+    fun getCalendar(dateStr: String, format: Int): Calendar? {
         val calendar = Calendar.getInstance()
         val year: Int
         val month: Int
         val date: Int
-
         when (format) {
             YYYY_MM_DD -> {
                 year = Integer.parseInt(dateStr.substring(0, dateStr.indexOf('/')))
@@ -176,7 +162,7 @@ object ZMailCalendarUtil {
                 calendar.set(year, month, date)
                 return calendar
             }
-            else -> return Calendar.getInstance()
+            else -> return null
         }
 
     }
@@ -196,7 +182,6 @@ object ZMailCalendarUtil {
                 buffer.append(date)
                 return buffer.toString()
             }
-
             DD_MM_YYYY -> {
                 buffer.append(calendar.get(Calendar.DATE))
                 buffer.append("/")
@@ -205,7 +190,6 @@ object ZMailCalendarUtil {
                 buffer.append(calendar.get(Calendar.YEAR))
                 return buffer.toString()
             }
-
             MM_DD_YYYY -> {
                 buffer.append(calendar.get(Calendar.MONTH) + 1)
                 buffer.append("/")
@@ -214,7 +198,6 @@ object ZMailCalendarUtil {
                 buffer.append(calendar.get(Calendar.YEAR))
                 return buffer.toString()
             }
-
             else -> return null
         }
     }

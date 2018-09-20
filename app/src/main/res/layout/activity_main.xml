@@ -18,11 +18,11 @@
             android:overScrollMode="never"
             app:isBoldTextOnSelectionEnabled="true"
             app:monthTitleColor="#ffffff"
-            app:primaryTextColor="#ffffff"
-            app:secondaryTextColor="#3e3e3e"
+            app:primaryTextColor="#c4c4c4"
+            app:secondaryTextColor="#666666"
             app:selectedTextColor="#000000"
-            app:selectionColor="#fce303"
-            app:weekHeaderColor="#aeaeae" />
+            app:weekHeaderColor="#c6c6c6"
+            app:selectionColor="#ffe600"/>
 
         <TextView
             android:id="@+id/text"

@@ -12,31 +12,33 @@ import com.events.calendar.views.MonthView
 
 import java.util.Calendar
 
-class WeekPageAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Calendar) : PagerAdapter() {
-    private val mMinMonth: Calendar
-    private val mMaxMonth: Calendar
-    private val mCount: Int
-    private val monthDatesGridLayoutsArray: Array<MonthView?>
+class MonthPagerAdapter(viewPager: EventsCalendar, startMonth: Calendar, endMonth: Calendar) : PagerAdapter() {
     private val mContext: Context
+    private val mMonthIterator: Calendar
+    private val mCount: Int
     private val mMonthViewCallback: MonthView.Callback
+
+    private val monthDatesGridLayoutsArray: Array<MonthView?>
+
 
     init {
         mContext = viewPager.context
         mMonthViewCallback = viewPager
-        if (EventsCalendarUtil.isPastDay(startDay)) {
-            mMinMonth = startDay
+        if (EventsCalendarUtil.isPastDay(startMonth)) {
+            mMinMonth = startMonth
         } else {
             mMinMonth = Calendar.getInstance()
         }
 
-        if (EventsCalendarUtil.isFutureDay(endDay)) {
-            mMaxMonth = endDay
+        if (EventsCalendarUtil.isFutureDay(endMonth)) {
+            mMaxMonth = endMonth
         } else {
             mMaxMonth = Calendar.getInstance()
         }
 
-        mCount = EventsCalendarUtil.getWeekCount(mMinMonth, mMaxMonth)
+        mCount = EventsCalendarUtil.getMonthCount(mMinMonth!!, mMaxMonth!!)
         monthDatesGridLayoutsArray = arrayOfNulls(mCount)
+        mMonthIterator = mMinMonth!!.clone() as Calendar
     }
 
     override fun getCount(): Int {
@@ -48,10 +50,10 @@ class WeekPageAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Cal
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val month = EventsCalendarUtil.getMonthForWeekPosition(mMinMonth, position)
-        val weekNo = EventsCalendarUtil.getWeekNo(mMinMonth, position)
-        val monthView = MonthView(mContext, month, EventsCalendarUtil.weekStartDay, weekNo)
+        mMonthIterator.add(Calendar.MONTH, position)
+        val monthView = MonthView(mContext, mMonthIterator, EventsCalendarUtil.weekStartDay, 1)
         monthView.setCallback(mMonthViewCallback)
+        mMonthIterator.add(Calendar.MONTH, -position)
         monthDatesGridLayoutsArray[position] = monthView
         container.addView(monthView)
         return monthView
@@ -63,5 +65,11 @@ class WeekPageAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Cal
 
     fun getItem(position: Int): MonthView? {
         return monthDatesGridLayoutsArray[position]
+    }
+
+    companion object {
+
+        private var mMinMonth: Calendar? = null
+        private var mMaxMonth: Calendar? = null
     }
 }

@@ -23,7 +23,7 @@
         <attr name="selectedWeekNo" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="EventCalendar">
+    <declare-styleable name="EventsCalendar">
         <attr name="primaryTextColor" format="color" />
         <attr name="secondaryTextColor" format="color" />
         <attr name="selectionColor" format="color" />

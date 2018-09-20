@@ -1,24 +1,22 @@
 package com.events.calendarsample
 
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.events.calendar.views.EventsCalendarCallback
+import android.util.Log
+import com.events.calendar.utils.EventsCalendarUtil
+import com.events.calendar.views.EventsCalendar
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity(), EventsCalendarCallback {
+class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
+    override fun onMonthChanged(monthStartDate: Calendar?) {
+        Log.e("PAGE CHANGED", EventsCalendarUtil.getDateString(monthStartDate!!, EventsCalendarUtil.YYYY_MM_DD))
+        Log.e("CURRENT DATE", EventsCalendarUtil.getDateString(eventsCalendar.getCurrentSelectedDate()!!, EventsCalendarUtil.YYYY_MM_DD))
+    }
 
-    override fun onDaySelected(date: Calendar?, isClick: Boolean) {
-        if (date?.timeInMillis!! < eventsCalendar.minDate.timeInMillis) {
+    override fun onDaySelected(date: Calendar?) {
+        Log.e(Calendar.getInstance().timeInMillis.toString(), "CLICKED " + EventsCalendarUtil.getDateString(date!!, EventsCalendarUtil.YYYY_MM_DD))
 
-        } else if (isClick) {
-
-        } else if (!isClick) {
-
-        } else {
-
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +30,6 @@ class MainActivity : AppCompatActivity(), EventsCalendarCallback {
         eventsCalendar.setMonthRange(today, end)
         eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
         eventsCalendar.setCurrentSelectedDate(today)
-        eventsCalendar.setEventDotColor(Color.parseColor("#FF0000"))
         eventsCalendar.invalidateColors()
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
@@ -40,7 +37,8 @@ class MainActivity : AppCompatActivity(), EventsCalendarCallback {
         eventsCalendar.setCallback(this)
 
         text.setOnClickListener {
-            eventsCalendar.nextPage(true)
+//            eventsCalendar.nextPage(true)
+//            Log.e("SELECTED", EventsCalendarUtil.getDateString(eventsCalendar.getCurrentSelectedDate(), EventsCalendarUtil.YYYY_MM).toString())
         }
     }
 }

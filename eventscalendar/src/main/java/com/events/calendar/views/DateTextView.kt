@@ -4,19 +4,18 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
 import com.events.calendar.utils.MeasureUtils
-import com.events.calendar.utils.ZMailCalendarUtil
+import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 
 class DateTextView : View {
 
-    var mDateSelectListener: DateSelectListener? = null
+    private var mDateSelectListener: DateSelectListener? = null
     private var mDate: Calendar? = null
     private var mDateTextSize: Float = 0.toFloat()
     private var mDotRadius: Float = 0.toFloat()
@@ -42,9 +41,11 @@ class DateTextView : View {
     private var mHeight: Int = 0
     private var mBgCircleRadius: Float = 0.toFloat()
 
+    //Variables used for circle expansion and shrink animation
     private var animate: Boolean = false    //Setting animate to 'true' will trigger repeated 'invalidate()' based on 'frameCount' resulting in Animation of SELECTION CIRCLE
     private var frameCount: Int = 0
 
+    //Variables used for click
     private var touchDown = false
     private var mDownX: Float = 0.toFloat()
     private var mDownY: Float = 0.toFloat()
@@ -76,7 +77,6 @@ class DateTextView : View {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
-        //INITIALIZATION TASKS
         mContext = context
         mAttrs = attrs
         mDefStyleAttr = defStyleAttr
@@ -99,28 +99,27 @@ class DateTextView : View {
         }
 
         if (doInitializeStaticVariables) {
-            selectedTextColor = ZMailCalendarUtil.selectedTextColor
-            selectionCircleColor = ZMailCalendarUtil.selectionColor
-            defaultTextColor = ZMailCalendarUtil.primaryTextColor
-            disabledTextColor = ZMailCalendarUtil.secondaryTextColor
-            eventDotColor = ZMailCalendarUtil.eventDotColor
-            datesTypeface = ZMailCalendarUtil.datesTypeface
+            selectedTextColor = EventsCalendarUtil.selectedTextColor
+            selectionCircleColor = EventsCalendarUtil.selectionColor
+            defaultTextColor = EventsCalendarUtil.primaryTextColor
+            disabledTextColor = EventsCalendarUtil.secondaryTextColor
+            eventDotColor = EventsCalendarUtil.eventDotColor
 
             mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            mSelectionPaint?.color = selectionCircleColor
+            mSelectionPaint!!.color = selectionCircleColor
 
             mDotPaint = Paint(Paint.ANTI_ALIAS_FLAG)
             mDotPaint?.color = eventDotColor
 
             mTodayPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            mTodayPaint?.color = context.resources.getColor(R.color.colorPrimary)
+            mTodayPaint?.color = EventsCalendarUtil.primaryTextColor
             mTodayPaint?.style = Paint.Style.STROKE
-            mTodayPaint?.strokeWidth = resources.getDimension(R.dimen.width_circle_stroke)
+            mTodayPaint!!.strokeWidth = resources.getDimension(R.dimen.width_circle_stroke)
 
 
             mDateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
             mDateTextPaint?.textAlign = Paint.Align.CENTER
-            mDateTextPaint?.color = ZMailCalendarUtil.primaryTextColor
+            mDateTextPaint?.color = EventsCalendarUtil.primaryTextColor
             mDateTextSize = mContext.resources.getDimension(R.dimen.text_calendar_date)
             mDateTextPaint?.textSize = mDateTextSize
 
@@ -139,27 +138,25 @@ class DateTextView : View {
         mWidth = w
         mHeight = h
 
-        mDateTextSize = height * (3.2f / 10f)
+        mDateTextSize = mHeight * (3.2f / 10f)
         mDateTextPaint!!.textSize = mDateTextSize
-        mDateTextX = width / 2
-        mDateTextY = height / 2 - (mDateTextPaint!!.ascent() + mDateTextPaint!!.descent()) / 2
+        mDateTextX = mWidth / 2
+        mDateTextY = mHeight / 2 - (mDateTextPaint!!.ascent() + mDateTextPaint!!.descent()) / 2
 
-        mBgCircleRadius = Math.min(height - height * (6f / 10f), width - width * (6f / 10f))
+        mBgCircleRadius = Math.min(mHeight - mHeight * (6f / 10f), mWidth - mWidth * (6f / 10f))
         mTodayCircleradius = mBgCircleRadius - resources.getDimension(R.dimen.width_circle_stroke) / 2
-        mCircleX = width / 2
-        mCircleY = height / 2
+        mCircleX = mWidth / 2
+        mCircleY = mHeight / 2
 
-        mDotRadius = height * (0.75f / 20f)
-        mDotX = width / 2
-        mDotY = (height * (7.5f / 10f)).toInt()
+        mDotRadius = mHeight * (0.75f / 20f)
+        mDotX = mWidth / 2
+        mDotY = (mHeight * (7.5f / 10f)).toInt()
     }
 
     override fun onDraw(canvas: Canvas) {
         val location = IntArray(2)
         this.getLocationOnScreen(location)
 
-        if (datesTypeface != null) mDateTextPaint?.typeface = datesTypeface
-        mDateTextPaint?.isFakeBoldText = false
 
         if (isPast) {
             mDateTextPaint!!.color = disabledTextColor
@@ -170,8 +167,8 @@ class DateTextView : View {
                     canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleradius, mTodayPaint!!)
                 }
                 if (isSelected) {
+                    mDateTextPaint?.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                     mDateTextPaint?.color = selectedTextColor
-                    if (ZMailCalendarUtil.isBoldTextOnSelectionEnabled) mDateTextPaint?.isFakeBoldText = true
                     //DRAWING SELECTION CIRCLE
                     //EDITED --> if(animate)
                     //                if (false)
@@ -220,7 +217,7 @@ class DateTextView : View {
             if (isSelected) {
                 mDotPaint?.color = selectedTextColor
                 canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint!!)
-                mDotPaint?.color = ZMailCalendarUtil.selectionColor
+                mDotPaint?.color = EventsCalendarUtil.selectionColor
             } else {
                 mDotPaint?.color = eventDotColor
                 canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint!!)
@@ -228,7 +225,7 @@ class DateTextView : View {
         } else {
             mDotPaint?.color = disabledTextColor
             canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint!!)
-            mDotPaint?.color = ZMailCalendarUtil.selectionColor
+            mDotPaint?.color = EventsCalendarUtil.selectionColor
         }
     }
 
@@ -245,6 +242,8 @@ class DateTextView : View {
 
         invalidate()
     }
+
+    /****SETTERS */
 
     fun setDateClickListener(dateSelectListener: DateSelectListener) {
         mDateSelectListener = dateSelectListener
@@ -287,9 +286,6 @@ class DateTextView : View {
         return super.onTouchEvent(event)
     }
 
-    /**
-     * @return true if MotionEvent Pointer is within bounds of this view
-     */
     private fun isPointerInsideArea(event: MotionEvent): Boolean {
         touchDown = false
         val locationOnScreen = IntArray(2)
@@ -303,48 +299,34 @@ class DateTextView : View {
         return x > leftLimit && x < rightLimit && y > upperLimit && y < lowerLimit
     }
 
-    /**
-     * starts "growing circle animation"
-     */
     private fun startSelectedAnimation() {
         animate = true
         frameCount = 0
         setIsSelected(true)
     }
 
-    /**
-     * starts "shrinking circle animation"
-     */
     private fun startUnselectedAnimation() {
         animate = true
         frameCount = 0
         setIsSelected(false)
     }
 
-    /**
-     * Called to select this DateTextView
-     *
-     * @param isClick true if selection is triggered by Click (explicit touch event)
-     */
     fun select(isClick: Boolean) {
         if (!isSelected && mDateSelectListener != null) {
             if (isClick) startSelectedAnimation() else setIsSelected(true)
-            mDateSelectListener?.onDateTextViewSelected(this, isClick)
+            mDateSelectListener!!.onDateTextViewSelected(this, isClick)
         }
     }
 
     fun selectOnPageChange(isClick: Boolean) {
+        var isClick = isClick
+        isClick = false
         if (!isSelected && mDateSelectListener != null) {
-            setIsSelected(false)
-            mDateSelectListener?.onDateTextViewSelected(this, false)
+            if (isClick) startSelectedAnimation() else setIsSelected(false)
+            mDateSelectListener!!.onDateTextViewSelected(this, isClick)
         }
     }
 
-    /**
-     * Called to un-select this DateTextView
-     *
-     * @param isClick true if un-selection is triggered by Click (explicit touch event)
-     */
     fun unSelect(isClick: Boolean) {
         if (isClick && isCurrentMonth) startUnselectedAnimation() else setIsSelected(false)
     }
@@ -356,7 +338,6 @@ class DateTextView : View {
         private var mTodayPaint: Paint? = null
         private var mDateTextPaint: Paint? = null
         private var selectedTextColor: Int = 0
-        private var datesTypeface: Typeface? = null
         private var defaultTextColor: Int = 0
         private var disabledTextColor: Int = 0
         private var selectionCircleColor: Int = 0
