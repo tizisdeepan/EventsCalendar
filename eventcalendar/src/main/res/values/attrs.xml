@@ -29,5 +29,8 @@
         <attr name="selectionColor" format="color" />
         <attr name="selectedTextColor" format="color" />
         <attr name="eventDotColor" format="color" />
+        <attr name="monthTitleColor" format="color" />
+        <attr name="weekHeaderColor" format="color" />
+        <attr name="isBoldTextOnSelectionEnabled" format="boolean" />
     </declare-styleable>
 </resources>

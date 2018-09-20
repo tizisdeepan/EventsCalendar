@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Parcel
 import android.support.v4.content.ContextCompat
@@ -72,16 +73,17 @@ class EventCalendar : ViewPager, MonthView.Callback {
                         doFocus = true
                     }
                 }
-            } else {
-                position = ZMailCalendarUtil.getWeekPosition(selectedDate!!, minDate)
-                setCurrentItem(position, false)
-                if (mCalendarWeekPagerAdapter != null) {
-                    post {
-                        mCalendarWeekPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate)
-                        doFocus = true
-                    }
-                }
             }
+//            else {
+//                position = ZMailCalendarUtil.getWeekPosition(selectedDate!!, minDate)
+//                setCurrentItem(position, false)
+//                if (mCalendarWeekPagerAdapter != null) {
+//                    post {
+//                        mCalendarWeekPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate)
+//                        doFocus = true
+//                    }
+//                }
+//            }
         }
     }
 
@@ -105,8 +107,8 @@ class EventCalendar : ViewPager, MonthView.Callback {
     fun setWeekStartDay(weekStartDay: Int, doReset: Boolean) {
         ZMailCalendarUtil.weekStartDay = weekStartDay
         if (doReset) {
-            mSelectedMonthPosition = ZMailCalendarUtil.getMonthPositionForDay(ZMailCalendarUtil.getCurrentSelectedDate(), minDate!!)
-            mSelectedWeekPosition = ZMailCalendarUtil.getWeekPosition(ZMailCalendarUtil.getCurrentSelectedDate()!!, minDate!!)
+            mSelectedMonthPosition = ZMailCalendarUtil.getMonthPositionForDay(ZMailCalendarUtil.getCurrentSelectedDate(), minDate)
+            mSelectedWeekPosition = ZMailCalendarUtil.getWeekPosition(ZMailCalendarUtil.getCurrentSelectedDate()!!, minDate)
             doChangeAdapter = true
             changeAdapter()
             mCallback!!.onDaySelected(ZMailCalendarUtil.getCurrentSelectedDate(), false)
@@ -133,6 +135,9 @@ class EventCalendar : ViewPager, MonthView.Callback {
             ZMailCalendarUtil.selectedTextColor = attributes.getColor(R.styleable.EventCalendar_selectedTextColor, Color.WHITE)
             ZMailCalendarUtil.selectionColor = attributes.getColor(R.styleable.EventCalendar_selectionColor, ZMailCalendarUtil.primaryTextColor)
             ZMailCalendarUtil.eventDotColor = attributes.getColor(R.styleable.EventCalendar_eventDotColor, ZMailCalendarUtil.eventDotColor)
+            ZMailCalendarUtil.monthTitleColor = attributes.getColor(R.styleable.EventCalendar_monthTitleColor, ZMailCalendarUtil.eventDotColor)
+            ZMailCalendarUtil.weekHeaderColor = attributes.getColor(R.styleable.EventCalendar_weekHeaderColor, ZMailCalendarUtil.eventDotColor)
+            ZMailCalendarUtil.isBoldTextOnSelectionEnabled = attributes.getBoolean(R.styleable.EventCalendar_isBoldTextOnSelectionEnabled, false)
         } finally {
             attributes.recycle()
         }
@@ -215,15 +220,16 @@ class EventCalendar : ViewPager, MonthView.Callback {
             }
             parcel.writeParcelable(null, 0)
             val currentSelectionDate = ZMailCalendarUtil.getCurrentSelectedDate()
-            if (ZMailCalendarUtil.currentMode == ZMailCalendarUtil.WEEK_MODE) {
+            if (ZMailCalendarUtil.currentMode != ZMailCalendarUtil.WEEK_MODE) {
                 val position = ZMailCalendarUtil.getWeekPosition(currentSelectionDate!!, minDate!!)
                 setCurrentItemField(position)
                 adapter = mCalendarWeekPagerAdapter
-            } else {
-                val position = ZMailCalendarUtil.getMonthPositionForDay(currentSelectionDate, minDate!!)
-                setCurrentItemField(position)
-                adapter = mCalendarMonthPagerAdapter
             }
+//            else {
+//                val position = ZMailCalendarUtil.getMonthPositionForDay(currentSelectionDate, minDate!!)
+//                setCurrentItemField(position)
+//                mCalendarMonthPagerAdapter
+//            }
             doChangeAdapter = false
         }
     }
@@ -249,7 +255,7 @@ class EventCalendar : ViewPager, MonthView.Callback {
     fun setMonthRange(minMonth: Calendar, maxMonth: Calendar) {
         this.minDate = minMonth
         this.maxDate = maxMonth
-        ZEvents.initialize(this.minDate!!, this.maxDate!!)
+        ZEvents.initialize(this.minDate, this.maxDate)
     }
 
     fun setPrimaryTextColor(color: Int) {
@@ -266,6 +272,34 @@ class EventCalendar : ViewPager, MonthView.Callback {
 
     fun setSelectedTextColor(color: Int) {
         ZMailCalendarUtil.selectedTextColor = color
+    }
+
+    fun setMonthTitleColor(color: Int) {
+        ZMailCalendarUtil.monthTitleColor = color
+    }
+
+    fun setWeekHeaderColor(color: Int) {
+        ZMailCalendarUtil.weekHeaderColor = color
+    }
+
+    fun setDatesTypeface(typeface: Typeface) {
+        ZMailCalendarUtil.datesTypeface = typeface
+    }
+
+    fun setMonthTitleTypeface(typeface: Typeface) {
+        ZMailCalendarUtil.monthTitleTypeface = typeface
+    }
+
+    fun setWeekHeaderTypeface(typeface: Typeface) {
+        ZMailCalendarUtil.weekHeaderTypeface = typeface
+    }
+
+    fun setIsBoldTextOnSelectionEnabled(enabled: Boolean) {
+        ZMailCalendarUtil.isBoldTextOnSelectionEnabled = enabled
+    }
+
+    fun nextPage(smoothScroll: Boolean) {
+        this@EventCalendar.setCurrentItem(this@EventCalendar.currentItem + 1, smoothScroll)
     }
 
 

@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -48,8 +49,6 @@ class DateTextView : View {
     private var mDownX: Float = 0.toFloat()
     private var mDownY: Float = 0.toFloat()
 
-    /****GETTERS */
-
     var date: Calendar
         get() = mDate!!.clone() as Calendar
         set(date) {
@@ -57,9 +56,6 @@ class DateTextView : View {
             invalidate()
         }
 
-    /**
-     * Interface definition for a callback to be invoked when a DateTextView is selected.
-     */
     interface DateSelectListener {
         fun onDateTextViewSelected(dateTextView: DateTextView, isClick: Boolean)
     }
@@ -102,13 +98,13 @@ class DateTextView : View {
             attributes.recycle()
         }
 
-        //INITIALIZING STATIC VARIABLES
         if (doInitializeStaticVariables) {
             selectedTextColor = ZMailCalendarUtil.selectedTextColor
             selectionCircleColor = ZMailCalendarUtil.selectionColor
             defaultTextColor = ZMailCalendarUtil.primaryTextColor
             disabledTextColor = ZMailCalendarUtil.secondaryTextColor
             eventDotColor = ZMailCalendarUtil.eventDotColor
+            datesTypeface = ZMailCalendarUtil.datesTypeface
 
             mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
             mSelectionPaint?.color = selectionCircleColor
@@ -162,6 +158,8 @@ class DateTextView : View {
         val location = IntArray(2)
         this.getLocationOnScreen(location)
 
+        if (datesTypeface != null) mDateTextPaint?.typeface = datesTypeface
+        mDateTextPaint?.isFakeBoldText = false
 
         if (isPast) {
             mDateTextPaint!!.color = disabledTextColor
@@ -172,7 +170,8 @@ class DateTextView : View {
                     canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleradius, mTodayPaint!!)
                 }
                 if (isSelected) {
-                    mDateTextPaint!!.color = selectedTextColor
+                    mDateTextPaint?.color = selectedTextColor
+                    if (ZMailCalendarUtil.isBoldTextOnSelectionEnabled) mDateTextPaint?.isFakeBoldText = true
                     //DRAWING SELECTION CIRCLE
                     //EDITED --> if(animate)
                     //                if (false)
@@ -184,7 +183,7 @@ class DateTextView : View {
                     canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint!!)
                     //                }
                 } else {
-                    mDateTextPaint!!.color = defaultTextColor
+                    mDateTextPaint?.color = defaultTextColor
                     //EDITED --> if(animate)
                     //                if (false)
                     //                {
@@ -194,7 +193,7 @@ class DateTextView : View {
                 }
                 canvas.drawText("" + mDate!!.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
             } else {
-                mDateTextPaint!!.color = disabledTextColor
+                mDateTextPaint?.color = disabledTextColor
                 canvas.drawText("" + mDate!!.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
             }
         }
@@ -357,6 +356,7 @@ class DateTextView : View {
         private var mTodayPaint: Paint? = null
         private var mDateTextPaint: Paint? = null
         private var selectedTextColor: Int = 0
+        private var datesTypeface: Typeface? = null
         private var defaultTextColor: Int = 0
         private var disabledTextColor: Int = 0
         private var selectionCircleColor: Int = 0

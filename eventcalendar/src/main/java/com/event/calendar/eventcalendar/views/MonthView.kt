@@ -2,6 +2,7 @@ package com.event.calendar.eventcalendar.views
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -93,7 +94,8 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
         val calendar = Calendar.getInstance()
         calendar.set(mYear, mMonth, 1)
         mMonthTitleTextView?.text = ZMailCalendarUtil.getMonthString(calendar, ZMailCalendarUtil.DISPLAY_STRING)
-        mMonthTitleTextView?.setTextColor(ZMailCalendarUtil.primaryTextColor)
+        mMonthTitleTextView?.setTextColor(ZMailCalendarUtil.monthTitleColor)
+        if (ZMailCalendarUtil.monthTitleTypeface != null) mMonthTitleTextView?.typeface = ZMailCalendarUtil.monthTitleTypeface
         addView(mMonthTitleTextView)
     }
 
@@ -106,6 +108,15 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
         mFifthDay = mWeekDaysHeader?.findViewById(R.id.fifth_day)
         mSixthDay = mWeekDaysHeader?.findViewById(R.id.sixth_day)
         mSeventhDay = mWeekDaysHeader?.findViewById(R.id.seventh_day)
+        if (ZMailCalendarUtil.weekHeaderTypeface != null) {
+            mFirstDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+            mSecondDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+            mThirdDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+            mFourthDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+            mFifthDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+            mSixthDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+            mSeventhDay?.typeface = ZMailCalendarUtil.weekHeaderTypeface
+        }
         setWeekdayHeader()
         addView(mWeekDaysHeader)
     }
@@ -118,7 +129,7 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
     }
 
     private fun setWeekDayHeaderString(header: TextView, calendarConstant: Int) {
-        header.setTextColor(ZMailCalendarUtil.secondaryTextColor)
+        header.setTextColor(ZMailCalendarUtil.weekHeaderColor)
         when (calendarConstant) {
             Calendar.SUNDAY -> header.text = mContext.getString(R.string.sunday)
             Calendar.MONDAY -> header.text = mContext.getString(R.string.monday)
@@ -157,9 +168,7 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
     }
 
     override fun onDaySelected(date: Calendar?, isClick: Boolean) {
-        if (mCallback != null) {
-            mCallback?.onDaySelected(isClick)
-        }
+        if (mCallback != null) mCallback?.onDaySelected(isClick)
     }
 
     fun setCallback(callBack: Callback) {
@@ -167,11 +176,8 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
     }
 
     fun onFocus(pos: Int) {
-        if (pos == ZMailCalendarUtil.monthPos) {
-            monthGridLayout?.selectDefaultDate(ZMailCalendarUtil.selectedDate.get(Calendar.DAY_OF_MONTH))
-        } else {
-            monthGridLayout?.selectDefaultDateOnPageChanged(ZMailCalendarUtil.tobeSelectedDate, false)
-        }
+        if (pos == ZMailCalendarUtil.monthPos) monthGridLayout?.selectDefaultDate(ZMailCalendarUtil.selectedDate.get(Calendar.DAY_OF_MONTH))
+        else monthGridLayout?.selectDefaultDateOnPageChanged(ZMailCalendarUtil.tobeSelectedDate, false)
     }
 
     fun setSelectedDate(date: Calendar) {
