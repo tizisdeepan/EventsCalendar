@@ -6,21 +6,11 @@ import java.util.*
 
 class EventDots(month: Calendar) {
 
-    private val mNoOfDays: Int
-    private val mDotsArray: SparseBooleanArray
-    private val mMonthDisplayHelper: MonthDisplayHelper
-    private val mCalendar: Calendar
+    private val mCalendar: Calendar = month.clone() as Calendar
+    private val mMonthDisplayHelper: MonthDisplayHelper = MonthDisplayHelper(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH))
+    private val mNoOfDays: Int = mMonthDisplayHelper.numberOfDaysInMonth
+    private val mDotsArray: SparseBooleanArray = SparseBooleanArray(mNoOfDays)
 
-    init {
-        mCalendar = month.clone() as Calendar
-        mMonthDisplayHelper = MonthDisplayHelper(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH))
-        mNoOfDays = mMonthDisplayHelper.numberOfDaysInMonth
-        mDotsArray = SparseBooleanArray(mNoOfDays)
-    }
-
-    /**
-     * Clears the map
-     */
     fun clear() {
         mDotsArray.clear()
     }
@@ -31,9 +21,5 @@ class EventDots(month: Calendar) {
 
     fun hasEvent(date: Int): Boolean {
         return mDotsArray.get(date)
-    }
-
-    companion object {
-        private val TAG = "EventsDots"
     }
 }

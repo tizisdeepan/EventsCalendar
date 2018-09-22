@@ -115,11 +115,7 @@ class MonthDatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
         mMonthDisplayHelper = MonthDisplayHelper(mYear, mMonth, sWeekStartDay)
         mNoOfCurrentMonthDays = mMonthDisplayHelper!!.numberOfDaysInMonth
         mMonthStartDayOffset = mMonthDisplayHelper!!.offset
-        if (showOnlyCurrentMonthWeeks) {
-            mNoOfWeeks = Math.ceil(((mNoOfCurrentMonthDays + mMonthStartDayOffset).toFloat() / 7.0f).toDouble()).toInt()
-        } else {
-            mNoOfWeeks = 6
-        }
+        mNoOfWeeks = if (showOnlyCurrentMonthWeeks) Math.ceil(((mNoOfCurrentMonthDays + mMonthStartDayOffset).toFloat() / 7.0f).toDouble()).toInt() else 6
         mTotalNoOfDays = 7 * mNoOfWeeks
         mTranslationDistance = (mSelectedWeekNo - 1) * mContext!!.resources.getDimension(R.dimen.dimen_date_text_view)
         translationY = -mTranslationDistance

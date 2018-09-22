@@ -44,6 +44,14 @@ object Events {
         dots?.add(monthCalendar!!.get(Calendar.DAY_OF_MONTH))
     }
 
+    fun add(c: Calendar) {
+        val date = EventsCalendarUtil.getDateString(c, EventsCalendarUtil.YYYY_MM_DD) ?: ""
+        if (!date.isEmpty()) {
+            val dots = mDotsMap!![date.substring(0, 7)]
+            dots?.add(c[Calendar.DAY_OF_MONTH])
+        }
+    }
+
     fun hasEvent(calendar: Calendar): Boolean {
         val eventDots = getDotsForMonth(calendar)
         return eventDots!!.hasEvent(calendar.get(Calendar.DATE))
@@ -58,14 +66,6 @@ object Events {
             mDotsMap!![monthString]
         } else {
             null
-        }
-    }
-
-    fun logData() {
-        val iterator = startMonth.clone() as Calendar
-        for (i in 0 until totalNoOfMonths) {
-            val monthString = EventsCalendarUtil.getMonthString(iterator, EventsCalendarUtil.YYYY_MM)
-            iterator.add(Calendar.MONTH, 1)
         }
     }
 

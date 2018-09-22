@@ -14,6 +14,7 @@ import android.view.View
 import com.events.calendar.R
 import com.events.calendar.adapters.MonthPagerAdapter
 import com.events.calendar.adapters.WeekPageAdapter
+import com.events.calendar.utils.EventDots
 import com.events.calendar.utils.Events
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
@@ -304,29 +305,61 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.selectedTextColor = color
     }
 
-    fun setMonthTitleColor(color: Int){
+    fun setMonthTitleColor(color: Int) {
         EventsCalendarUtil.monthTitleColor = color
     }
 
-    fun setWeekHeaderColor(color: Int){
+    fun setWeekHeaderColor(color: Int) {
         EventsCalendarUtil.weekHeaderColor = color
     }
 
-    fun setDatesTypeface(typeface: Typeface){
+    fun setDatesTypeface(typeface: Typeface) {
         EventsCalendarUtil.datesTypeface = typeface
     }
 
-    fun setMonthTitleTypeface(typeface: Typeface){
+    fun setMonthTitleTypeface(typeface: Typeface) {
         EventsCalendarUtil.monthTitleTypeface = typeface
     }
 
-    fun setWeekHeaderTypeface(typeface: Typeface){
+    fun setWeekHeaderTypeface(typeface: Typeface) {
         EventsCalendarUtil.weekHeaderTypeface = typeface
     }
 
-    fun setIsBoldTextOnSelectionEnabled(isEnabled: Boolean){
+    fun setIsBoldTextOnSelectionEnabled(isEnabled: Boolean) {
         EventsCalendarUtil.isBoldTextOnSelectionEnabled = isEnabled
     }
+
+    fun addEvent(date: String) {
+        Events.add(date)
+    }
+
+    fun addEvent(c: Calendar) {
+        Events.add(c)
+    }
+
+    fun addEvent(arrayOfCalendars: Array<Calendar>) {
+        for (c in arrayOfCalendars) {
+            addEvent(c)
+        }
+    }
+
+    fun nextPage(smoothScroll: Boolean = true) {
+        setCurrentItem(currentItem + 1, smoothScroll)
+    }
+
+    fun previousPage(smoothScroll: Boolean = true) {
+        setCurrentItem(currentItem - 1, smoothScroll)
+    }
+
+    fun clearEvents() {
+        Events.clear()
+    }
+
+    fun hasEvent(c: Calendar): Boolean = Events.hasEvent(c)
+
+    fun getDotsForMonth(monthCalendar: Calendar): EventDots? = Events.getDotsForMonth(monthCalendar)
+
+    fun getDotsForMonth(monthString: String?): EventDots? = Events.getDotsForMonth(monthString)
 
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
