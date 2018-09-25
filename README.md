@@ -76,7 +76,7 @@ eventsCalendar.addEvent(c)
 ```
 ### Documentation
 
-|Code|Description|
+|XML|Kotlin/Java|Description|
 |---|---|---|
 |`app:primaryTextColor`|`setPrimaryTextColor(color: Int)`|**Primary Text** color of the calendar (selectable dates)|
 |`app:secondaryTextColor`|`setSecondaryTextColor(color: Int)`|**Secondary Text** color of the calendar (disabled dates)|
