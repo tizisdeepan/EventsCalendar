@@ -72,4 +72,16 @@ eventsCalendar.setWeekHeaderTypeface(typeface)
 //set the callback for EventsCalendar
 eventsCalendar.setCallback(this)
 ```
+###Documentation
+|XML|Kotlin/Java|Description|
+|---|---|---|
+|app:primaryTextColor|eventsCalendar.setPrimaryTextColor(color: Int)|Sets primary text color of the calendar (selectable dates)|
+|app:secondaryTextColor|eventsCalendar.setSecondaryTextColor(color: Int)|Sets secondary text color of the calendar (disabled dates)|
+|app:selectedTextColor|eventsCalendar.setSelectedTextColor(color: Int)|Sets text color of the selected date|
+|app:selectionColor|eventsCalendar.setSelectionColor(color: Int)|Sets color for the selection circle|
+|app:weekHeaderColor|eventsCalendar.setWeekHeaderColor(color: Int)|Sets text color for the week header labels|
+|app:monthTitleColor|eventsCalendar.setMonthTitleColor(color: Int)|Sets text color for the month title in the calendar view|
+|app:eventDotColor|eventsCalendar.setEventDotColor(color: Int)|Sets color for the event dots marked in the calendar view|
+|app:isBoldTextOnSelectionEnabled|eventsCalendar.setIsBoldTextOnSelectionEnabled(isEnabled: Boolean)|Sets whether the dates should be highlighted or not|
+
 Voila! You have implemented an awesome Events Calendar for your Android Project now!
