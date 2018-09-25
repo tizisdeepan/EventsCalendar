@@ -72,7 +72,7 @@ eventsCalendar.setWeekHeaderTypeface(typeface)
 //set the callback for EventsCalendar
 eventsCalendar.setCallback(this)
 ```
-###Documentation
+### Documentation
 
 |XML|Kotlin/Java|Description|
 |---|---|---|
