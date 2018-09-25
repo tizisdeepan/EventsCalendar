@@ -72,3 +72,4 @@ eventsCalendar.setWeekHeaderTypeface(typeface)
 //set the callback for EventsCalendar
 eventsCalendar.setCallback(this)
 ```
+Voila! You have implemented an awesome Events Calendar for your Android Project now!
