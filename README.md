@@ -78,13 +78,13 @@ eventsCalendar.addEvent(c)
 
 |XML|Kotlin/Java|Description|
 |---|---|---|
-|`app:primaryTextColor`|`setPrimaryTextColor(color: Int)`|Sets **primary text** color of the calendar (selectable dates)|
-|`app:secondaryTextColor`|`setSecondaryTextColor(color: Int)`|Sets **secondary text** color of the calendar (disabled dates)|
-|`app:selectedTextColor`|`setSelectedTextColor(color: Int)`|Sets text color of the **selected** date|
-|`app:selectionColor`|`setSelectionColor(color: Int)`|Sets color for the **selection circle**|
-|`app:weekHeaderColor`|`setWeekHeaderColor(color: Int)`|Sets text color for the **week header** labels|
-|`app:monthTitleColor`|`setMonthTitleColor(color: Int)`|Sets text color for the **month title** in the calendar view|
-|`app:eventDotColor`|`setEventDotColor(color: Int)`|Sets color for the **event dots** marked in the calendar view|
+|`app:primaryTextColor`|`setPrimaryTextColor(color: Int)`|**Primary Text** color of the calendar (selectable dates)|
+|`app:secondaryTextColor`|`setSecondaryTextColor(color: Int)`|**Secondary Text** color of the calendar (disabled dates)|
+|`app:selectedTextColor`|`setSelectedTextColor(color: Int)`|Text color of the **Selected** date|
+|`app:selectionColor`|`setSelectionColor(color: Int)`|Color for the **Selection Circle**|
+|`app:weekHeaderColor`|`setWeekHeaderColor(color: Int)`|Text color for the **Week Header** labels|
+|`app:monthTitleColor`|`setMonthTitleColor(color: Int)`|Text color for the **Month Title** in the calendar view|
+|`app:eventDotColor`|`setEventDotColor(color: Int)`|Color for the **Event Dots** marked in the calendar view|
 |`app:isBoldTextOnSelectionEnabled`|`setIsBoldTextOnSelectionEnabled(isEnabled: Boolean)`|Sets whether the dates should be **highlighted** or not|
 
 Voila! You have implemented an awesome Events Calendar for your Android Project now!
