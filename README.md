@@ -73,6 +73,7 @@ eventsCalendar.setWeekHeaderTypeface(typeface)
 eventsCalendar.setCallback(this)
 ```
 ###Documentation
+
 |XML|Kotlin/Java|Description|
 |---|---|---|
 |app:primaryTextColor|eventsCalendar.setPrimaryTextColor(color: Int)|Sets primary text color of the calendar (selectable dates)|
