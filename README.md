@@ -79,7 +79,6 @@ eventsCalendar.addEvent(c)
 |Code|Description|
 |---|---|
 |`app:primaryTextColor`
-[OR]
 `setPrimaryTextColor(color: Int)`|**Primary Text** color of the calendar (selectable dates)|
 |`app:secondaryTextColor`
 `setSecondaryTextColor(color: Int)`|**Secondary Text** color of the calendar (disabled dates)|
