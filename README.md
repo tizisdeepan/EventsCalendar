@@ -38,7 +38,7 @@ allprojects {
             app:selectionColor="#ffe600"
             app:weekHeaderColor="#c6c6c6" />
 ```
-### [5] Implement EventCalendar.Listener on your Activity/ Fragment
+### [5] Implement EventCalendar.Callback on your Activity/ Fragment
 ```kotlin
 class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
     ...
@@ -67,6 +67,6 @@ eventsCalendar.setDatesTypeface(typeface)
 eventsCalendar.setMonthTitleTypeface(typeface)
 //set font for week names
 eventsCalendar.setWeekHeaderTypeface(typeface)
-//set the callback for EventsCalendar.Listener
+//set the callback for EventsCalendar
 eventsCalendar.setCallback(this)
 ```
