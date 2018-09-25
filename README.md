@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
 ```
 ### [6] Create instances and set default values for the EventsCalendar in your Activity/ Fragment
 ```kotlin
-//set today's date [today: Calendar Object]
+//set today's date [today: Calendar]
 eventsCalendar.setToday(today)
-//set starting month [start: Calendar Object] and ending month [end: Calendar Object]
+//set starting month [start: Calendar] and ending month [end: Calendar]
 eventsCalendar.setMonthRange(start, end)
 //set start day of the week as you wish [startday: Int, doReset: Boolean]
 eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
@@ -71,6 +71,8 @@ eventsCalendar.setMonthTitleTypeface(typeface)
 eventsCalendar.setWeekHeaderTypeface(typeface)
 //set the callback for EventsCalendar
 eventsCalendar.setCallback(this)
+//set events on the EventsCalendar [c: Calendar]
+eventsCalendar.addEvent(c)
 ```
 ### Documentation
 
