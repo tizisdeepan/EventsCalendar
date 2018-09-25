@@ -13,7 +13,6 @@ import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 
 class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
-
     private var mContext: Context? = null
     private var sWeekStartDay = Calendar.MONDAY
     private var mMonth: Int = 0
@@ -89,7 +88,7 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
     }
 
     private fun initMonthTitle() {
-        mMonthTitleTextView = mLayoutInflater!!.inflate(R.layout.zmail_layout_month_title, null) as TextView
+        mMonthTitleTextView = mLayoutInflater?.inflate(R.layout.zmail_layout_month_title, null) as TextView
         val calendar = Calendar.getInstance()
         calendar.set(mYear, mMonth, 1)
         mMonthTitleTextView?.text = EventsCalendarUtil.getMonthString(calendar, EventsCalendarUtil.DISPLAY_STRING)
@@ -100,20 +99,20 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
     }
 
     private fun initWeekDayHeader() {
-        mWeekDaysHeader = mLayoutInflater!!.inflate(R.layout.zmail_layout_weekday_header, null)
-        mFirstDay = mWeekDaysHeader!!.findViewById(R.id.first_day)
-        mSecondDay = mWeekDaysHeader!!.findViewById(R.id.second_day)
-        mThirdDay = mWeekDaysHeader!!.findViewById(R.id.third_day)
-        mFourthDay = mWeekDaysHeader!!.findViewById(R.id.fourth_day)
-        mFifthDay = mWeekDaysHeader!!.findViewById(R.id.fifth_day)
-        mSixthDay = mWeekDaysHeader!!.findViewById(R.id.sixth_day)
-        mSeventhDay = mWeekDaysHeader!!.findViewById(R.id.seventh_day)
+        mWeekDaysHeader = mLayoutInflater?.inflate(R.layout.zmail_layout_weekday_header, null)
+        mFirstDay = mWeekDaysHeader?.findViewById(R.id.first_day)
+        mSecondDay = mWeekDaysHeader?.findViewById(R.id.second_day)
+        mThirdDay = mWeekDaysHeader?.findViewById(R.id.third_day)
+        mFourthDay = mWeekDaysHeader?.findViewById(R.id.fourth_day)
+        mFifthDay = mWeekDaysHeader?.findViewById(R.id.fifth_day)
+        mSixthDay = mWeekDaysHeader?.findViewById(R.id.sixth_day)
+        mSeventhDay = mWeekDaysHeader?.findViewById(R.id.seventh_day)
         setWeekdayHeader()
         addView(mWeekDaysHeader)
     }
 
     private fun setWeekdayHeader() {
-        val headers = arrayOf<TextView>(mFirstDay!!, mSecondDay!!, mThirdDay!!, mFourthDay!!, mFifthDay!!, mSixthDay!!, mSeventhDay!!)
+        val headers = arrayOf(mFirstDay!!, mSecondDay!!, mThirdDay!!, mFourthDay!!, mFifthDay!!, mSixthDay!!, mSeventhDay!!)
         for (i in 0..6) {
             setWeekDayHeaderString(headers[i], if (i + sWeekStartDay > 7) (i + sWeekStartDay) % 7 else i + sWeekStartDay)
         }
@@ -135,34 +134,32 @@ class MonthView : ViewGroup, MonthDatesGridLayout.CallBack {
 
     private fun setMonthGridLayout() {
         monthGridLayout = MonthDatesGridLayout(mContext!!, mMonth, mYear, sWeekStartDay, mSelectedWeekNo)
-        monthGridLayout!!.setCallback(this)
+        monthGridLayout?.setCallback(this)
         mMonthGridContainer = MonthGridContainer(mContext!!, monthGridLayout!!)
         addView(mMonthGridContainer)
     }
 
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mMonthTitleTextView!!.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_month_title).toInt(), View.MeasureSpec.EXACTLY))
-        mWeekDaysHeader!!.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(mContext!!.resources.getDimension(R.dimen.height_week_day_header).toInt(), View.MeasureSpec.EXACTLY))
-        mMonthGridContainer!!.measure(widthMeasureSpec, heightMeasureSpec)
+        mMonthTitleTextView?.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_month_title).toInt(), View.MeasureSpec.EXACTLY))
+        mWeekDaysHeader?.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(mContext!!.resources.getDimension(R.dimen.height_week_day_header).toInt(), View.MeasureSpec.EXACTLY))
+        mMonthGridContainer?.measure(widthMeasureSpec, heightMeasureSpec)
         val height = mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight + mMonthGridContainer!!.measuredHeight
         setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), height)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        mMonthTitleTextView!!.layout(0, 0, mMonthTitleTextView!!.measuredWidth, mMonthTitleTextView!!.measuredHeight)
-        mWeekDaysHeader!!.layout(0, mMonthTitleTextView!!.measuredHeight, mWeekDaysHeader!!.measuredWidth, mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight)
-        mMonthGridContainer!!.layout(0, mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight, mMonthGridContainer!!.measuredWidth, mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight + mMonthGridContainer!!.measuredHeight)
+        mMonthTitleTextView?.layout(0, 0, mMonthTitleTextView!!.measuredWidth, mMonthTitleTextView!!.measuredHeight)
+        mWeekDaysHeader?.layout(0, mMonthTitleTextView!!.measuredHeight, mWeekDaysHeader!!.measuredWidth, mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight)
+        mMonthGridContainer?.layout(0, mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight, mMonthGridContainer!!.measuredWidth, mMonthTitleTextView!!.measuredHeight + mWeekDaysHeader!!.measuredHeight + mMonthGridContainer!!.measuredHeight)
     }
 
     fun setMonthTranslationFraction(fraction: Float) {
-        monthGridLayout!!.setTranslationFraction(fraction)
+        monthGridLayout?.setTranslationFraction(fraction)
     }
 
     override fun onDaySelected(date: Calendar?, isClick: Boolean) {
-        if (mCallback != null) {
-            mCallback!!.onDaySelected(isClick)
-        }
+        if (mCallback != null) mCallback?.onDaySelected(isClick)
     }
 
     fun setCallback(callBack: Callback) {

@@ -150,7 +150,6 @@ object EventsCalendarUtil {
                 year = Integer.parseInt(dateStr.substring(0, dateStr.indexOf('/')))
                 month = Integer.parseInt(dateStr.substring(dateStr.indexOf('/') + 1, dateStr.lastIndexOf('/'))) - 1
                 date = Integer.parseInt(dateStr.substring(dateStr.lastIndexOf('/') + 1))
-
                 calendar.set(year, month, date)
                 return calendar
             }
@@ -158,13 +157,11 @@ object EventsCalendarUtil {
                 month = Integer.parseInt(dateStr.substring(0, dateStr.indexOf('/'))) - 1
                 date = Integer.parseInt(dateStr.substring(dateStr.indexOf('/') + 1, dateStr.lastIndexOf('/')))
                 year = Integer.parseInt(dateStr.substring(dateStr.lastIndexOf('/') + 1))
-
                 calendar.set(year, month, date)
                 return calendar
             }
             else -> return null
         }
-
     }
 
     fun getDateString(calendar: Calendar, format: Int): String? {

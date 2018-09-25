@@ -1,5 +1,6 @@
 package com.events.calendar.views
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
@@ -41,11 +42,9 @@ class DateTextView : View {
     private var mHeight: Int = 0
     private var mBgCircleRadius: Float = 0.toFloat()
 
-    //Variables used for circle expansion and shrink animation
     private var animate: Boolean = false    //Setting animate to 'true' will trigger repeated 'invalidate()' based on 'frameCount' resulting in Animation of SELECTION CIRCLE
     private var frameCount: Int = 0
 
-    //Variables used for click
     private var touchDown = false
     private var mDownX: Float = 0.toFloat()
     private var mDownY: Float = 0.toFloat()
@@ -153,6 +152,7 @@ class DateTextView : View {
         mDotY = (mHeight * (7.5f / 10f)).toInt()
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         val location = IntArray(2)
         this.getLocationOnScreen(location)
@@ -209,9 +209,6 @@ class DateTextView : View {
         }
     }
 
-    /**
-     * Draws "Event Dot"
-     */
     private fun drawDot(canvas: Canvas) {
         if (isCurrentMonth) {
             if (isSelected) {
@@ -229,9 +226,6 @@ class DateTextView : View {
         }
     }
 
-    /**
-     * Set properties of DateTextView . Usually used when adding this view manually .
-     */
     fun setProperties(isCurrentMonth: Boolean, hasEvent: Boolean, isSelected: Boolean, isToday: Boolean, date: Calendar, isPast: Boolean) {
         this.isCurrentMonth = isCurrentMonth
         this.hasEvent = hasEvent
@@ -242,8 +236,6 @@ class DateTextView : View {
 
         invalidate()
     }
-
-    /****SETTERS */
 
     fun setDateClickListener(dateSelectListener: DateSelectListener) {
         mDateSelectListener = dateSelectListener

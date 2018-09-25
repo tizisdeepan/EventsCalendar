@@ -3,8 +3,6 @@ package com.events.calendar.utils
 import java.util.*
 
 object Events {
-    private val TAG = "Events"
-
     var startMonth = Calendar.getInstance()
     var endMonth = Calendar.getInstance()
     var totalNoOfMonths: Int = 0
@@ -57,29 +55,17 @@ object Events {
         return eventDots!!.hasEvent(calendar.get(Calendar.DATE))
     }
 
-    fun getDotsForMonth(monthCalendar: Calendar): EventDots? {
-        return getDotsForMonth(EventsCalendarUtil.getMonthString(monthCalendar, EventsCalendarUtil.YYYY_MM))
-    }
+    fun getDotsForMonth(monthCalendar: Calendar): EventDots? = getDotsForMonth(EventsCalendarUtil.getMonthString(monthCalendar, EventsCalendarUtil.YYYY_MM))
 
-    fun getDotsForMonth(monthString: String?): EventDots? {
-        return if (mDotsMap != null) {
-            mDotsMap!![monthString]
-        } else {
-            null
-        }
-    }
+    fun getDotsForMonth(monthString: String?): EventDots? = if (mDotsMap != null) mDotsMap!![monthString] else null
 
     fun isWithinMonthSpan(mDate: Calendar): Boolean {
         val year = mDate.get(Calendar.YEAR)
         val month = mDate.get(Calendar.MONTH)
-        if (year < startMonth.get(Calendar.YEAR) && year > endMonth.get(Calendar.YEAR)) {
-            return false
-        } else {
-            if (year == startMonth.get(Calendar.YEAR) && month < startMonth.get(Calendar.MONTH)) {
-                return false
-            } else if (year == endMonth.get(Calendar.YEAR) && month > endMonth.get(Calendar.MONTH)) {
-                return false
-            }
+        if (year < startMonth.get(Calendar.YEAR) && year > endMonth.get(Calendar.YEAR)) return false
+        else {
+            if (year == startMonth.get(Calendar.YEAR) && month < startMonth.get(Calendar.MONTH)) return false
+            else if (year == endMonth.get(Calendar.YEAR) && month > endMonth.get(Calendar.MONTH)) return false
         }
         return true
     }
