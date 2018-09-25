@@ -26,19 +26,19 @@ allprojects {
 ### [3] Use EventsCalendar in your layout.xml
 ```xml
 <com.events.calendar.views.EventsCalendar
-            android:id="@+id/eventsCalendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#000000"
-            android:overScrollMode="never"
-            app:eventDotColor="#ff0000"
-            app:isBoldTextOnSelectionEnabled="true"
-            app:monthTitleColor="#ffffff"
-            app:primaryTextColor="#c4c4c4"
-            app:secondaryTextColor="#666666"
-            app:selectedTextColor="#000000"
-            app:selectionColor="#ffe600"
-            app:weekHeaderColor="#c6c6c6" />
+    android:id="@+id/eventsCalendar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    android:overScrollMode="never"
+    app:eventDotColor="#ff0000"
+    app:isBoldTextOnSelectionEnabled="true"
+    app:monthTitleColor="#ffffff"
+    app:primaryTextColor="#c4c4c4"
+    app:secondaryTextColor="#666666"
+    app:selectedTextColor="#000000"
+    app:selectionColor="#ffe600"
+    app:weekHeaderColor="#c6c6c6" />
 ```
 ### [5] Implement EventCalendar.Callback on your Activity/ Fragment
 ```kotlin
