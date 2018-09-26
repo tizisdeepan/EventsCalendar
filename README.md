@@ -5,7 +5,7 @@
 ![Screenshot 2](https://github.com/tizisdeepan/eventscalendar/blob/master/screenshots/ss2.png)
 
 ## What is Events Calendar?
-Events Calendar is a developer-friendly library that helps you achieve a cool Calendar UI with events mapping. You can customise every pixel of the calendar as per your wish and still achieve in implementing all the functionalities of the native android calendar in addition with adding dots to the calendar which represents the presence of an event on the respective dates. It can be done easily, you are just a few steps away from implementing your own badass looking Calendar for your very own project!
+Events Calendar is a user-friendly library that helps you achieve a cool Calendar UI with events mapping. You can customise every pixel of the calendar as per your wish and still achieve in implementing all the functionalities of the native android calendar in addition with adding dots to the calendar which represents the presence of an event on the respective dates. It can be done easily, you are just a few steps away from implementing your own badass looking Calendar for your very own project!
 
 ## Implementation
 ### [1] In your app module gradle file
