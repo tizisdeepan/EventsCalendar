@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
-import com.events.calendar.utils.MeasureUtils
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 
@@ -127,8 +126,8 @@ class DateTextView : View {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = MeasureUtils.getMeasurement(widthMeasureSpec, mContext.resources.getDimension(R.dimen.dimen_date_text_view).toInt())
-        val height = MeasureUtils.getMeasurement(heightMeasureSpec, mContext.resources.getDimension(R.dimen.dimen_date_text_view).toInt())
+        val width = getMeasurement(widthMeasureSpec, mContext.resources.getDimension(R.dimen.dimen_date_text_view).toInt())
+        val height = getMeasurement(heightMeasureSpec, mContext.resources.getDimension(R.dimen.dimen_date_text_view).toInt())
         setMeasuredDimension(width, height)
     }
 
@@ -321,6 +320,18 @@ class DateTextView : View {
 
     fun unSelect(isClick: Boolean) {
         if (isClick && isCurrentMonth) startUnselectedAnimation() else setIsSelected(false)
+    }
+
+    private fun getMeasurement(measureSpec: Int, contentSize: Int): Int {
+        val specMode = View.MeasureSpec.getMode(measureSpec)
+        val specSize = View.MeasureSpec.getSize(measureSpec)
+        var resultSize = 0
+        when (specMode) {
+            View.MeasureSpec.UNSPECIFIED -> resultSize = contentSize
+            View.MeasureSpec.AT_MOST -> resultSize = Math.min(specSize, contentSize)
+            View.MeasureSpec.EXACTLY -> resultSize = specSize
+        }
+        return resultSize
     }
 
     companion object {

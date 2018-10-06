@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         val today = Calendar.getInstance()
         val end = Calendar.getInstance()
         end.add(Calendar.YEAR, 2)
+//        eventsCalendar.setCalendarMode(eventsCalendar.WEEK_MODE)
         eventsCalendar.setToday(today)
         eventsCalendar.setMonthRange(today, end)
         eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setCallback(this)
+
 
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, 2)

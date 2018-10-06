@@ -16,7 +16,7 @@ import com.events.calendar.utils.Events
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 
-class MonthDatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
+class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
 
     private var mContext: Context? = null
     private var mLayoutInflater: LayoutInflater? = null
@@ -98,12 +98,12 @@ class MonthDatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
     private fun getAttributeValues() {
         mMonth = mCurrentCalendar!!.get(Calendar.MONTH)
         mYear = mCurrentCalendar!!.get(Calendar.YEAR)
-        val attributes = mContext!!.theme.obtainStyledAttributes(mAttrs, R.styleable.MonthDatesGridLayout, mDefStyleAttr, mDefStyleRes)
+        val attributes = mContext!!.theme.obtainStyledAttributes(mAttrs, R.styleable.DatesGridLayout, mDefStyleAttr, mDefStyleRes)
         try {
-            mMonth = attributes.getInt(R.styleable.MonthDatesGridLayout_month, mMonth)
-            mYear = attributes.getInt(R.styleable.MonthDatesGridLayout_year, mYear)
-            sWeekStartDay = attributes.getInt(R.styleable.MonthDatesGridLayout_weekStartDay, Calendar.MONDAY)
-            mSelectedWeekNo = attributes.getInt(R.styleable.MonthDatesGridLayout_selectedWeekNo, 1)
+            mMonth = attributes.getInt(R.styleable.DatesGridLayout_month, mMonth)
+            mYear = attributes.getInt(R.styleable.DatesGridLayout_year, mYear)
+            sWeekStartDay = attributes.getInt(R.styleable.DatesGridLayout_weekStartDay, Calendar.MONDAY)
+            mSelectedWeekNo = attributes.getInt(R.styleable.DatesGridLayout_selectedWeekNo, 1)
         } finally {
             attributes.recycle()
         }
@@ -295,7 +295,7 @@ class MonthDatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
         post {
             val layoutLocation = IntArray(2)
             val dateViewLocation = IntArray(2)
-            this@MonthDatesGridLayout.getLocationOnScreen(layoutLocation)
+            this@DatesGridLayout.getLocationOnScreen(layoutLocation)
             try {
                 selectedDateTextView!!.getLocationOnScreen(dateViewLocation)
             } catch (e: NullPointerException) {
@@ -374,7 +374,7 @@ class MonthDatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
     }
 
     fun setShowOnlyCurrentMonthWeeks(showOnlyCurrentMonthWeeks: Boolean) {
-        MonthDatesGridLayout.showOnlyCurrentMonthWeeks = showOnlyCurrentMonthWeeks
+        DatesGridLayout.showOnlyCurrentMonthWeeks = showOnlyCurrentMonthWeeks
     }
 
     companion object {

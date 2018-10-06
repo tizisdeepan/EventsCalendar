@@ -124,12 +124,12 @@ object EventsCalendarUtil {
         return offsetForPreviousMonth - (noOfWeeks - position) + 1
     }
 
-    fun getWeekPosition(day: Calendar, startMonth: Calendar): Int {
+    fun getWeekPosition(day: Calendar?, startMonth: Calendar): Int {
         val helper = MonthDisplayHelper(startMonth.get(Calendar.YEAR), startMonth.get(Calendar.MONTH), weekStartDay)
         var finished = false
         var noOfWeeks = 0
         while (!finished) {
-            if (helper.month == day.get(Calendar.MONTH) && helper.year == day.get(Calendar.YEAR)) {
+            if (helper.month == day?.get(Calendar.MONTH) && helper.year == day.get(Calendar.YEAR)) {
                 noOfWeeks += helper.getRowOf(day.get(Calendar.DATE))
                 finished = true
             } else noOfWeeks += Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()

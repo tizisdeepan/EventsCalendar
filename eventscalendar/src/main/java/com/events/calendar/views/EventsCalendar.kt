@@ -24,6 +24,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     lateinit var mMaxMonth: Calendar
     var isPagingEnabled = true //Boolean used to switch off and on EventsCalendar's page change
 
+    val WEEK_MODE = 0
+    val MONTH_MODE = 1
+
     private var mContext: Context? = null
     private var mAttrs: AttributeSet? = null
     private var mCurrentItem: MonthView? = null
@@ -35,105 +38,12 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     private var mSelectedMonthPosition: Int = 0
     private var mSelectedWeekPosition: Int = 0
     private var doFocus = true
-
-    val weekStartDay: Int
-        get() = EventsCalendarUtil.weekStartDay
-
-    private val mOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
-        override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-            if (childCount > 0) {
-                if (doFocus) {
-                    if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) {
-                        mCalendarMonthPagerAdapter!!.getItem(position)!!.onFocus(position)
-                    }
-                } else {
-                    doFocus = true
-                }
-            }
-        }
-    }
-
-
+    val weekStartDay: Int get() = EventsCalendarUtil.weekStartDay
     val visibleContentHeight: Float
         get() {
             val resources = resources
             return resources.getDimension(R.dimen.height_month_title) + resources.getDimension(R.dimen.height_week_day_header) + resources.getDimension(R.dimen.dimen_date_text_view)
         }
-
-    /**
-     * Interface to be implemented by Activity or Fragment which may use EventsCalendar
-     */
-    interface Callback {
-        fun onDaySelected(selectedDate: Calendar?)
-        fun onMonthChanged(monthStartDate: Calendar?)
-    }
-
-    fun setCurrentSelectedDate(selectedDate: Calendar?) {
-        val position: Int
-        if (isPagingEnabled) {
-            doFocus = false
-            if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
-                position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
-                setCurrentItem(position, false)
-                if (mCalendarMonthPagerAdapter != null) {
-                    post {
-                        EventsCalendarUtil.monthPos = currentItem
-                        EventsCalendarUtil.selectedDate = selectedDate
-                        mCalendarMonthPagerAdapter!!.getItem(currentItem)!!.setSelectedDate(selectedDate!!)
-                        doFocus = true
-                    }
-                }
-            }
-            //            else
-            //            {
-            //                position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth);
-            //                setCurrentItem(position, false);
-            //                if(mCalendarWeekPagerAdapter!=null)
-            //                {
-            //                    post(new Runnable()
-            //                    {
-            //                        @Override
-            //                        public void run()
-            //                        {
-            //                            mCalendarWeekPagerAdapter.getItem(getCurrentItem()).setSelectedDate(selectedDate);
-            //                            doFocus = true;
-            //                        }
-            //                    });
-            //                }
-            //            }
-        }
-    }
-
-    fun getCurrentSelectedDate(): Calendar? = EventsCalendarUtil.selectedDate
-
-    fun reset() {
-        for (i in 0 until childCount) {
-            (getChildAt(i) as MonthView).reset(false)
-        }
-    }
-
-    fun refreshTodayDate() {
-        for (i in 0 until childCount) {
-            (getChildAt(i) as MonthView).refreshDates()
-        }
-    }
-
-    fun setToday(c: Calendar) {
-        EventsCalendarUtil.today = c
-        EventsCalendarUtil.setCurrentSelectedDate(c)
-    }
-
-    fun setWeekStartDay(weekStartDay: Int, doReset: Boolean) {
-        EventsCalendarUtil.weekStartDay = weekStartDay
-        if (doReset) {
-            mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
-            mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate()!!, mMinMonth)
-            doChangeAdapter = true
-            changeAdapter()
-            mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
-        }
-    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     constructor(context: Context) : super(context) {
@@ -195,7 +105,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         try {
             mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) (adapter as WeekPageAdapter).getItem(currentItem)
             else (adapter as MonthPagerAdapter).getItem(currentItem)
-            mCurrentItemHeight = mCurrentItem!!.measuredHeight
+            mCurrentItemHeight = mCurrentItem?.measuredHeight!!
         } catch (e: NullPointerException) {
             e.printStackTrace()
         } catch (e: ClassCastException) {
@@ -206,7 +116,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     }
 
     fun setCurrentMonthTranslationFraction(fraction: Float) {
-        mCurrentItem!!.setMonthTranslationFraction(fraction)
+        mCurrentItem?.setMonthTranslationFraction(fraction)
     }
 
     fun setCalendarMode(mode: Int) {
@@ -222,13 +132,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     override fun onDaySelected(isClick: Boolean) {
         if (mCallback != null) {
-            if (!MonthDatesGridLayout.selectedDateTextView?.isCurrentMonth!!) {
-                val itemNo: Int
-                if (EventsCalendarUtil.getCurrentSelectedDate()!!.get(Calendar.DATE) < 8) {
-                    itemNo = currentItem + 1
-                } else {
-                    itemNo = currentItem - 1
-                }
+            if (!DatesGridLayout.selectedDateTextView?.isCurrentMonth!!) {
+                val itemNo = if (EventsCalendarUtil.getCurrentSelectedDate()!!.get(Calendar.DATE) < 8) currentItem + 1 else currentItem - 1
                 if (itemNo >= 0 && itemNo <= EventsCalendarUtil.getWeekCount(mMinMonth, mMaxMonth)) {
                     setCurrentSelectedDate(EventsCalendarUtil.getCurrentSelectedDate())
                 }
@@ -236,40 +141,31 @@ class EventsCalendar : ViewPager, MonthView.Callback {
                 if (isClick) {
                     setCurrentSelectedDate(EventsCalendarUtil.getCurrentSelectedDate())
                     mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
-                } else {
-                    mCallback?.onMonthChanged(EventsCalendarUtil.getCurrentSelectedDate())
-                }
+                } else mCallback?.onMonthChanged(EventsCalendarUtil.getCurrentSelectedDate())
             }
         }
     }
 
     fun changeAdapter() {
         if (doChangeAdapter) {
-            MonthDatesGridLayout.clearSelectedDateTextView()
+            DatesGridLayout.clearSelectedDateTextView()
             val parcel = Parcel.obtain()
-            if (Build.VERSION.SDK_INT >= 23) {
-                parcel.writeParcelable(null, 0)
-            }
+            if (Build.VERSION.SDK_INT >= 23) parcel.writeParcelable(null, 0)
             parcel.writeParcelable(null, 0)
             val currentSelectionDate = EventsCalendarUtil.getCurrentSelectedDate()
-            if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) {
-                val position = EventsCalendarUtil.getWeekPosition(currentSelectionDate!!, mMinMonth)
+            adapter = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) {
+                val position = EventsCalendarUtil.getWeekPosition(currentSelectionDate, mMinMonth)
                 setCurrentItemField(position)
-                adapter = mCalendarWeekPagerAdapter
+                mCalendarWeekPagerAdapter
             } else {
                 val position = EventsCalendarUtil.getMonthPositionForDay(currentSelectionDate, mMinMonth)
                 setCurrentItemField(position)
-                adapter = mCalendarMonthPagerAdapter
+                mCalendarMonthPagerAdapter
             }
             doChangeAdapter = false
         }
     }
 
-    //TODO: If we use Proguard, then you need to include the following in its config:
-    //-keepclassmembers class android.support.v4.view.ViewPager
-    //{
-    //      private int mRestoredCurItem;
-    //}
     private fun setCurrentItemField(position: Int) {
         try {
             val field = ViewPager::class.java.getDeclaredField("mRestoredCurItem")//No I18N
@@ -303,6 +199,10 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     fun setSelectedTextColor(color: Int) {
         EventsCalendarUtil.selectedTextColor = color
+    }
+
+    fun setSelectionColor(color: Int) {
+        EventsCalendarUtil.selectionColor = color
     }
 
     fun setMonthTitleColor(color: Int) {
@@ -378,8 +278,82 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         DateTextView.invalidateColors()
     }
 
-    companion object {
-        private val TAG = "EventsCalendar"
-        private val mCurrentSelectedDate = Calendar.getInstance()
+    private val mOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            if (childCount > 0) {
+                if (doFocus) {
+                    if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) {
+                        mCalendarMonthPagerAdapter!!.getItem(position)!!.onFocus(position)
+                    }
+                } else {
+                    doFocus = true
+                }
+            }
+        }
     }
+
+    interface Callback {
+        fun onDaySelected(selectedDate: Calendar?)
+        fun onMonthChanged(monthStartDate: Calendar?)
+    }
+
+    fun setCurrentSelectedDate(selectedDate: Calendar?) {
+        val position: Int
+        if (isPagingEnabled) {
+            doFocus = false
+            if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
+                position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
+                setCurrentItem(position, false)
+                if (mCalendarMonthPagerAdapter != null) {
+                    post {
+                        EventsCalendarUtil.monthPos = currentItem
+                        EventsCalendarUtil.selectedDate = selectedDate
+                        mCalendarMonthPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        doFocus = true
+                    }
+                }
+            } else {
+                position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
+                setCurrentItem(position, false)
+                if (mCalendarWeekPagerAdapter != null) {
+                    post {
+                        mCalendarWeekPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        doFocus = true
+                    }
+                }
+            }
+        }
+    }
+
+    fun getCurrentSelectedDate(): Calendar? = EventsCalendarUtil.selectedDate
+
+    fun reset() {
+        for (i in 0 until childCount) {
+            (getChildAt(i) as MonthView).reset(false)
+        }
+    }
+
+    fun refreshTodayDate() {
+        for (i in 0 until childCount) {
+            (getChildAt(i) as MonthView).refreshDates()
+        }
+    }
+
+    fun setToday(c: Calendar) {
+        EventsCalendarUtil.today = c
+        EventsCalendarUtil.setCurrentSelectedDate(c)
+    }
+
+    fun setWeekStartDay(weekStartDay: Int, doReset: Boolean) {
+        EventsCalendarUtil.weekStartDay = weekStartDay
+        if (doReset) {
+            mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
+            mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate()!!, mMinMonth)
+            doChangeAdapter = true
+            changeAdapter()
+            mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
+        }
+    }
+
 }

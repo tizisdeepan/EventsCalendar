@@ -8,7 +8,7 @@
         <attr name="isPast" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="MonthDatesGridLayout">
+    <declare-styleable name="DatesGridLayout">
         <attr name="month" format="integer" />
         <attr name="year" format="integer" />
         <attr name="weekStartDay" format="enum">
@@ -32,5 +32,21 @@
         <attr name="monthTitleColor" format="color" />
         <attr name="weekHeaderColor" format="color" />
         <attr name="isBoldTextOnSelectionEnabled" format="boolean" />
+        <attr name="selectedDateLabelGravity">
+            <flag name="bottom" value="80" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+            <flag name="clip_horizontal" value="8" />
+            <flag name="clip_vertical" value="128" />
+            <flag name="end" value="8388613" />
+            <flag name="fill" value="119" />
+            <flag name="fill_horizontal" value="7" />
+            <flag name="fill_vertical" value="112" />
+            <flag name="left" value="3" />
+            <flag name="right" value="5" />
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+        </attr>
     </declare-styleable>
 </resources>

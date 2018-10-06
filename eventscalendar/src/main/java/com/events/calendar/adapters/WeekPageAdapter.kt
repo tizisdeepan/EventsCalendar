@@ -17,35 +17,20 @@ class WeekPageAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Cal
     private val mMaxMonth: Calendar
     private val mCount: Int
     private val monthDatesGridLayoutsArray: Array<MonthView?>
-    private val mContext: Context
+    private val mContext: Context = viewPager.context
     private val mMonthViewCallback: MonthView.Callback
 
     init {
-        mContext = viewPager.context
         mMonthViewCallback = viewPager
-        if (EventsCalendarUtil.isPastDay(startDay)) {
-            mMinMonth = startDay
-        } else {
-            mMinMonth = Calendar.getInstance()
-        }
-
-        if (EventsCalendarUtil.isFutureDay(endDay)) {
-            mMaxMonth = endDay
-        } else {
-            mMaxMonth = Calendar.getInstance()
-        }
-
+        mMinMonth = if (EventsCalendarUtil.isPastDay(startDay)) startDay else Calendar.getInstance()
+        mMaxMonth = if (EventsCalendarUtil.isFutureDay(endDay)) endDay else Calendar.getInstance()
         mCount = EventsCalendarUtil.getWeekCount(mMinMonth, mMaxMonth)
         monthDatesGridLayoutsArray = arrayOfNulls(mCount)
     }
 
-    override fun getCount(): Int {
-        return mCount
-    }
+    override fun getCount(): Int = mCount
 
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object`
-    }
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val month = EventsCalendarUtil.getMonthForWeekPosition(mMinMonth, position)
@@ -61,7 +46,5 @@ class WeekPageAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Cal
         container.removeView(`object` as View)
     }
 
-    fun getItem(position: Int): MonthView? {
-        return monthDatesGridLayoutsArray[position]
-    }
+    fun getItem(position: Int): MonthView? = monthDatesGridLayoutsArray[position]
 }
