@@ -12,8 +12,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
-import com.events.calendar.adapters.MonthPagerAdapter
-import com.events.calendar.adapters.WeekPageAdapter
+import com.events.calendar.adapters.MonthsAdapter
+import com.events.calendar.adapters.WeeksAdapter
 import com.events.calendar.utils.EventDots
 import com.events.calendar.utils.Events
 import com.events.calendar.utils.EventsCalendarUtil
@@ -32,9 +32,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     private var mCurrentItem: MonthView? = null
     private var mCurrentItemHeight: Int = 0
     private var mCallback: Callback? = null
-    private var mCalendarMonthPagerAdapter: MonthPagerAdapter? = null
+    private var mCalendarMonthsAdapter: MonthsAdapter? = null
     private var doChangeAdapter: Boolean = false
-    private var mCalendarWeekPagerAdapter: WeekPageAdapter? = null
+    private var mCalendarWeekPagerAdapter: WeeksAdapter? = null
     private var mSelectedMonthPosition: Int = 0
     private var mSelectedWeekPosition: Int = 0
     private var doFocus = true
@@ -88,9 +88,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             startMonth.add(Calendar.MONTH, -1)
             endMonth.add(Calendar.MONTH, EventsCalendarUtil.DEFAULT_NO_OF_MONTHS / 2)
         }
-        mCalendarMonthPagerAdapter = MonthPagerAdapter(this, startMonth, endMonth)
-        mCalendarWeekPagerAdapter = WeekPageAdapter(this, startMonth, endMonth)
-        adapter = mCalendarMonthPagerAdapter
+        mCalendarMonthsAdapter = MonthsAdapter(this, startMonth, endMonth)
+        mCalendarWeekPagerAdapter = WeeksAdapter(this, startMonth, endMonth)
+        adapter = mCalendarMonthsAdapter
         mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), startMonth)
         mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate()!!, startMonth)
         currentItem = mSelectedMonthPosition
@@ -103,8 +103,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
         try {
-            mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) (adapter as WeekPageAdapter).getItem(currentItem)
-            else (adapter as MonthPagerAdapter).getItem(currentItem)
+            mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) (adapter as WeeksAdapter).getItem(currentItem)
+            else (adapter as MonthsAdapter).getItem(currentItem)
             mCurrentItemHeight = mCurrentItem?.measuredHeight!!
         } catch (e: NullPointerException) {
             e.printStackTrace()
@@ -160,7 +160,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             } else {
                 val position = EventsCalendarUtil.getMonthPositionForDay(currentSelectionDate, mMinMonth)
                 setCurrentItemField(position)
-                mCalendarMonthPagerAdapter
+                mCalendarMonthsAdapter
             }
             doChangeAdapter = false
         }
@@ -284,7 +284,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             if (childCount > 0) {
                 if (doFocus) {
                     if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) {
-                        mCalendarMonthPagerAdapter!!.getItem(position)!!.onFocus(position)
+                        mCalendarMonthsAdapter!!.getItem(position)!!.onFocus(position)
                     }
                 } else {
                     doFocus = true
@@ -305,11 +305,11 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
                 position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
                 setCurrentItem(position, false)
-                if (mCalendarMonthPagerAdapter != null) {
+                if (mCalendarMonthsAdapter != null) {
                     post {
                         EventsCalendarUtil.monthPos = currentItem
                         EventsCalendarUtil.selectedDate = selectedDate
-                        mCalendarMonthPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        mCalendarMonthsAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
                         doFocus = true
                     }
                 }

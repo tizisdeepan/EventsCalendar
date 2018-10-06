@@ -12,7 +12,7 @@ import com.events.calendar.views.MonthView
 
 import java.util.Calendar
 
-class MonthPagerAdapter(viewPager: EventsCalendar, startMonth: Calendar, endMonth: Calendar) : PagerAdapter() {
+class MonthsAdapter(viewPager: EventsCalendar, startMonth: Calendar, endMonth: Calendar) : PagerAdapter() {
     private val mContext: Context
     private val mMonthIterator: Calendar
     private val mCount: Int

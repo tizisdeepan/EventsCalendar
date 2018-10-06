@@ -12,7 +12,7 @@ import com.events.calendar.views.MonthView
 
 import java.util.Calendar
 
-class WeekPageAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Calendar) : PagerAdapter() {
+class WeeksAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Calendar) : PagerAdapter() {
     private val mMinMonth: Calendar
     private val mMaxMonth: Calendar
     private val mCount: Int
