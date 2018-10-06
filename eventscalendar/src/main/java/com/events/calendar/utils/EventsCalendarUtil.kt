@@ -6,21 +6,21 @@ import android.util.MonthDisplayHelper
 import java.util.*
 
 object EventsCalendarUtil {
-    val WEEK_MODE = 0
-    val MONTH_MODE = 1
-    private val MONTHS_IN_YEAR = 12
-    val YYYY_MM_DD = 10
-    val DD_MM_YYYY = 20
-    val MM_DD_YYYY = 30
-    val DISPLAY_STRING = 200
-    val YYYY_MM = 100
-    var today = Calendar.getInstance()
+    const val WEEK_MODE = 0
+    const val MONTH_MODE = 1
+    private const val MONTHS_IN_YEAR = 12
+    const val YYYY_MM_DD = 10
+    const val DD_MM_YYYY = 20
+    const val MM_DD_YYYY = 30
+    const val DISPLAY_STRING = 200
+    const val YYYY_MM = 100
+    var today: Calendar = Calendar.getInstance()
 
     var currentMode = MONTH_MODE
     var weekStartDay = Calendar.MONDAY
     private var currentSelectedDate: Calendar? = Calendar.getInstance()
     var tobeSelectedDate = 1
-    val DEFAULT_NO_OF_MONTHS = 480
+    const val DEFAULT_NO_OF_MONTHS = 480
     var primaryTextColor: Int = 0
     var secondaryTextColor: Int = 0
     var selectedTextColor: Int = 0
@@ -96,7 +96,7 @@ object EventsCalendarUtil {
         val helper = MonthDisplayHelper(startMonth.get(Calendar.YEAR), startMonth.get(Calendar.MONTH), weekStartDay)
         var finished = false
         var noOfWeeks = 0
-        var offsetForPreviousMonth = 0
+        var offsetForPreviousMonth: Int
         val month = Calendar.getInstance()
         while (!finished) {
             offsetForPreviousMonth = Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
@@ -140,7 +140,7 @@ object EventsCalendarUtil {
 
     fun getCurrentSelectedDate(): Calendar? = currentSelectedDate
 
-    fun getCalendar(dateStr: String, format: Int): Calendar? {
+    fun getCalendar(dateStr: String, format: Int): Calendar {
         val calendar = Calendar.getInstance()
         val year: Int
         val month: Int
@@ -160,7 +160,7 @@ object EventsCalendarUtil {
                 calendar.set(year, month, date)
                 return calendar
             }
-            else -> return null
+            else -> return Calendar.getInstance()
         }
     }
 

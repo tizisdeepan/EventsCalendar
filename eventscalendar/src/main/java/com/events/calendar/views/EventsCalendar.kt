@@ -262,17 +262,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     fun getDotsForMonth(monthString: String?): EventDots? = Events.getDotsForMonth(monthString)
 
 
-    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        return if (this.isPagingEnabled) {
-            super.onInterceptTouchEvent(event)
-        } else false
-    }
+    override fun onInterceptTouchEvent(event: MotionEvent): Boolean = if (this.isPagingEnabled) super.onInterceptTouchEvent(event) else false
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return if (this.isPagingEnabled) {
-            super.onTouchEvent(event)
-        } else false
-    }
+    override fun onTouchEvent(event: MotionEvent): Boolean = if (this.isPagingEnabled) super.onTouchEvent(event) else false
 
     fun invalidateColors() {
         DateTextView.invalidateColors()
@@ -283,12 +275,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             super.onPageSelected(position)
             if (childCount > 0) {
                 if (doFocus) {
-                    if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) {
-                        mCalendarMonthsAdapter!!.getItem(position)!!.onFocus(position)
-                    }
-                } else {
-                    doFocus = true
-                }
+                    if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter!!.getItem(position)!!.onFocus(position)
+                } else doFocus = true
             }
         }
     }

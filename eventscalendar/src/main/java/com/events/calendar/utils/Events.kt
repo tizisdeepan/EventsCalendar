@@ -3,10 +3,10 @@ package com.events.calendar.utils
 import java.util.*
 
 object Events {
-    var startMonth = Calendar.getInstance()
-    var endMonth = Calendar.getInstance()
-    var totalNoOfMonths: Int = 0
-    private var mDotsMap: HashMap<String, EventDots>? = null
+    private var startMonth: Calendar = Calendar.getInstance()
+    private var endMonth: Calendar = Calendar.getInstance()
+    private var totalNoOfMonths: Int = 0
+    private lateinit var mDotsMap: HashMap<String, EventDots>
 
 
     fun initialize(startMonth: Calendar, endMonth: Calendar) {
@@ -22,42 +22,42 @@ object Events {
         for (i in 0 until totalNoOfMonths) {
             val monthString = EventsCalendarUtil.getMonthString(iterator, EventsCalendarUtil.YYYY_MM)
             val eventDots = EventDots(iterator)
-            mDotsMap!![monthString!!] = eventDots
+            mDotsMap[monthString!!] = eventDots
             iterator.add(Calendar.MONTH, 1)
         }
     }
 
     fun clear() {
         val iterator = startMonth.clone() as Calendar
-        for (i in 0 until mDotsMap!!.size) {
+        for (i in 0 until mDotsMap.size) {
             val monthString = EventsCalendarUtil.getMonthString(iterator, EventsCalendarUtil.YYYY_MM)
-            mDotsMap!![monthString]?.clear()
+            mDotsMap[monthString]?.clear()
             iterator.add(Calendar.MONTH, 1)
         }
     }
 
     fun add(date: String) {
         val monthCalendar = EventsCalendarUtil.getCalendar(date, EventsCalendarUtil.YYYY_MM_DD)
-        val dots = mDotsMap!![date.substring(0, 7)]
-        dots?.add(monthCalendar!!.get(Calendar.DAY_OF_MONTH))
+        val dots = mDotsMap[date.substring(0, 7)]
+        dots?.add(monthCalendar.get(Calendar.DAY_OF_MONTH))
     }
 
     fun add(c: Calendar) {
         val date = EventsCalendarUtil.getDateString(c, EventsCalendarUtil.YYYY_MM_DD) ?: ""
         if (!date.isEmpty()) {
-            val dots = mDotsMap!![date.substring(0, 7)]
+            val dots = mDotsMap[date.substring(0, 7)]
             dots?.add(c[Calendar.DAY_OF_MONTH])
         }
     }
 
     fun hasEvent(calendar: Calendar): Boolean {
         val eventDots = getDotsForMonth(calendar)
-        return eventDots!!.hasEvent(calendar.get(Calendar.DATE))
+        return eventDots?.hasEvent(calendar.get(Calendar.DATE)) ?: false
     }
 
     fun getDotsForMonth(monthCalendar: Calendar): EventDots? = getDotsForMonth(EventsCalendarUtil.getMonthString(monthCalendar, EventsCalendarUtil.YYYY_MM))
 
-    fun getDotsForMonth(monthString: String?): EventDots? = if (mDotsMap != null) mDotsMap!![monthString] else null
+    fun getDotsForMonth(monthString: String?): EventDots? = mDotsMap[monthString]
 
     fun isWithinMonthSpan(mDate: Calendar): Boolean {
         val year = mDate.get(Calendar.YEAR)

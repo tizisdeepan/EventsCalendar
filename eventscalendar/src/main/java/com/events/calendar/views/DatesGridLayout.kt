@@ -15,11 +15,13 @@ import com.events.calendar.utils.EventDots
 import com.events.calendar.utils.Events
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
+import kotlin.collections.ArrayList
 
+@Suppress("NAME_SHADOWING")
 class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
 
-    private var mContext: Context? = null
-    private var mLayoutInflater: LayoutInflater? = null
+    private lateinit var mContext: Context
+    private lateinit var mLayoutInflater: LayoutInflater
     private var mAttrs: AttributeSet? = null
     private var mDefStyleAttr: Int = 0
     private var mDefStyleRes: Int = 0
@@ -27,8 +29,8 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
     private var mMonth: Int = 0
     private var mYear: Int = 0
     private var mSelectedWeekNo: Int = 0
-    private var mCurrentCalendar: Calendar? = null
-    private var mMonthDisplayHelper: MonthDisplayHelper? = null
+    private lateinit var mCurrentCalendar: Calendar
+    private lateinit var mMonthDisplayHelper: MonthDisplayHelper
     private var mNoOfWeeks: Int = 0
     private var mNoOfCurrentMonthDays: Int = 0
     private var mMonthStartDayOffset: Int = 0
@@ -46,9 +48,9 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
     private var mPreviousMonthDots: EventDots? = null
     private var mCurrentMonthData: EventDots? = null
     private var mNextMonthDots: EventDots? = null
-    private var mDotsInclusionArray: ArrayList<DateTextView>? = null
-    private var mDotsRemovalArray: ArrayList<DateTextView>? = null
-    private var mRefreshDotsTask: AsyncTask<Int, Int, Boolean>? = null
+    private var mDotsInclusionArray: ArrayList<DateTextView> = ArrayList()
+    private var mDotsRemovalArray: ArrayList<DateTextView> = ArrayList()
+    private lateinit var mRefreshDotsTask: AsyncTask<Int, Int, Boolean>
     private var mResetTaskExecuting: Boolean = false
 
     interface CallBack {
@@ -88,7 +90,7 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
         mLayoutInflater = LayoutInflater.from(mContext)
         isClickable = true
         mCurrentCalendar = Calendar.getInstance()
-        mCurrentCalendar?.set(Calendar.DATE, 1)
+        mCurrentCalendar.set(Calendar.DATE, 1)
         if (doGetAttributes) getAttributeValues()
         setCalendarProperties()
         getDotsData()
@@ -96,9 +98,9 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
     }
 
     private fun getAttributeValues() {
-        mMonth = mCurrentCalendar!!.get(Calendar.MONTH)
-        mYear = mCurrentCalendar!!.get(Calendar.YEAR)
-        val attributes = mContext!!.theme.obtainStyledAttributes(mAttrs, R.styleable.DatesGridLayout, mDefStyleAttr, mDefStyleRes)
+        mMonth = mCurrentCalendar.get(Calendar.MONTH)
+        mYear = mCurrentCalendar.get(Calendar.YEAR)
+        val attributes = mContext.theme.obtainStyledAttributes(mAttrs, R.styleable.DatesGridLayout, mDefStyleAttr, mDefStyleRes)
         try {
             mMonth = attributes.getInt(R.styleable.DatesGridLayout_month, mMonth)
             mYear = attributes.getInt(R.styleable.DatesGridLayout_year, mYear)
@@ -110,19 +112,19 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
     }
 
     private fun setCalendarProperties() {
-        mCurrentCalendar!!.set(Calendar.MONTH, mMonth)
-        mCurrentCalendar!!.set(Calendar.YEAR, mYear)
+        mCurrentCalendar.set(Calendar.MONTH, mMonth)
+        mCurrentCalendar.set(Calendar.YEAR, mYear)
         mMonthDisplayHelper = MonthDisplayHelper(mYear, mMonth, sWeekStartDay)
-        mNoOfCurrentMonthDays = mMonthDisplayHelper!!.numberOfDaysInMonth
-        mMonthStartDayOffset = mMonthDisplayHelper!!.offset
+        mNoOfCurrentMonthDays = mMonthDisplayHelper.numberOfDaysInMonth
+        mMonthStartDayOffset = mMonthDisplayHelper.offset
         mNoOfWeeks = if (showOnlyCurrentMonthWeeks) Math.ceil(((mNoOfCurrentMonthDays + mMonthStartDayOffset).toFloat() / 7.0f).toDouble()).toInt() else 6
         mTotalNoOfDays = 7 * mNoOfWeeks
-        mTranslationDistance = (mSelectedWeekNo - 1) * mContext!!.resources.getDimension(R.dimen.dimen_date_text_view)
+        mTranslationDistance = (mSelectedWeekNo - 1) * mContext.resources.getDimension(R.dimen.dimen_date_text_view)
         translationY = -mTranslationDistance
     }
 
     private fun getDotsData() {
-        val iterator = mCurrentCalendar!!.clone() as Calendar
+        val iterator = mCurrentCalendar.clone() as Calendar
         iterator.add(Calendar.MONTH, -1)
         mPreviousMonthDots = Events.getDotsForMonth(iterator)
         iterator.add(Calendar.MONTH, 1)
@@ -137,10 +139,10 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
         var isPast: Boolean
         var isSelected = false
 
-        mCurrentCalendar!!.add(Calendar.DATE, -mMonthStartDayOffset)
+        mCurrentCalendar.add(Calendar.DATE, -mMonthStartDayOffset)
         var dotsData: EventDots?
         for (i in 1..mTotalNoOfDays) {
-            val dateTextView = DateTextView(mContext!!)
+            val dateTextView = DateTextView(mContext)
             dateTextView.setDateClickListener(this)
             if (i < mMonthStartDayOffset) {
                 isCurrentMonth = false
@@ -153,13 +155,13 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
                 dotsData = mNextMonthDots
             }
 
-            hasEvent = dotsData != null && dotsData.hasEvent(mCurrentCalendar!!.get(Calendar.DATE))
+            hasEvent = dotsData != null && dotsData.hasEvent(mCurrentCalendar.get(Calendar.DATE))
 
-            isPast = mCurrentCalendar!!.timeInMillis <= Calendar.getInstance().timeInMillis - 86400000
+            isPast = mCurrentCalendar.timeInMillis <= Calendar.getInstance().timeInMillis - 86400000
 
-            dateTextView.setProperties(isCurrentMonth, hasEvent, isSelected, EventsCalendarUtil.isToday(mCurrentCalendar!!), mCurrentCalendar!!, isPast)
+            dateTextView.setProperties(isCurrentMonth, hasEvent, isSelected, EventsCalendarUtil.isToday(mCurrentCalendar), mCurrentCalendar, isPast)
 
-            if (!Events.isWithinMonthSpan(mCurrentCalendar!!)) dateTextView.isClickable = false
+            if (!Events.isWithinMonthSpan(mCurrentCalendar)) dateTextView.isClickable = false
 
             if (EventsCalendarUtil.areDatesSame(EventsCalendarUtil.getCurrentSelectedDate(), mCurrentCalendar) && isLoadingFirstTime && selectedDateTextView == null) {
                 selectedDateTextView = dateTextView
@@ -168,18 +170,18 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
             }
 
             addView(dateTextView)
-            mCurrentCalendar!!.add(Calendar.DATE, 1)
+            mCurrentCalendar.add(Calendar.DATE, 1)
             isSelected = false
         }
-        mCurrentCalendar?.set(Calendar.DATE, 1)
-        mCurrentCalendar?.set(Calendar.MONTH, mMonth)
-        mCurrentCalendar?.set(Calendar.YEAR, mYear)
+        mCurrentCalendar.set(Calendar.DATE, 1)
+        mCurrentCalendar.set(Calendar.MONTH, mMonth)
+        mCurrentCalendar.set(Calendar.YEAR, mYear)
     }
 
     fun refreshDots() {
-        if (mResetTaskExecuting) mRefreshDotsTask!!.cancel(true)
+        if (mResetTaskExecuting) mRefreshDotsTask.cancel(true)
         mRefreshDotsTask = RefreshDotsTask()
-        mRefreshDotsTask!!.execute()
+        mRefreshDotsTask.execute()
     }
 
     fun refreshToday() {
@@ -191,19 +193,18 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private inner class RefreshDotsTask : AsyncTask<Int, Int, Boolean>() {
         override fun doInBackground(vararg p0: Int?): Boolean {
             mResetTaskExecuting = true
-            if (mDotsInclusionArray == null) mDotsInclusionArray = ArrayList()
-            mDotsInclusionArray?.clear()
-            if (mDotsRemovalArray == null) mDotsRemovalArray = ArrayList()
-            mDotsRemovalArray?.clear()
+            mDotsInclusionArray.clear()
+            mDotsRemovalArray.clear()
             fillDotsModificationArrays()
             return false
         }
 
         private fun fillDotsModificationArrays() {
-            mCurrentCalendar!!.add(Calendar.DATE, -mMonthStartDayOffset)
+            mCurrentCalendar.add(Calendar.DATE, -mMonthStartDayOffset)
             var dotsData: EventDots?
             for (i in 1..mTotalNoOfDays) {
                 dotsData = if (i < mMonthStartDayOffset) mPreviousMonthDots
@@ -211,27 +212,27 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
                 else mNextMonthDots
                 val dateTextView = getChildAt(i - 1) as DateTextView
                 if (dotsData != null) {
-                    if (dateTextView.hasEvent && !dotsData.hasEvent(mCurrentCalendar!!.get(Calendar.DATE))) mDotsRemovalArray?.add(dateTextView)
-                    else if (!dateTextView.hasEvent && dotsData.hasEvent(mCurrentCalendar!!.get(Calendar.DATE))) mDotsInclusionArray?.add(dateTextView)
+                    if (dateTextView.hasEvent && !dotsData.hasEvent(mCurrentCalendar.get(Calendar.DATE))) mDotsRemovalArray.add(dateTextView)
+                    else if (!dateTextView.hasEvent && dotsData.hasEvent(mCurrentCalendar.get(Calendar.DATE))) mDotsInclusionArray.add(dateTextView)
                 }
-                mCurrentCalendar?.add(Calendar.DATE, 1)
+                mCurrentCalendar.add(Calendar.DATE, 1)
             }
-            mCurrentCalendar?.set(Calendar.DATE, 1)
-            mCurrentCalendar?.set(Calendar.MONTH, mMonth)
-            mCurrentCalendar?.set(Calendar.YEAR, mYear)
+            mCurrentCalendar.set(Calendar.DATE, 1)
+            mCurrentCalendar.set(Calendar.MONTH, mMonth)
+            mCurrentCalendar.set(Calendar.YEAR, mYear)
         }
 
         override fun onPostExecute(finished: Boolean?) {
-            var count = mDotsInclusionArray!!.size
+            var count = mDotsInclusionArray.size
             for (i in 0 until count) {
                 try {
-                    mDotsInclusionArray!![i].setHasEvent(true)
+                    mDotsInclusionArray[i].setHasEvent(true)
                 } catch (e: Exception) {
                 }
             }
-            count = mDotsRemovalArray!!.size
+            count = mDotsRemovalArray.size
             for (i in 0 until count) {
-                mDotsRemovalArray!![i].setHasEvent(false)
+                mDotsRemovalArray[i].setHasEvent(false)
             }
             mResetTaskExecuting = false
         }
@@ -239,13 +240,13 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthConstraints: Int = paddingLeft + paddingRight
-        val heightConstraints: Int = paddingTop + paddingBottom
+//        val heightConstraints: Int = paddingTop + paddingBottom
         val dateWidthSpec: Int = View.MeasureSpec.makeMeasureSpec(mDateTextWidth.toInt(), View.MeasureSpec.EXACTLY)
         val dateHeightSpec: Int = View.MeasureSpec.makeMeasureSpec(mDateTextHeight.toInt(), View.MeasureSpec.EXACTLY)
         mWidth = View.getDefaultSize(0, widthMeasureSpec)
         mDateTextWidth = (mWidth - widthConstraints) / 7f
         mDateTextHeight = if (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.EXACTLY) (View.MeasureSpec.getSize(heightMeasureSpec).toFloat() - resources.getDimension(R.dimen.dimen_date_text_view) / 1.5f - resources.getDimension(R.dimen.height_week_day_header)) / mNoOfWeeks
-        else mContext!!.resources.getDimension(R.dimen.dimen_date_text_view)
+        else mContext.resources.getDimension(R.dimen.dimen_date_text_view)
         mHeight = (mNoOfWeeks * mDateTextHeight).toInt()
         val childCount = childCount
         for (i in 0 until childCount) {
@@ -282,7 +283,7 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (mRefreshDotsTask != null && mResetTaskExecuting) mRefreshDotsTask?.cancel(true)
+        if (mResetTaskExecuting) mRefreshDotsTask.cancel(true)
     }
 
     override fun onDateTextViewSelected(dateTextView: DateTextView, isClick: Boolean) {
@@ -290,7 +291,7 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
 
         selectedDateTextView = dateTextView
         EventsCalendarUtil.setCurrentSelectedDate(selectedDateTextView!!.date)
-        if (mCallback != null) mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate(), isClick)
+        mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate(), isClick)
 
         post {
             val layoutLocation = IntArray(2)

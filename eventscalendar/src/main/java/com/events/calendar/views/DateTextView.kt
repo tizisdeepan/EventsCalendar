@@ -13,6 +13,7 @@ import com.events.calendar.R
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 
+@Suppress("NAME_SHADOWING")
 class DateTextView : View {
 
     private var mDateSelectListener: DateSelectListener? = null
@@ -265,6 +266,7 @@ class DateTextView : View {
         invalidate()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -305,16 +307,15 @@ class DateTextView : View {
     fun select(isClick: Boolean) {
         if (!isSelected && mDateSelectListener != null) {
             if (isClick) startSelectedAnimation() else setIsSelected(true)
-            mDateSelectListener!!.onDateTextViewSelected(this, isClick)
+            mDateSelectListener?.onDateTextViewSelected(this, isClick)
         }
     }
 
     fun selectOnPageChange(isClick: Boolean) {
-        var isClick = isClick
-        isClick = false
+        val isClick = false
         if (!isSelected && mDateSelectListener != null) {
-            if (isClick) startSelectedAnimation() else setIsSelected(false)
-            mDateSelectListener!!.onDateTextViewSelected(this, isClick)
+            setIsSelected(false)
+            mDateSelectListener?.onDateTextViewSelected(this, isClick)
         }
     }
 
