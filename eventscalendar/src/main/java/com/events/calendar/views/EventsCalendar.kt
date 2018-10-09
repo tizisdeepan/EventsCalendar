@@ -255,6 +255,17 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         Events.clear()
     }
 
+    fun disableDate(c: Calendar) {
+        EventsCalendarUtil.disabledDates.add(c)
+    }
+
+    fun disableDayInWeek(vararg days: Int) {
+        EventsCalendarUtil.disabledDays.clear()
+        for (day in days) {
+            EventsCalendarUtil.disabledDays.add(day)
+        }
+    }
+
     fun hasEvent(c: Calendar): Boolean = Events.hasEvent(c)
 
     fun getDotsForMonth(monthCalendar: Calendar): EventDots? = Events.getDotsForMonth(monthCalendar)

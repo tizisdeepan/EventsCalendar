@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
 import com.events.calendar.utils.EventsCalendarUtil
+import java.lang.Exception
 import java.util.*
 
 @Suppress("NAME_SHADOWING")
@@ -233,6 +234,16 @@ class DateTextView : View {
         this.isToday = isToday
         this.isPast = isPast
         mDate = date.clone() as Calendar
+
+        try {
+            for (c in EventsCalendarUtil.disabledDates) {
+                if (c[Calendar.MONTH] == mDate!![Calendar.MONTH] && c[Calendar.YEAR] == mDate!![Calendar.YEAR] && c[Calendar.DAY_OF_MONTH] == mDate!![Calendar.DAY_OF_MONTH]) this.isCurrentMonth = false
+            }
+            for (day in EventsCalendarUtil.disabledDays) {
+                if (mDate!![Calendar.DAY_OF_WEEK] == day) this.isCurrentMonth = false
+            }
+        } catch (e: Exception) {
+        }
 
         invalidate()
     }

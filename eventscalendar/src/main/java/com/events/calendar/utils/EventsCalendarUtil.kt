@@ -4,6 +4,8 @@ import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.util.MonthDisplayHelper
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashSet
 
 object EventsCalendarUtil {
     const val WEEK_MODE = 0
@@ -34,6 +36,9 @@ object EventsCalendarUtil {
     var monthTitleTypeface: Typeface? = null
     var weekHeaderTypeface: Typeface? = null
     var isBoldTextOnSelectionEnabled: Boolean = false
+
+    val disabledDates: ArrayList<Calendar> = ArrayList()
+    val disabledDays: LinkedHashSet<Int> = LinkedHashSet()
 
     fun areDatesSame(date1: Calendar?, date2: Calendar?): Boolean = date1 != null && date2 != null && date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) && date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) && date1.get(Calendar.DATE) == date2.get(Calendar.DATE)
 
