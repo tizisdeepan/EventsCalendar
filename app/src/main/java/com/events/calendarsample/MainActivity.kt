@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         val dc = Calendar.getInstance()
         dc.add(Calendar.DAY_OF_MONTH, 2)
         eventsCalendar.disableDate(dc)
-        eventsCalendar.disableDayInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
+        eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
     }
 
     fun getDateString(time: Long?): String {

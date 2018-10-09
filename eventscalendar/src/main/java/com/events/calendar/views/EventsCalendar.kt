@@ -259,7 +259,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.disabledDates.add(c)
     }
 
-    fun disableDayInWeek(vararg days: Int) {
+    fun disableDaysInWeek(vararg days: Int) {
         EventsCalendarUtil.disabledDays.clear()
         for (day in days) {
             EventsCalendarUtil.disabledDays.add(day)
