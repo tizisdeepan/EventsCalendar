@@ -52,6 +52,12 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         }
 
         selected.typeface = FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this)
+
+        val dc = Calendar.getInstance()
+        dc.add(Calendar.DAY_OF_MONTH, 2)
+        eventsCalendar.disableDate(dc)
+        eventsCalendar.disableDayInWeek(Calendar.SATURDAY)
+        eventsCalendar.disableDayInWeek(Calendar.SUNDAY)
     }
 
     fun getDateString(time: Long?): String {
