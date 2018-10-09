@@ -73,6 +73,10 @@ eventsCalendar.setWeekHeaderTypeface(typeface)
 eventsCalendar.setCallback(this)
 //set events on the EventsCalendar [c: Calendar]
 eventsCalendar.addEvent(c)
+//disable a specific day on the EventsCalendar [c: Calendar]
+eventsCalendar.disableDate(dc)
+//disable days in a week on the whole EventsCalendar [varargs days: Int]
+eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
 ```
 ### Documentation
 
