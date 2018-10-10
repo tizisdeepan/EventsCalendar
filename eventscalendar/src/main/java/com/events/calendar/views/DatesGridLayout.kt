@@ -138,6 +138,7 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
         var hasEvent: Boolean
         var isPast: Boolean
         var isSelected = false
+        var isDisabled = false
 
         mCurrentCalendar.add(Calendar.DATE, -mMonthStartDayOffset)
         var dotsData: EventDots?
@@ -159,7 +160,18 @@ class DatesGridLayout : ViewGroup, DateTextView.DateSelectListener {
 
             isPast = mCurrentCalendar.timeInMillis <= Calendar.getInstance().timeInMillis - 86400000
 
-            dateTextView.setProperties(isCurrentMonth, hasEvent, isSelected, EventsCalendarUtil.isToday(mCurrentCalendar), mCurrentCalendar, isPast)
+            try {
+                for (c in EventsCalendarUtil.disabledDates) {
+                    isDisabled = c[Calendar.MONTH] == mCurrentCalendar[Calendar.MONTH] && c[Calendar.YEAR] == mCurrentCalendar[Calendar.YEAR] && c[Calendar.DAY_OF_MONTH] == mCurrentCalendar[Calendar.DAY_OF_MONTH]
+                }
+                for (day in EventsCalendarUtil.disabledDays) {
+                    if (!isDisabled) isDisabled = mCurrentCalendar[Calendar.DAY_OF_WEEK] == day
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            dateTextView.setProperties(isCurrentMonth, hasEvent, isSelected, EventsCalendarUtil.isToday(mCurrentCalendar), mCurrentCalendar, isPast, isDisabled)
 
             if (!Events.isWithinMonthSpan(mCurrentCalendar)) dateTextView.isClickable = false
 

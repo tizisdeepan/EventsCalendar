@@ -285,9 +285,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             if (childCount > 0) {
-                if (doFocus) {
-                    if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter!!.getItem(position)!!.onFocus(position)
-                } else doFocus = true
+                if (doFocus) if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter!!.getItem(position)!!.onFocus(position)
+                else doFocus = true
             }
         }
     }

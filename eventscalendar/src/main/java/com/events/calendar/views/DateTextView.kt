@@ -43,6 +43,8 @@ class DateTextView : View {
     private var mHeight: Int = 0
     private var mBgCircleRadius: Float = 0.toFloat()
 
+    internal var isDisabled: Boolean = false
+
     private var animate: Boolean = false    //Setting animate to 'true' will trigger repeated 'invalidate()' based on 'frameCount' resulting in Animation of SELECTION CIRCLE
     private var frameCount: Int = 0
 
@@ -163,10 +165,8 @@ class DateTextView : View {
             mDateTextPaint!!.color = disabledTextColor
             canvas.drawText("" + mDate!!.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
         } else {
-            if (isCurrentMonth) {
-                if (isToday) {
-                    canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleradius, mTodayPaint!!)
-                }
+            if (isCurrentMonth && !isDisabled) {
+                if (isToday) canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleradius, mTodayPaint!!)
                 if (isSelected) {
                     mDateTextPaint?.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                     mDateTextPaint?.color = selectedTextColor
@@ -189,10 +189,10 @@ class DateTextView : View {
                     //                    canvas.drawCircle(mCircleX, mCircleY, mBgCircleRadius * (1 - (frameCount / 10f)), mSelectionPaint);
                     //                }
                 }
-                canvas.drawText("" + mDate!!.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
+                canvas.drawText("" + mDate?.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
             } else {
                 mDateTextPaint?.color = disabledTextColor
-                canvas.drawText("" + mDate!!.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
+                canvas.drawText("" + mDate?.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint!!)
             }
         }
 
@@ -211,7 +211,7 @@ class DateTextView : View {
     }
 
     private fun drawDot(canvas: Canvas) {
-        if (isCurrentMonth) {
+        if (isCurrentMonth && !isDisabled) {
             if (isSelected) {
                 mDotPaint?.color = selectedTextColor
                 canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint!!)
@@ -227,24 +227,14 @@ class DateTextView : View {
         }
     }
 
-    fun setProperties(isCurrentMonth: Boolean, hasEvent: Boolean, isSelected: Boolean, isToday: Boolean, date: Calendar, isPast: Boolean) {
+    fun setProperties(isCurrentMonth: Boolean, hasEvent: Boolean, isSelected: Boolean, isToday: Boolean, date: Calendar, isPast: Boolean, isDisabled: Boolean) {
         this.isCurrentMonth = isCurrentMonth
         this.hasEvent = hasEvent
         this.isSelected = isSelected
         this.isToday = isToday
         this.isPast = isPast
+        this.isDisabled = isDisabled
         mDate = date.clone() as Calendar
-
-        try {
-            for (c in EventsCalendarUtil.disabledDates) {
-                if (c[Calendar.MONTH] == mDate!![Calendar.MONTH] && c[Calendar.YEAR] == mDate!![Calendar.YEAR] && c[Calendar.DAY_OF_MONTH] == mDate!![Calendar.DAY_OF_MONTH]) this.isCurrentMonth = false
-            }
-            for (day in EventsCalendarUtil.disabledDays) {
-                if (mDate!![Calendar.DAY_OF_WEEK] == day) this.isCurrentMonth = false
-            }
-        } catch (e: Exception) {
-        }
-
         invalidate()
     }
 
@@ -316,7 +306,7 @@ class DateTextView : View {
     }
 
     fun select(isClick: Boolean) {
-        if (!isSelected && mDateSelectListener != null) {
+        if (!isSelected && mDateSelectListener != null && !isDisabled) {
             if (isClick) startSelectedAnimation() else setIsSelected(true)
             mDateSelectListener?.onDateTextViewSelected(this, isClick)
         }
@@ -324,14 +314,14 @@ class DateTextView : View {
 
     fun selectOnPageChange(isClick: Boolean) {
         val isClick = false
-        if (!isSelected && mDateSelectListener != null) {
+        if (!isSelected && mDateSelectListener != null && !isDisabled) {
             setIsSelected(false)
             mDateSelectListener?.onDateTextViewSelected(this, isClick)
         }
     }
 
     fun unSelect(isClick: Boolean) {
-        if (isClick && isCurrentMonth) startUnselectedAnimation() else setIsSelected(false)
+        if (isClick && isCurrentMonth && !isDisabled) startUnselectedAnimation() else setIsSelected(false)
     }
 
     private fun getMeasurement(measureSpec: Int, contentSize: Int): Int {
