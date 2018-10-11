@@ -20,14 +20,15 @@ import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 
 class EventsCalendar : ViewPager, MonthView.Callback {
+
+    companion object {
+        const val WEEK_MODE = 0
+        const val MONTH_MODE = 1
+    }
+
     lateinit var mMinMonth: Calendar
     lateinit var mMaxMonth: Calendar
-    var isPagingEnabled = true //Boolean used to switch off and on EventsCalendar's page change
 
-    val WEEK_MODE = 0
-    val MONTH_MODE = 1
-
-    private var mContext: Context? = null
     private var mAttrs: AttributeSet? = null
     private var mCurrentItem: MonthView? = null
     private var mCurrentItemHeight: Int = 0
@@ -38,7 +39,10 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     private var mSelectedMonthPosition: Int = 0
     private var mSelectedWeekPosition: Int = 0
     private var doFocus = true
+
     val weekStartDay: Int get() = EventsCalendarUtil.weekStartDay
+    var isPagingEnabled = true //Boolean used to switch off and on EventsCalendar's page change
+
     val visibleContentHeight: Float
         get() {
             val resources = resources
@@ -47,30 +51,33 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     constructor(context: Context) : super(context) {
-        init(context, null)
+        init(null)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context, attrs)
+        init(attrs)
     }
 
-    fun init(context: Context, attrs: AttributeSet?) {
-        mContext = context
+    private fun init(attrs: AttributeSet?) {
         mAttrs = attrs
 
-        val attributes = mContext!!.obtainStyledAttributes(attrs, R.styleable.EventsCalendar, 0, 0)
-        try {
-            EventsCalendarUtil.primaryTextColor = attributes.getColor(R.styleable.EventsCalendar_primaryTextColor, Color.BLACK)
-            EventsCalendarUtil.secondaryTextColor = attributes.getColor(R.styleable.EventsCalendar_secondaryTextColor, ContextCompat.getColor(mContext!!, R.color.text_black_disabled))
-            EventsCalendarUtil.selectedTextColor = attributes.getColor(R.styleable.EventsCalendar_selectedTextColor, Color.WHITE)
-            EventsCalendarUtil.selectionColor = attributes.getColor(R.styleable.EventsCalendar_selectionColor, EventsCalendarUtil.primaryTextColor)
-            EventsCalendarUtil.eventDotColor = attributes.getColor(R.styleable.EventsCalendar_eventDotColor, EventsCalendarUtil.eventDotColor)
-            EventsCalendarUtil.monthTitleColor = attributes.getColor(R.styleable.EventsCalendar_monthTitleColor, EventsCalendarUtil.secondaryTextColor)
-            EventsCalendarUtil.weekHeaderColor = attributes.getColor(R.styleable.EventsCalendar_weekHeaderColor, EventsCalendarUtil.secondaryTextColor)
-            EventsCalendarUtil.isBoldTextOnSelectionEnabled = attributes.getBoolean(R.styleable.EventsCalendar_isBoldTextOnSelectionEnabled, false)
-        } finally {
-            attributes.recycle()
+        with(context.obtainStyledAttributes(attrs, R.styleable.EventsCalendar, 0, 0)) {
+            try {
+                EventsCalendarUtil.apply {
+                    primaryTextColor = getColor(R.styleable.EventsCalendar_primaryTextColor, Color.BLACK)
+                    secondaryTextColor = getColor(R.styleable.EventsCalendar_secondaryTextColor, ContextCompat.getColor(context, R.color.text_black_disabled))
+                    selectedTextColor = getColor(R.styleable.EventsCalendar_selectedTextColor, Color.WHITE)
+                    selectionColor = getColor(R.styleable.EventsCalendar_selectionColor, EventsCalendarUtil.primaryTextColor)
+                    eventDotColor = getColor(R.styleable.EventsCalendar_eventDotColor, EventsCalendarUtil.eventDotColor)
+                    monthTitleColor = getColor(R.styleable.EventsCalendar_monthTitleColor, EventsCalendarUtil.secondaryTextColor)
+                    weekHeaderColor = getColor(R.styleable.EventsCalendar_weekHeaderColor, EventsCalendarUtil.secondaryTextColor)
+                    isBoldTextOnSelectionEnabled = getBoolean(R.styleable.EventsCalendar_isBoldTextOnSelectionEnabled, false)
+                }
+            } finally {
+                recycle()
+            }
         }
+
 
         EventsCalendarUtil.currentMode = EventsCalendarUtil.MONTH_MODE
         EventsCalendarUtil.setCurrentSelectedDate(Calendar.getInstance())
@@ -81,6 +88,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
         var startMonth = Calendar.getInstance()
         var endMonth = Calendar.getInstance()
+
         if (mCallback != null) {
             startMonth = mMinMonth
             endMonth = mMaxMonth
@@ -88,12 +96,17 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             startMonth.add(Calendar.MONTH, -1)
             endMonth.add(Calendar.MONTH, EventsCalendarUtil.DEFAULT_NO_OF_MONTHS / 2)
         }
+
         mCalendarMonthsAdapter = MonthsAdapter(this, startMonth, endMonth)
         mCalendarWeekPagerAdapter = WeeksAdapter(this, startMonth, endMonth)
+
         adapter = mCalendarMonthsAdapter
+
         mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), startMonth)
         mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate()!!, startMonth)
+
         currentItem = mSelectedMonthPosition
+
         addOnPageChangeListener(mOnPageChangeListener)
     }
 
@@ -103,8 +116,13 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
         try {
-            mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) (adapter as WeeksAdapter).getItem(currentItem)
-            else (adapter as MonthsAdapter).getItem(currentItem)
+            with(adapter as WeeksAdapter) {
+                mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) {
+                    getItem(currentItem)
+                } else {
+                    getItem(currentItem)
+                }
+            }
             mCurrentItemHeight = mCurrentItem?.measuredHeight!!
         } catch (e: NullPointerException) {
             e.printStackTrace()
@@ -134,6 +152,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         if (mCallback != null) {
             if (!DatesGridLayout.selectedDateText?.isCurrentMonth!!) {
                 val itemNo = if (EventsCalendarUtil.getCurrentSelectedDate()!!.get(Calendar.DATE) < 8) currentItem + 1 else currentItem - 1
+
                 if (itemNo >= 0 && itemNo <= EventsCalendarUtil.getWeekCount(mMinMonth, mMaxMonth)) {
                     setCurrentSelectedDate(EventsCalendarUtil.getCurrentSelectedDate())
                 }
@@ -141,7 +160,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
                 if (isClick) {
                     setCurrentSelectedDate(EventsCalendarUtil.getCurrentSelectedDate())
                     mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
-                } else mCallback?.onMonthChanged(EventsCalendarUtil.getCurrentSelectedDate())
+                } else {
+                    mCallback?.onMonthChanged(EventsCalendarUtil.getCurrentSelectedDate())
+                }
             }
         }
     }
@@ -150,9 +171,13 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         if (doChangeAdapter) {
             DatesGridLayout.clearSelectedDateTextView()
             val parcel = Parcel.obtain()
+
             if (Build.VERSION.SDK_INT >= 23) parcel.writeParcelable(null, 0)
+
             parcel.writeParcelable(null, 0)
+
             val currentSelectionDate = EventsCalendarUtil.getCurrentSelectedDate()
+
             adapter = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) {
                 val position = EventsCalendarUtil.getWeekPosition(currentSelectionDate, mMinMonth)
                 setCurrentItemField(position)
@@ -162,6 +187,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
                 setCurrentItemField(position)
                 mCalendarMonthsAdapter
             }
+
             doChangeAdapter = false
         }
     }
@@ -261,6 +287,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     fun disableDaysInWeek(vararg days: Int) {
         EventsCalendarUtil.disabledDays.clear()
+
         for (day in days) {
             EventsCalendarUtil.disabledDays.add(day)
         }
@@ -300,9 +327,11 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         val position: Int
         if (isPagingEnabled) {
             doFocus = false
+
             if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
                 position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
                 setCurrentItem(position, false)
+
                 if (mCalendarMonthsAdapter != null) {
                     post {
                         EventsCalendarUtil.monthPos = currentItem
@@ -314,6 +343,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             } else {
                 position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
                 setCurrentItem(position, false)
+
                 if (mCalendarWeekPagerAdapter != null) {
                     post {
                         mCalendarWeekPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
@@ -345,6 +375,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     fun setWeekStartDay(weekStartDay: Int, doReset: Boolean) {
         EventsCalendarUtil.weekStartDay = weekStartDay
+
         if (doReset) {
             mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
             mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate()!!, mMinMonth)
