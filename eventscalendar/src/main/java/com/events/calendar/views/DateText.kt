@@ -18,35 +18,35 @@ class DateText : View {
 
     private lateinit var mDateSelectListener: DateSelectListener
     private lateinit var mDate: Calendar
+    private var mDateTextSize: Float = 0f
+    private var mDotRadius: Float = 0f
+    private var mDotX: Int = 0
+    private var mDotY: Int = 0
+    private var mCircleX: Int = 0
+    private var mCircleY: Int = 0
+    private var mDateTextX: Int = 0
+    private var mDateTextY: Float = 0f
+    private var mTodayCircleRadius: Float = 0f
 
-    private var mDateTextSize = 0f
-    private var mDotRadius = 0f
-    private var mDotX = 0
-    private var mDotY = 0
-    private var mCircleX = 0
-    private var mCircleY = 0
-    private var mDateTextX = 0
-    private var mDateTextY = 0f
-    private var mTodayCircleRadius = 0f
-
+    private lateinit var mContext: Context
     private var mAttrs: AttributeSet? = null
-    private var mDefStyleAttr = 0
-    private var mDefStyleRes = 0
+    private var mDefStyleAttr: Int = 0
+    private var mDefStyleRes: Int = 0
 
-    internal var isCurrentMonth = false
-    internal var hasEvent = false
-    internal var isSelected = false
-    internal var isToday = false
-    internal var isPast = false
-    private var mWidth = 0
-    private var mHeight = 0
-    private var mBgCircleRadius = 0f
+    internal var isCurrentMonth: Boolean = false
+    internal var hasEvent: Boolean = false
+    internal var isSelected: Boolean = false
+    internal var isToday: Boolean = false
+    internal var isPast: Boolean = false
+    private var mWidth: Int = 0
+    private var mHeight: Int = 0
+    private var mBgCircleRadius: Float = 0f
 
-    private var isDisabled = false
+    private var isDisabled: Boolean = false
 
     private var touchDown = false
-    private var mDownX = 0f
-    private var mDownY = 0f
+    private var mDownX: Float = 0f
+    private var mDownY: Float = 0f
 
     var date: Calendar
         get() = mDate.clone() as Calendar
@@ -75,6 +75,7 @@ class DateText : View {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
+        mContext = context
         mAttrs = attrs
         mDefStyleAttr = defStyleAttr
         mDefStyleRes = defStyleRes
@@ -84,17 +85,15 @@ class DateText : View {
         mDate = Calendar.getInstance()
         mDotRadius = resources.getDimension(R.dimen.radius_event_dot)
 
-
-        with(context.obtainStyledAttributes(attrs, R.styleable.DateText, defStyleAttr, defStyleRes)){
-            try {
-                isCurrentMonth = getBoolean(R.styleable.DateText_isCurrentMonth, false)
-                isSelected = getBoolean(R.styleable.DateText_isSelected, false)
-                hasEvent = getBoolean(R.styleable.DateText_hasEvent, false)
-                isToday = getBoolean(R.styleable.DateText_isToday, false)
-                isPast = getBoolean(R.styleable.DateText_isPast, false)
-            } finally {
-                recycle()
-            }
+        val attributes = mContext.theme.obtainStyledAttributes(attrs, R.styleable.DateText, defStyleAttr, defStyleRes)
+        try {
+            isCurrentMonth = attributes.getBoolean(R.styleable.DateText_isCurrentMonth, false)
+            isSelected = attributes.getBoolean(R.styleable.DateText_isSelected, false)
+            hasEvent = attributes.getBoolean(R.styleable.DateText_hasEvent, false)
+            isToday = attributes.getBoolean(R.styleable.DateText_isToday, false)
+            isPast = attributes.getBoolean(R.styleable.DateText_isPast, false)
+        } finally {
+            attributes.recycle()
         }
 
         if (doInitializeStaticVariables) {
@@ -104,31 +103,30 @@ class DateText : View {
             disabledTextColor = EventsCalendarUtil.secondaryTextColor
             eventDotColor = EventsCalendarUtil.eventDotColor
 
-            mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = selectionCircleColor }
+            mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+            mSelectionPaint.color = selectionCircleColor
 
-            mDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = eventDotColor }
+            mDotPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+            mDotPaint.color = eventDotColor
 
-            mTodayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = EventsCalendarUtil.primaryTextColor
-                style = Paint.Style.STROKE
-                strokeWidth = resources.getDimension(R.dimen.width_circle_stroke)
-            }
+            mTodayPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+            mTodayPaint.color = EventsCalendarUtil.primaryTextColor
+            mTodayPaint.style = Paint.Style.STROKE
+            mTodayPaint.strokeWidth = resources.getDimension(R.dimen.width_circle_stroke)
 
-            mDateTextSize = resources.getDimension(R.dimen.text_calendar_date)
-
-            mDateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                textAlign = Paint.Align.CENTER
-                color = EventsCalendarUtil.primaryTextColor
-                textSize = mDateTextSize
-            }
+            mDateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+            mDateTextPaint.textAlign = Paint.Align.CENTER
+            mDateTextPaint.color = EventsCalendarUtil.primaryTextColor
+            mDateTextSize = mContext.resources.getDimension(R.dimen.text_calendar_date)
+            mDateTextPaint.textSize = mDateTextSize
 
             doInitializeStaticVariables = false
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = getMeasurement(widthMeasureSpec, resources.getDimension(R.dimen.dimen_date_text_view).toInt())
-        val height = getMeasurement(heightMeasureSpec, resources.getDimension(R.dimen.dimen_date_text_view).toInt())
+        val width = getMeasurement(widthMeasureSpec, mContext.resources.getDimension(R.dimen.dimen_date_text_view).toInt())
+        val height = getMeasurement(heightMeasureSpec, mContext.resources.getDimension(R.dimen.dimen_date_text_view).toInt())
         setMeasuredDimension(width, height)
     }
 
@@ -156,36 +154,25 @@ class DateText : View {
     override fun onDraw(canvas: Canvas) {
         val location = IntArray(2)
         this.getLocationOnScreen(location)
-
         if (isPast) {
             mDateTextPaint.color = disabledTextColor
             canvas.drawText("" + mDate.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint)
         } else {
             if (isCurrentMonth && !isDisabled) {
-                if (isToday) {
-                    canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleRadius, mTodayPaint)
-                }
-
+                if (isToday) canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleRadius, mTodayPaint)
                 if (isSelected) {
                     mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                     mDateTextPaint.color = selectedTextColor
                     canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint)
-                } else {
-                    mDateTextPaint.color = defaultTextColor
-                }
-
+                } else mDateTextPaint.color = defaultTextColor
                 canvas.drawText("" + mDate.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint)
             } else {
                 mDateTextPaint.color = disabledTextColor
                 canvas.drawText("" + mDate.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint)
             }
         }
-
         super.onDraw(canvas)
-
-        if (hasEvent) {
-            drawDot(canvas)
-        }
+        if (hasEvent) drawDot(canvas)
     }
 
     private fun drawDot(canvas: Canvas) {
@@ -212,9 +199,7 @@ class DateText : View {
         this.isToday = isToday
         this.isPast = isPast
         this.isDisabled = isDisabled
-
         mDate = date.clone() as Calendar
-
         invalidate()
     }
 
@@ -262,18 +247,14 @@ class DateText : View {
 
     private fun isPointerInsideArea(event: MotionEvent): Boolean {
         touchDown = false
-
         val locationOnScreen = IntArray(2)
-
         getLocationOnScreen(locationOnScreen)
-
         val leftLimit = locationOnScreen[0]
         val upperLimit = locationOnScreen[1]
         val rightLimit = leftLimit + measuredWidth
         val lowerLimit = upperLimit + measuredHeight
         val x = event.x + locationOnScreen[0]
         val y = event.y + locationOnScreen[1]
-
         return x > leftLimit && x < rightLimit && y > upperLimit && y < lowerLimit
     }
 
@@ -301,17 +282,12 @@ class DateText : View {
     }
 
     fun unSelect(isClick: Boolean) {
-        if (isClick && isCurrentMonth && !isDisabled) {
-            unselectAction()
-        } else {
-            setIsSelected(false)
-        }
+        if (isClick && isCurrentMonth && !isDisabled) unselectAction() else setIsSelected(false)
     }
 
     private fun getMeasurement(measureSpec: Int, contentSize: Int): Int {
         val specMode = View.MeasureSpec.getMode(measureSpec)
         val specSize = View.MeasureSpec.getSize(measureSpec)
-
         return when (specMode) {
             View.MeasureSpec.UNSPECIFIED -> contentSize
             View.MeasureSpec.AT_MOST -> Math.min(specSize, contentSize)
@@ -331,7 +307,6 @@ class DateText : View {
         private var disabledTextColor: Int = 0
         private var selectionCircleColor: Int = 0
         private var eventDotColor: Int = 0
-
         fun invalidateColors() {
             doInitializeStaticVariables = true
         }
