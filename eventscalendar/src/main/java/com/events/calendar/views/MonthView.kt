@@ -14,6 +14,10 @@ import java.text.DateFormatSymbols
 import java.util.*
 
 class MonthView : ViewGroup, DatesGridLayout.CallBack {
+    private lateinit var mContext: Context
+    private var sWeekStartDay = Calendar.MONDAY
+    private var mMonth: Int = 0
+    private var mYear: Int = 0
     private lateinit var mLayoutInflater: LayoutInflater
     private lateinit var mWeekDaysHeader: View
     private lateinit var mFirstDay: TextView
@@ -23,25 +27,18 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     private lateinit var mFifthDay: TextView
     private lateinit var mSixthDay: TextView
     private lateinit var mSeventhDay: TextView
+    lateinit var gridLayout: DatesGridLayout private set
     private lateinit var mMonthGridContainer: MonthGridContainer
     private lateinit var mCallback: Callback
+    private var mSelectedWeekNo: Int = 0
     private lateinit var mMonthTitleTextView: TextView
-
-    lateinit var gridLayout: DatesGridLayout private set
-
-    private var sWeekStartDay = Calendar.MONDAY
-    private var mMonth = 0
-    private var mYear = 0
-    private var mSelectedWeekNo = 0
 
     fun reset(doChangeWeekStartDay: Boolean) {
         if (doChangeWeekStartDay) {
             sWeekStartDay = EventsCalendarUtil.weekStartDay
             setWeekdayHeader()
             gridLayout.resetWeekStartDay(sWeekStartDay)
-        } else {
-            gridLayout.refreshDots()
-        }
+        } else gridLayout.refreshDots()
     }
 
     fun refreshDates() {
@@ -53,33 +50,34 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     }
 
     constructor(context: Context) : super(context) {
-        init(-1, -1, sWeekStartDay, 1)
+        init(context, -1, -1, sWeekStartDay, 1)
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(-1, -1, sWeekStartDay, 1)
+        init(context, -1, -1, sWeekStartDay, 1)
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init(-1, -1, sWeekStartDay, 1)
+        init(context, -1, -1, sWeekStartDay, 1)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init(-1, -1, sWeekStartDay, 1)
+        init(context, -1, -1, sWeekStartDay, 1)
     }
 
     constructor(context: Context, month: Int, year: Int, weekStartDay: Int, selectedWeekNo: Int) : super(context) {
-        init(month, year, weekStartDay, selectedWeekNo)
+        init(context, month, year, weekStartDay, selectedWeekNo)
     }
 
     constructor(context: Context, month: Calendar, weekStartDay: Int, selectedWeekNo: Int) : super(context) {
-        init(month.get(Calendar.MONTH), month.get(Calendar.YEAR), weekStartDay, selectedWeekNo)
+        init(context, month.get(Calendar.MONTH), month.get(Calendar.YEAR), weekStartDay, selectedWeekNo)
     }
 
-    private fun init(month: Int, year: Int, weekStartDay: Int, selectedWeekNo: Int) {
-        mLayoutInflater = LayoutInflater.from(context)
+    private fun init(context: Context, month: Int, year: Int, weekStartDay: Int, selectedWeekNo: Int) {
+        mContext = context
+        mLayoutInflater = LayoutInflater.from(mContext)
         mMonth = month
         mYear = year
         sWeekStartDay = weekStartDay
@@ -91,45 +89,30 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     private fun initMonthTitle() {
         mMonthTitleTextView = mLayoutInflater.inflate(R.layout.zmail_layout_month_title, null) as TextView
-
-        val calendar = Calendar.getInstance().apply {
-            set(mYear, mMonth, 1)
-        }
-
-        mMonthTitleTextView.apply {
-            text = EventsCalendarUtil.getMonthString(calendar, EventsCalendarUtil.DISPLAY_STRING)
-            setTextColor(EventsCalendarUtil.primaryTextColor)
-
-            if (EventsCalendarUtil.monthTitleTypeface != null) {
-                typeface = EventsCalendarUtil.monthTitleTypeface
-            }
-
-            setTextColor(EventsCalendarUtil.monthTitleColor)
-
-            addView(this)
-        }
+        val calendar = Calendar.getInstance()
+        calendar.set(mYear, mMonth, 1)
+        mMonthTitleTextView.text = EventsCalendarUtil.getMonthString(calendar, EventsCalendarUtil.DISPLAY_STRING)
+        mMonthTitleTextView.setTextColor(EventsCalendarUtil.primaryTextColor)
+        if (EventsCalendarUtil.monthTitleTypeface != null) mMonthTitleTextView.typeface = EventsCalendarUtil.monthTitleTypeface
+        mMonthTitleTextView.setTextColor(EventsCalendarUtil.monthTitleColor)
+        addView(mMonthTitleTextView)
     }
 
     private fun initWeekDayHeader() {
         mWeekDaysHeader = mLayoutInflater.inflate(R.layout.zmail_layout_weekday_header, null)
-
-        with(mWeekDaysHeader) {
-            mFirstDay = findViewById(R.id.first_day)
-            mSecondDay = findViewById(R.id.second_day)
-            mThirdDay = findViewById(R.id.third_day)
-            mFourthDay = findViewById(R.id.fourth_day)
-            mFifthDay = findViewById(R.id.fifth_day)
-            mSixthDay = findViewById(R.id.sixth_day)
-            mSeventhDay = findViewById(R.id.seventh_day)
-        }
-
+        mFirstDay = mWeekDaysHeader.findViewById(R.id.first_day)
+        mSecondDay = mWeekDaysHeader.findViewById(R.id.second_day)
+        mThirdDay = mWeekDaysHeader.findViewById(R.id.third_day)
+        mFourthDay = mWeekDaysHeader.findViewById(R.id.fourth_day)
+        mFifthDay = mWeekDaysHeader.findViewById(R.id.fifth_day)
+        mSixthDay = mWeekDaysHeader.findViewById(R.id.sixth_day)
+        mSeventhDay = mWeekDaysHeader.findViewById(R.id.seventh_day)
         setWeekdayHeader()
         addView(mWeekDaysHeader)
     }
 
     private fun setWeekdayHeader() {
         val headers = arrayOf(mFirstDay, mSecondDay, mThirdDay, mFourthDay, mFifthDay, mSixthDay, mSeventhDay)
-
         for (i in 0..6) {
             setWeekDayHeaderString(headers[i], if (i + sWeekStartDay > 7) (i + sWeekStartDay) % 7 else i + sWeekStartDay)
         }
@@ -137,13 +120,8 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     private fun setWeekDayHeaderString(header: TextView, calendarConstant: Int) {
         header.setTextColor(EventsCalendarUtil.weekHeaderColor)
-
-        if (EventsCalendarUtil.weekHeaderTypeface != null) {
-            header.typeface = EventsCalendarUtil.weekHeaderTypeface
-        }
-
+        if (EventsCalendarUtil.weekHeaderTypeface != null) header.typeface = EventsCalendarUtil.weekHeaderTypeface
         val namesOfDays = DateFormatSymbols.getInstance().shortWeekdays
-
         when (calendarConstant) {
             Calendar.SUNDAY -> header.text = namesOfDays[Calendar.SUNDAY].toUpperCase()
             Calendar.MONDAY -> header.text = namesOfDays[Calendar.MONDAY].toUpperCase()
@@ -156,34 +134,24 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     }
 
     private fun setMonthGridLayout() {
-        gridLayout = DatesGridLayout(context, mMonth, mYear, sWeekStartDay, mSelectedWeekNo).apply {
-            setCallback(this@MonthView)
-        }
-
-        mMonthGridContainer = MonthGridContainer(context, gridLayout)
-
+        gridLayout = DatesGridLayout(mContext, mMonth, mYear, sWeekStartDay, mSelectedWeekNo)
+        gridLayout.setCallback(this)
+        mMonthGridContainer = MonthGridContainer(mContext, gridLayout)
         addView(mMonthGridContainer)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         mMonthTitleTextView.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_month_title).toInt(), View.MeasureSpec.EXACTLY))
-        mWeekDaysHeader.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_week_day_header).toInt(), View.MeasureSpec.EXACTLY))
+        mWeekDaysHeader.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(mContext.resources.getDimension(R.dimen.height_week_day_header).toInt(), View.MeasureSpec.EXACTLY))
         mMonthGridContainer.measure(widthMeasureSpec, heightMeasureSpec)
-
         val height = mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight + mMonthGridContainer.measuredHeight
-
         setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), height)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         mMonthTitleTextView.layout(0, 0, mMonthTitleTextView.measuredWidth, mMonthTitleTextView.measuredHeight)
-
-        mWeekDaysHeader.layout(0, mMonthTitleTextView.measuredHeight, mWeekDaysHeader.measuredWidth,
-                mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight)
-
-        mMonthGridContainer.layout(0, mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight,
-                mMonthGridContainer.measuredWidth,
-                mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight + mMonthGridContainer.measuredHeight)
+        mWeekDaysHeader.layout(0, mMonthTitleTextView.measuredHeight, mWeekDaysHeader.measuredWidth, mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight)
+        mMonthGridContainer.layout(0, mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight, mMonthGridContainer.measuredWidth, mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight + mMonthGridContainer.measuredHeight)
     }
 
     fun setMonthTranslationFraction(fraction: Float) {
@@ -199,11 +167,8 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     }
 
     fun onFocus(pos: Int) {
-        if (pos == EventsCalendarUtil.monthPos) {
-            gridLayout.selectDefaultDate(EventsCalendarUtil.selectedDate.get(Calendar.DAY_OF_MONTH))
-        } else {
-            gridLayout.selectDefaultDateOnPageChanged(EventsCalendarUtil.tobeSelectedDate, false)
-        }
+        if (pos == EventsCalendarUtil.monthPos) gridLayout.selectDefaultDate(EventsCalendarUtil.selectedDate.get(Calendar.DAY_OF_MONTH))
+        else gridLayout.selectDefaultDateOnPageChanged(EventsCalendarUtil.tobeSelectedDate, false)
     }
 
     fun setSelectedDate(date: Calendar) {
