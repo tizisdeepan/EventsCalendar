@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="DateTextView">
+    <declare-styleable name="DateText">
         <attr name="isSelected" format="boolean" />
         <attr name="isCurrentMonth" format="boolean" />
         <attr name="hasEvent" format="boolean" />

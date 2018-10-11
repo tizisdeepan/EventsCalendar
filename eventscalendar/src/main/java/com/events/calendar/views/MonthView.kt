@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.events.calendar.R
 import com.events.calendar.utils.EventsCalendarUtil
+import java.text.DateFormatSymbols
 import java.util.*
 
 class MonthView : ViewGroup, DatesGridLayout.CallBack {
@@ -26,8 +27,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     private lateinit var mFifthDay: TextView
     private lateinit var mSixthDay: TextView
     private lateinit var mSeventhDay: TextView
-    lateinit var gridLayout: DatesGridLayout
-        private set
+    lateinit var gridLayout: DatesGridLayout private set
     private lateinit var mMonthGridContainer: MonthGridContainer
     private lateinit var mCallback: Callback
     private var mSelectedWeekNo: Int = 0
@@ -85,11 +85,6 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         initMonthTitle()
         initWeekDayHeader()
         setMonthGridLayout()
-        setSelectedDateLayout()
-    }
-
-    private fun setSelectedDateLayout() {
-
     }
 
     private fun initMonthTitle() {
@@ -126,14 +121,15 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     private fun setWeekDayHeaderString(header: TextView, calendarConstant: Int) {
         header.setTextColor(EventsCalendarUtil.weekHeaderColor)
         if (EventsCalendarUtil.weekHeaderTypeface != null) header.typeface = EventsCalendarUtil.weekHeaderTypeface
+        val namesOfDays = DateFormatSymbols.getInstance().shortWeekdays
         when (calendarConstant) {
-            Calendar.SUNDAY -> header.text = mContext.getString(R.string.sunday)
-            Calendar.MONDAY -> header.text = mContext.getString(R.string.monday)
-            Calendar.TUESDAY -> header.text = mContext.getString(R.string.tuesday)
-            Calendar.WEDNESDAY -> header.text = mContext.getString(R.string.wednesday)
-            Calendar.THURSDAY -> header.text = mContext.getString(R.string.thursday)
-            Calendar.FRIDAY -> header.text = mContext.getString(R.string.friday)
-            Calendar.SATURDAY -> header.text = mContext.getString(R.string.saturday)
+            Calendar.SUNDAY -> header.text = namesOfDays[Calendar.SUNDAY].toUpperCase()
+            Calendar.MONDAY -> header.text = namesOfDays[Calendar.MONDAY].toUpperCase()
+            Calendar.TUESDAY -> header.text = namesOfDays[Calendar.TUESDAY].toUpperCase()
+            Calendar.WEDNESDAY -> header.text = namesOfDays[Calendar.WEDNESDAY].toUpperCase()
+            Calendar.THURSDAY -> header.text = namesOfDays[Calendar.THURSDAY].toUpperCase()
+            Calendar.FRIDAY -> header.text = namesOfDays[Calendar.FRIDAY].toUpperCase()
+            Calendar.SATURDAY -> header.text = namesOfDays[Calendar.SATURDAY].toUpperCase()
         }
     }
 
@@ -143,7 +139,6 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         mMonthGridContainer = MonthGridContainer(mContext, gridLayout)
         addView(mMonthGridContainer)
     }
-
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         mMonthTitleTextView.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_month_title).toInt(), View.MeasureSpec.EXACTLY))

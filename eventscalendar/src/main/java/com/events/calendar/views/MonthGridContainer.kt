@@ -7,10 +7,10 @@ import android.view.ViewGroup
 
 class MonthGridContainer : ViewGroup {
 
-    lateinit var mDatesGridLayout: DatesGridLayout
-    lateinit var mContext: Context
+    private lateinit var mDatesGridLayout: DatesGridLayout
+    private lateinit var mContext: Context
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
     constructor(context: Context, datesGridLayout: DatesGridLayout) : super(context) {
         mContext = context
@@ -18,11 +18,10 @@ class MonthGridContainer : ViewGroup {
         addView(mDatesGridLayout)
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var heightMeasureSpec = heightMeasureSpec
-        if (mContext.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(heightMeasureSpec), View.MeasureSpec.AT_MOST)
-        mDatesGridLayout.measure(widthMeasureSpec, heightMeasureSpec)
+        var mHeightMeasureSpec = heightMeasureSpec
+        if (mContext.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) mHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(mHeightMeasureSpec), View.MeasureSpec.AT_MOST)
+        mDatesGridLayout.measure(widthMeasureSpec, mHeightMeasureSpec)
         val height = mDatesGridLayout.measuredHeight
         setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), height)
     }

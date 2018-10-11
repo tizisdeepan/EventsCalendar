@@ -132,7 +132,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     override fun onDaySelected(isClick: Boolean) {
         if (mCallback != null) {
-            if (!DatesGridLayout.selectedDateTextView?.isCurrentMonth!!) {
+            if (!DatesGridLayout.selectedDateText?.isCurrentMonth!!) {
                 val itemNo = if (EventsCalendarUtil.getCurrentSelectedDate()!!.get(Calendar.DATE) < 8) currentItem + 1 else currentItem - 1
                 if (itemNo >= 0 && itemNo <= EventsCalendarUtil.getWeekCount(mMinMonth, mMaxMonth)) {
                     setCurrentSelectedDate(EventsCalendarUtil.getCurrentSelectedDate())
@@ -278,7 +278,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     override fun onTouchEvent(event: MotionEvent): Boolean = if (this.isPagingEnabled) super.onTouchEvent(event) else false
 
     fun invalidateColors() {
-        DateTextView.invalidateColors()
+        DateText.invalidateColors()
     }
 
     private val mOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
