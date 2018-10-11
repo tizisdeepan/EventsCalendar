@@ -20,9 +20,15 @@ class MonthGridContainer : ViewGroup {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var mHeightMeasureSpec = heightMeasureSpec
-        if (mContext.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) mHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(mHeightMeasureSpec), View.MeasureSpec.AT_MOST)
+
+        if (mContext.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(mHeightMeasureSpec), View.MeasureSpec.AT_MOST)
+        }
+
         mDatesGridLayout.measure(widthMeasureSpec, mHeightMeasureSpec)
+
         val height = mDatesGridLayout.measuredHeight
+
         setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), height)
     }
 

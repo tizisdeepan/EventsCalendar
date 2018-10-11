@@ -5,15 +5,14 @@ import android.content.Context
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
-
 import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
 import com.events.calendar.views.MonthView
-
-import java.util.Calendar
+import java.util.*
 
 class MonthsAdapter(viewPager: EventsCalendar, startMonth: Calendar, endMonth: Calendar) : PagerAdapter() {
-    private val mContext: Context
+    private val mContext: Context = viewPager.context
+
     private val mMonthIterator: Calendar
     private val mCount: Int
     private val mMonthViewCallback: MonthView.Callback
@@ -22,18 +21,18 @@ class MonthsAdapter(viewPager: EventsCalendar, startMonth: Calendar, endMonth: C
 
 
     init {
-        mContext = viewPager.context
         mMonthViewCallback = viewPager
-        if (EventsCalendarUtil.isPastDay(startMonth)) {
-            mMinMonth = startMonth
+
+        mMinMonth = if (EventsCalendarUtil.isPastDay(startMonth)) {
+            startMonth
         } else {
-            mMinMonth = Calendar.getInstance()
+            Calendar.getInstance()
         }
 
-        if (EventsCalendarUtil.isFutureDay(endMonth)) {
-            mMaxMonth = endMonth
+        mMaxMonth = if (EventsCalendarUtil.isFutureDay(endMonth)) {
+            endMonth
         } else {
-            mMaxMonth = Calendar.getInstance()
+            Calendar.getInstance()
         }
 
         mCount = EventsCalendarUtil.getMonthCount(mMinMonth!!, mMaxMonth!!)
@@ -52,10 +51,14 @@ class MonthsAdapter(viewPager: EventsCalendar, startMonth: Calendar, endMonth: C
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         mMonthIterator.add(Calendar.MONTH, position)
         val monthView = MonthView(mContext, mMonthIterator, EventsCalendarUtil.weekStartDay, 1)
-        monthView.setCallback(mMonthViewCallback)
+                .apply {
+                    setCallback(mMonthViewCallback)
+                }
+
         mMonthIterator.add(Calendar.MONTH, -position)
         monthDatesGridLayoutsArray[position] = monthView
         container.addView(monthView)
+
         return monthView
     }
 

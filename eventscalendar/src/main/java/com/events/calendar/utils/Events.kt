@@ -62,11 +62,14 @@ object Events {
     fun isWithinMonthSpan(mDate: Calendar): Boolean {
         val year = mDate.get(Calendar.YEAR)
         val month = mDate.get(Calendar.MONTH)
-        if (year < startMonth.get(Calendar.YEAR) && year > endMonth.get(Calendar.YEAR)) return false
-        else {
+
+        if (year < startMonth.get(Calendar.YEAR) && year > endMonth.get(Calendar.YEAR)) {
+            return false
+        } else {
             if (year == startMonth.get(Calendar.YEAR) && month < startMonth.get(Calendar.MONTH)) return false
             else if (year == endMonth.get(Calendar.YEAR) && month > endMonth.get(Calendar.MONTH)) return false
         }
+
         return true
     }
 }

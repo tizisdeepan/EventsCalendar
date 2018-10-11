@@ -5,12 +5,10 @@ import android.content.Context
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
-
 import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
 import com.events.calendar.views.MonthView
-
-import java.util.Calendar
+import java.util.*
 
 class WeeksAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Calendar) : PagerAdapter() {
     private val mMinMonth: Calendar
@@ -35,10 +33,13 @@ class WeeksAdapter(viewPager: EventsCalendar, startDay: Calendar, endDay: Calend
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val month = EventsCalendarUtil.getMonthForWeekPosition(mMinMonth, position)
         val weekNo = EventsCalendarUtil.getWeekNo(mMinMonth, position)
-        val monthView = MonthView(mContext, month, EventsCalendarUtil.weekStartDay, weekNo)
-        monthView.setCallback(mMonthViewCallback)
+        val monthView = MonthView(mContext, month, EventsCalendarUtil.weekStartDay, weekNo).apply {
+            setCallback(mMonthViewCallback)
+        }
+
         monthDatesGridLayoutsArray[position] = monthView
         container.addView(monthView)
+
         return monthView
     }
 
