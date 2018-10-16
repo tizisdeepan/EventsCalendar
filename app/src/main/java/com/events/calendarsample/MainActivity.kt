@@ -3,11 +3,13 @@ package com.events.calendarsample
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.events.calendar.views.EventsCalendar
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
+
     override fun onMonthChanged(monthStartDate: Calendar?) {
         Log.e("MON", "CHANGED")
     }
@@ -26,7 +28,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         val today = Calendar.getInstance()
         val end = Calendar.getInstance()
         end.add(Calendar.YEAR, 2)
-//        eventsCalendar.setCalendarMode(eventsCalendar.WEEK_MODE)
+        eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
         eventsCalendar.setToday(today)
         eventsCalendar.setMonthRange(today, end)
         eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
@@ -34,7 +36,11 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
-        eventsCalendar.setRangeMode(true)
+
+        eventsCalendar.setOnDateLongClickListener(View.OnLongClickListener {
+            Log.e("DAY", "LONG CLICKED")
+            true
+        })
         eventsCalendar.setCallback(this)
 
 
