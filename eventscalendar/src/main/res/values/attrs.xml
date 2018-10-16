@@ -27,6 +27,9 @@
         <attr name="primaryTextColor" format="color" />
         <attr name="secondaryTextColor" format="color" />
         <attr name="selectionColor" format="color" />
+        <attr name="rangeSelectionColor" format="color" />
+        <attr name="rangeSelectionStartColor" format="color" />
+        <attr name="rangeSelectionEndColor" format="color" />
         <attr name="selectedTextColor" format="color" />
         <attr name="eventDotColor" format="color" />
         <attr name="monthTitleColor" format="color" />

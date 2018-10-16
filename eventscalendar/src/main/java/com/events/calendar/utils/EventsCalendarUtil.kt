@@ -32,6 +32,9 @@ object EventsCalendarUtil {
     var secondaryTextColor: Int = 0
     var selectedTextColor: Int = 0
     var selectionColor: Int = 0
+    var rangeSelectionColor: Int = 0
+    var rangeSelectionStartColor: Int = 0
+    var rangeSelectionEndColor: Int = 0
     var eventDotColor: Int = 0
     var monthTitleColor: Int = 0
     var weekHeaderColor: Int = 0

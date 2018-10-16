@@ -99,9 +99,24 @@ class DateText : View {
             defaultTextColor = EventsCalendarUtil.primaryTextColor
             disabledTextColor = EventsCalendarUtil.secondaryTextColor
             eventDotColor = EventsCalendarUtil.eventDotColor
+            rangeSelectionColor = EventsCalendarUtil.rangeSelectionColor
+            rangeSelectionStartColor = EventsCalendarUtil.rangeSelectionStartColor
+            rangeSelectionEndColor = EventsCalendarUtil.rangeSelectionEndColor
 
             mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = selectionCircleColor
+            }
+
+            mRangeSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = rangeSelectionColor
+            }
+
+            mRangeSelectionStartPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = rangeSelectionStartColor
+            }
+
+            mRangeSelectionEndPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = rangeSelectionEndColor
             }
 
             mDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -168,22 +183,22 @@ class DateText : View {
                             EventsCalendarUtil.datesInSelectedRange.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == 0 -> {
                                 mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                 mDateTextPaint.color = selectedTextColor
-                                canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mSelectionPaint)
-                                canvas.drawRect(RectF((mWidth/2).toFloat(),0f,mWidth.toFloat(),mHeight.toFloat()), mSelectionPaint)
+                                canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mRangeSelectionStartPaint)
+                                canvas.drawRect(RectF((mWidth/2).toFloat(),0f,mWidth.toFloat(),mHeight.toFloat()), mRangeSelectionStartPaint)
                                 RectF(1f, 2f, 3f, 4f)
 //                                canvas.drawColor(eventDotColor)
                             }
                             EventsCalendarUtil.datesInSelectedRange.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == EventsCalendarUtil.datesInSelectedRange.size - 1 -> {
                                 mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                 mDateTextPaint.color = selectedTextColor
-                                canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mSelectionPaint)
-                                canvas.drawRect(RectF(0f,0f,(mWidth/2).toFloat(),mHeight.toFloat()), mSelectionPaint)
+                                canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mRangeSelectionEndPaint)
+                                canvas.drawRect(RectF(0f,0f,(mWidth/2).toFloat(),mHeight.toFloat()), mRangeSelectionEndPaint)
 //                                canvas.drawColor(eventDotColor)
                             }
                             else -> {
                                 mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                 mDateTextPaint.color = selectedTextColor
-                                canvas.drawColor(mSelectionPaint.color)
+                                canvas.drawColor(mRangeSelectionPaint.color)
                             }
                         }
                     }
@@ -331,12 +346,18 @@ class DateText : View {
         private var doInitializeStaticVariables = true
         private lateinit var mDotPaint: Paint
         private lateinit var mSelectionPaint: Paint
+        private lateinit var mRangeSelectionPaint: Paint
+        private lateinit var mRangeSelectionStartPaint: Paint
+        private lateinit var mRangeSelectionEndPaint: Paint
         private lateinit var mTodayPaint: Paint
         private lateinit var mDateTextPaint: Paint
         private var selectedTextColor = 0
         private var defaultTextColor = 0
         private var disabledTextColor = 0
         private var selectionCircleColor = 0
+        private var rangeSelectionColor = 0
+        private var rangeSelectionStartColor = 0
+        private var rangeSelectionEndColor = 0
         private var eventDotColor = 0
         fun invalidateColors() {
             doInitializeStaticVariables = true

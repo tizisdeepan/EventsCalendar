@@ -66,6 +66,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             EventsCalendarUtil.secondaryTextColor = attributes.getColor(R.styleable.EventsCalendar_secondaryTextColor, ContextCompat.getColor(mContext, R.color.text_black_disabled))
             EventsCalendarUtil.selectedTextColor = attributes.getColor(R.styleable.EventsCalendar_selectedTextColor, Color.WHITE)
             EventsCalendarUtil.selectionColor = attributes.getColor(R.styleable.EventsCalendar_selectionColor, EventsCalendarUtil.primaryTextColor)
+            EventsCalendarUtil.rangeSelectionColor = attributes.getColor(R.styleable.EventsCalendar_rangeSelectionColor, EventsCalendarUtil.primaryTextColor)
+            EventsCalendarUtil.rangeSelectionStartColor = attributes.getColor(R.styleable.EventsCalendar_rangeSelectionStartColor, EventsCalendarUtil.primaryTextColor)
+            EventsCalendarUtil.rangeSelectionEndColor = attributes.getColor(R.styleable.EventsCalendar_rangeSelectionEndColor, EventsCalendarUtil.primaryTextColor)
             EventsCalendarUtil.eventDotColor = attributes.getColor(R.styleable.EventsCalendar_eventDotColor, EventsCalendarUtil.eventDotColor)
             EventsCalendarUtil.monthTitleColor = attributes.getColor(R.styleable.EventsCalendar_monthTitleColor, EventsCalendarUtil.secondaryTextColor)
             EventsCalendarUtil.weekHeaderColor = attributes.getColor(R.styleable.EventsCalendar_weekHeaderColor, EventsCalendarUtil.secondaryTextColor)
@@ -205,6 +208,18 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     }
 
     fun setSelectionColor(color: Int) {
+        EventsCalendarUtil.selectionColor = color
+    }
+
+    fun setRangeSelectionColor(color: Int) {
+        EventsCalendarUtil.selectionColor = color
+    }
+
+    fun setRangeSelectionStartColor(color: Int) {
+        EventsCalendarUtil.selectionColor = color
+    }
+
+    fun setRangeSelectionEndColor(color: Int) {
         EventsCalendarUtil.selectionColor = color
     }
 
