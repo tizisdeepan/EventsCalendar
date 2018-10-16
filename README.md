@@ -44,12 +44,16 @@ allprojects {
 ```kotlin
 class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
     ...
+    override fun onDayLongPressed(selectedDate: Calendar?) {
+        Log.e("LONG", "CLICKED")
+    }
+    
     override fun onMonthChanged(monthStartDate: Calendar?) {
         Log.e("MON", "CHANGED")
     }
 
     override fun onDaySelected(selectedDate: Calendar?) {
-        Log.e("DAY", "SELECTED")
+        Log.e("SHORT", "CLICKED")
     }
 }
 ```
@@ -78,6 +82,13 @@ eventsCalendar.disableDate(dc)
 //disable days in a week on the whole EventsCalendar [varargs days: Int]
 eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
 ```
+### [7] You can change selection mode of the calendar as you wish
+```kotlin
+eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
+```
+**Available Selection modes are,**
+1. **Single Selection** -> can select single day at a time
+2. **Range Selection** -> can select range of days at a time
 ### Documentation
 
 |XML|Kotlin/Java|Description|
