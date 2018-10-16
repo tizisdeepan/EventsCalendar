@@ -338,7 +338,7 @@ class DateText : View {
     }
 
     fun select(isClick: Boolean) {
-        if (!isSelected && !isDisabled) {
+        if ((!isSelected && !isDisabled) || EventsCalendarUtil.SELECTION_MODE == EventsCalendarUtil.MULTIPLE_SELECTION) {
             if (isClick) selectAction() else setIsSelected(true)
             mDateSelectListener.onDateTextViewSelected(this, isClick)
         }

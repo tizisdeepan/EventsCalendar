@@ -50,12 +50,13 @@ object EventsCalendarUtil {
     var isBoldTextOnSelectionEnabled: Boolean = false
 
     val datesInSelectedRange: LinkedHashMap<String, Calendar> = LinkedHashMap()
-    var minDateInRange: Calendar? = null
-    var maxDateInRange: Calendar? = null
+    private var minDateInRange: Calendar? = null
+    private var maxDateInRange: Calendar? = null
 
     fun updateSelectedDates(c: Calendar) {
-        if (datesInSelectedRange.containsKey(getDateString(c, DD_MM_YYYY))) datesInSelectedRange.remove(getDateString(c, DD_MM_YYYY))
+        if (datesInSelectedRange.contains(getDateString(c, DD_MM_YYYY))) datesInSelectedRange.remove(getDateString(c, DD_MM_YYYY))
         else datesInSelectedRange[getDateString(c, DD_MM_YYYY)] = c
+        Log.e("SIZE", datesInSelectedRange.size.toString())
     }
 
     fun updateMinMaxDateInRange(c: Calendar) {
@@ -63,31 +64,21 @@ object EventsCalendarUtil {
             areDatesSame(minDateInRange, c) -> {
                 minDateInRange = null
                 maxDateInRange = null
-                Log.e("MIN1", getDateString(minDateInRange, DD_MM_YYYY))
-                Log.e("MAX1", getDateString(maxDateInRange, DD_MM_YYYY))
             }
             areDatesSame(maxDateInRange, c) -> {
                 minDateInRange = null
                 maxDateInRange = null
-                Log.e("MIN2", getDateString(minDateInRange, DD_MM_YYYY))
-                Log.e("MAX2", getDateString(maxDateInRange, DD_MM_YYYY))
             }
             c.before(minDateInRange) || areDatesSame(c, minDateInRange) || minDateInRange == null -> {
                 minDateInRange = c
                 maxDateInRange = null
-                Log.e("MIN3", getDateString(minDateInRange, DD_MM_YYYY))
-                Log.e("MAX3", getDateString(maxDateInRange, DD_MM_YYYY))
             }
-            else -> {
-                maxDateInRange = c
-                Log.e("MIN4", getDateString(minDateInRange, DD_MM_YYYY))
-                Log.e("MAX4", getDateString(maxDateInRange, DD_MM_YYYY))
-            }
+            else -> maxDateInRange = c
         }
         refreshRange()
     }
 
-    fun refreshRange() {
+    private fun refreshRange() {
         if (minDateInRange == null || maxDateInRange == null) datesInSelectedRange.clear()
         else {
             if (minDateInRange != null && maxDateInRange != null) {
