@@ -14,6 +14,9 @@ import kotlin.properties.Delegates
 object EventsCalendarUtil {
     const val WEEK_MODE = 0
     const val MONTH_MODE = 1
+    val SINGLE_SELECTION = 0
+    val RANGE_SELECTION = 1
+    val MULTIPLE_SELECTION = 2
     private const val MONTHS_IN_YEAR = 12
     const val YYYY_MM_DD = 10
     const val DD_MM_YYYY = 20
@@ -49,6 +52,11 @@ object EventsCalendarUtil {
     val datesInSelectedRange: LinkedHashMap<String, Calendar> = LinkedHashMap()
     var minDateInRange: Calendar? = null
     var maxDateInRange: Calendar? = null
+
+    fun updateSelectedDates(c: Calendar) {
+        if (datesInSelectedRange.containsKey(getDateString(c, DD_MM_YYYY))) datesInSelectedRange.remove(getDateString(c, DD_MM_YYYY))
+        else datesInSelectedRange[getDateString(c, DD_MM_YYYY)] = c
+    }
 
     fun updateMinMaxDateInRange(c: Calendar) {
         when {
@@ -92,7 +100,6 @@ object EventsCalendarUtil {
                 }
             } else datesInSelectedRange.clear()
         }
-        Log.e("RANGE SIZE", datesInSelectedRange.size.toString())
     }
 
     val disabledDates: ArrayList<Calendar> = ArrayList()
