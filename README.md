@@ -45,7 +45,10 @@ allprojects {
     app:secondaryTextColor="#666666"
     app:selectedTextColor="#000000"
     app:selectionColor="#ffe600"
-    app:weekHeaderColor="#c6c6c6" />
+    app:weekHeaderColor="#c6c6c6"
+    app:rangeSelectionColor="#ffe600"
+    app:rangeSelectionStartColor="#c1ae01"
+    app:rangeSelectionEndColor="#c1ae01" />
 ```
 ### [4] Implement EventCalendar.Callback on your Activity/ Fragment
 ```kotlin
