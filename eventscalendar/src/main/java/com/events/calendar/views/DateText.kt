@@ -5,8 +5,11 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
@@ -18,35 +21,32 @@ class DateText : View {
 
     private lateinit var mDateSelectListener: DateSelectListener
     private lateinit var mDate: Calendar
-    private var mDateTextSize: Float = 0f
-    private var mDotRadius: Float = 0f
-    private var mDotX: Int = 0
-    private var mDotY: Int = 0
-    private var mCircleX: Int = 0
-    private var mCircleY: Int = 0
-    private var mDateTextX: Int = 0
-    private var mDateTextY: Float = 0f
-    private var mTodayCircleRadius: Float = 0f
-
+    private var mDateTextSize = 0f
+    private var mDotRadius = 0f
+    private var mDotX = 0
+    private var mDotY = 0
+    private var mCircleX = 0
+    private var mCircleY = 0
+    private var mDateTextX = 0
+    private var mDateTextY = 0f
+    private var mTodayCircleRadius = 0f
     private lateinit var mContext: Context
     private var mAttrs: AttributeSet? = null
-    private var mDefStyleAttr: Int = 0
-    private var mDefStyleRes: Int = 0
-
-    internal var isCurrentMonth: Boolean = false
-    internal var hasEvent: Boolean = false
-    internal var isSelected: Boolean = false
-    internal var isToday: Boolean = false
-    internal var isPast: Boolean = false
-    private var mWidth: Int = 0
-    private var mHeight: Int = 0
-    private var mBgCircleRadius: Float = 0f
-
-    private var isDisabled: Boolean = false
-
+    private var mDefStyleAttr = 0
+    private var mDefStyleRes = 0
+    internal var isCurrentMonth = false
+    internal var hasEvent = false
+    internal var isSelected = false
+    internal var isToday = false
+    internal var isPast = false
+    private var mWidth = 0
+    private var mHeight = 0
+    private var mBgCircleRadius = 0f
+    private var mFullCircleRadius = 0f
+    private var isDisabled = false
     private var touchDown = false
-    private var mDownX: Float = 0f
-    private var mDownY: Float = 0f
+    private var mDownX = 0f
+    private var mDownY = 0f
 
     var date: Calendar
         get() = mDate.clone() as Calendar
@@ -79,12 +79,9 @@ class DateText : View {
         mAttrs = attrs
         mDefStyleAttr = defStyleAttr
         mDefStyleRes = defStyleRes
-
         this.isClickable = true
-
         mDate = Calendar.getInstance()
         mDotRadius = resources.getDimension(R.dimen.radius_event_dot)
-
         val attributes = mContext.theme.obtainStyledAttributes(attrs, R.styleable.DateText, defStyleAttr, defStyleRes)
         try {
             isCurrentMonth = attributes.getBoolean(R.styleable.DateText_isCurrentMonth, false)
@@ -103,22 +100,26 @@ class DateText : View {
             disabledTextColor = EventsCalendarUtil.secondaryTextColor
             eventDotColor = EventsCalendarUtil.eventDotColor
 
-            mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            mSelectionPaint.color = selectionCircleColor
+            mSelectionPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = selectionCircleColor
+            }
 
-            mDotPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            mDotPaint.color = eventDotColor
+            mDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = eventDotColor
+            }
 
-            mTodayPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            mTodayPaint.color = EventsCalendarUtil.primaryTextColor
-            mTodayPaint.style = Paint.Style.STROKE
-            mTodayPaint.strokeWidth = resources.getDimension(R.dimen.width_circle_stroke)
+            mTodayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = EventsCalendarUtil.primaryTextColor
+                style = Paint.Style.STROKE
+                strokeWidth = resources.getDimension(R.dimen.width_circle_stroke)
+            }
 
-            mDateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            mDateTextPaint.textAlign = Paint.Align.CENTER
-            mDateTextPaint.color = EventsCalendarUtil.primaryTextColor
-            mDateTextSize = mContext.resources.getDimension(R.dimen.text_calendar_date)
-            mDateTextPaint.textSize = mDateTextSize
+            mDateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                textAlign = Paint.Align.CENTER
+                color = EventsCalendarUtil.primaryTextColor
+                mDateTextSize = mContext.resources.getDimension(R.dimen.text_calendar_date)
+                textSize = mDateTextSize
+            }
 
             doInitializeStaticVariables = false
         }
@@ -140,7 +141,8 @@ class DateText : View {
         mDateTextX = mWidth / 2
         mDateTextY = mHeight / 2 - (mDateTextPaint.ascent() + mDateTextPaint.descent()) / 2
 
-        mBgCircleRadius = Math.min(mHeight - mHeight * (6f / 10f), mWidth - mWidth * (6f / 10f))
+        mBgCircleRadius = Math.min(mHeight - mHeight * 0.6f, mWidth - mWidth * 0.6f)
+        mFullCircleRadius = Math.min(mHeight - mHeight * 0.5f, mWidth - mWidth * 0.5f)
         mTodayCircleRadius = mBgCircleRadius - resources.getDimension(R.dimen.width_circle_stroke) / 2
         mCircleX = mWidth / 2
         mCircleY = mHeight / 2
@@ -158,13 +160,40 @@ class DateText : View {
             mDateTextPaint.color = disabledTextColor
             canvas.drawText("" + mDate.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint)
         } else {
-            if (isCurrentMonth && !isDisabled) {
+            if ((isCurrentMonth && !isDisabled) || EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY))) {
                 if (isToday) canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mTodayCircleRadius, mTodayPaint)
-                if (isSelected) {
-                    mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
-                    mDateTextPaint.color = selectedTextColor
-                    canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint)
-                } else mDateTextPaint.color = defaultTextColor
+                when {
+                    EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) && !isDisabled -> {
+                        when {
+                            EventsCalendarUtil.datesInSelectedRange.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == 0 -> {
+                                mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
+                                mDateTextPaint.color = selectedTextColor
+                                canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mSelectionPaint)
+                                canvas.drawRect(RectF((mWidth/2).toFloat(),0f,mWidth.toFloat(),mHeight.toFloat()), mSelectionPaint)
+                                RectF(1f, 2f, 3f, 4f)
+//                                canvas.drawColor(eventDotColor)
+                            }
+                            EventsCalendarUtil.datesInSelectedRange.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == EventsCalendarUtil.datesInSelectedRange.size - 1 -> {
+                                mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
+                                mDateTextPaint.color = selectedTextColor
+                                canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mSelectionPaint)
+                                canvas.drawRect(RectF(0f,0f,(mWidth/2).toFloat(),mHeight.toFloat()), mSelectionPaint)
+//                                canvas.drawColor(eventDotColor)
+                            }
+                            else -> {
+                                mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
+                                mDateTextPaint.color = selectedTextColor
+                                canvas.drawColor(mSelectionPaint.color)
+                            }
+                        }
+                    }
+                    isSelected -> {
+                        mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
+                        mDateTextPaint.color = selectedTextColor
+                        canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint)
+                    }
+                    else -> mDateTextPaint.color = defaultTextColor
+                }
                 canvas.drawText("" + mDate.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint)
             } else {
                 mDateTextPaint.color = disabledTextColor
@@ -172,7 +201,9 @@ class DateText : View {
             }
         }
         super.onDraw(canvas)
-        if (hasEvent) drawDot(canvas)
+        if (hasEvent) {
+            drawDot(canvas)
+        }
     }
 
     private fun drawDot(canvas: Canvas) {
@@ -273,6 +304,10 @@ class DateText : View {
         }
     }
 
+    fun selectRange() {
+        selectAction()
+    }
+
     fun selectOnPageChange(isClick: Boolean) {
         val isClick = false
         if (!isSelected && !isDisabled) {
@@ -302,11 +337,11 @@ class DateText : View {
         private lateinit var mSelectionPaint: Paint
         private lateinit var mTodayPaint: Paint
         private lateinit var mDateTextPaint: Paint
-        private var selectedTextColor: Int = 0
-        private var defaultTextColor: Int = 0
-        private var disabledTextColor: Int = 0
-        private var selectionCircleColor: Int = 0
-        private var eventDotColor: Int = 0
+        private var selectedTextColor = 0
+        private var defaultTextColor = 0
+        private var disabledTextColor = 0
+        private var selectionCircleColor = 0
+        private var eventDotColor = 0
         fun invalidateColors() {
             doInitializeStaticVariables = true
         }

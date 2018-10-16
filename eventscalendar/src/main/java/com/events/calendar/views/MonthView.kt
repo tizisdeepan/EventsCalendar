@@ -16,8 +16,8 @@ import java.util.*
 class MonthView : ViewGroup, DatesGridLayout.CallBack {
     private lateinit var mContext: Context
     private var sWeekStartDay = Calendar.MONDAY
-    private var mMonth: Int = 0
-    private var mYear: Int = 0
+    private var mMonth = 0
+    private var mYear = 0
     private lateinit var mLayoutInflater: LayoutInflater
     private lateinit var mWeekDaysHeader: View
     private lateinit var mFirstDay: TextView
@@ -27,10 +27,10 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     private lateinit var mFifthDay: TextView
     private lateinit var mSixthDay: TextView
     private lateinit var mSeventhDay: TextView
-    lateinit var gridLayout: DatesGridLayout private set
+    private lateinit var gridLayout: DatesGridLayout
     private lateinit var mMonthGridContainer: MonthGridContainer
     private lateinit var mCallback: Callback
-    private var mSelectedWeekNo: Int = 0
+    private var mSelectedWeekNo = 0
     private lateinit var mMonthTitleTextView: TextView
 
     fun reset(doChangeWeekStartDay: Boolean) {
@@ -38,7 +38,9 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
             sWeekStartDay = EventsCalendarUtil.weekStartDay
             setWeekdayHeader()
             gridLayout.resetWeekStartDay(sWeekStartDay)
-        } else gridLayout.refreshDots()
+        } else {
+            gridLayout.refreshDots()
+        }
     }
 
     fun refreshDates() {
@@ -173,5 +175,9 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     fun setSelectedDate(date: Calendar) {
         gridLayout.selectDate(date)
+    }
+
+    fun setSelectedDateRange(date: Calendar) {
+        gridLayout.selectDateRange(date)
     }
 }

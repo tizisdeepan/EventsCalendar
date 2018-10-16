@@ -1,5 +1,6 @@
 package com.events.calendar.views
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Color
@@ -9,6 +10,7 @@ import android.os.Parcel
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
@@ -22,23 +24,23 @@ import java.util.*
 class EventsCalendar : ViewPager, MonthView.Callback {
     lateinit var mMinMonth: Calendar
     lateinit var mMaxMonth: Calendar
-    var isPagingEnabled = true //Boolean used to switch off and on EventsCalendar's page change
+    var isPagingEnabled = true
 
     val WEEK_MODE = 0
     val MONTH_MODE = 1
 
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
     private var mAttrs: AttributeSet? = null
     private var mCurrentItem: MonthView? = null
-    private var mCurrentItemHeight: Int = 0
+    private var mCurrentItemHeight = 0
     private var mCallback: Callback? = null
-    private var mCalendarMonthsAdapter: MonthsAdapter? = null
-    private var doChangeAdapter: Boolean = false
-    private var mCalendarWeekPagerAdapter: WeeksAdapter? = null
-    private var mSelectedMonthPosition: Int = 0
-    private var mSelectedWeekPosition: Int = 0
+    private lateinit var mCalendarMonthsAdapter: MonthsAdapter
+    private var doChangeAdapter = false
+    private lateinit var mCalendarWeekPagerAdapter: WeeksAdapter
+    private var mSelectedMonthPosition = 0
+    private var mSelectedWeekPosition = 0
     private var doFocus = true
-    val weekStartDay: Int get() = EventsCalendarUtil.weekStartDay
+    val weekStartDay get() = EventsCalendarUtil.weekStartDay
     val visibleContentHeight: Float
         get() {
             val resources = resources
@@ -54,14 +56,14 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         init(context, attrs)
     }
 
-    fun init(context: Context, attrs: AttributeSet?) {
+    private fun init(context: Context, attrs: AttributeSet?) {
         mContext = context
         mAttrs = attrs
 
-        val attributes = mContext!!.obtainStyledAttributes(attrs, R.styleable.EventsCalendar, 0, 0)
+        val attributes = mContext.obtainStyledAttributes(attrs, R.styleable.EventsCalendar, 0, 0)
         try {
             EventsCalendarUtil.primaryTextColor = attributes.getColor(R.styleable.EventsCalendar_primaryTextColor, Color.BLACK)
-            EventsCalendarUtil.secondaryTextColor = attributes.getColor(R.styleable.EventsCalendar_secondaryTextColor, ContextCompat.getColor(mContext!!, R.color.text_black_disabled))
+            EventsCalendarUtil.secondaryTextColor = attributes.getColor(R.styleable.EventsCalendar_secondaryTextColor, ContextCompat.getColor(mContext, R.color.text_black_disabled))
             EventsCalendarUtil.selectedTextColor = attributes.getColor(R.styleable.EventsCalendar_selectedTextColor, Color.WHITE)
             EventsCalendarUtil.selectionColor = attributes.getColor(R.styleable.EventsCalendar_selectionColor, EventsCalendarUtil.primaryTextColor)
             EventsCalendarUtil.eventDotColor = attributes.getColor(R.styleable.EventsCalendar_eventDotColor, EventsCalendarUtil.eventDotColor)
@@ -105,7 +107,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         try {
             mCurrentItem = if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) (adapter as WeeksAdapter).getItem(currentItem)
             else (adapter as MonthsAdapter).getItem(currentItem)
-            mCurrentItemHeight = mCurrentItem?.measuredHeight!!
+            mCurrentItemHeight = mCurrentItem?.measuredHeight ?: 0
         } catch (e: NullPointerException) {
             e.printStackTrace()
         } catch (e: ClassCastException) {
@@ -146,7 +148,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         }
     }
 
-    fun changeAdapter() {
+    @SuppressLint("Recycle")
+    private fun changeAdapter() {
         if (doChangeAdapter) {
             DatesGridLayout.clearSelectedDateTextView()
             val parcel = Parcel.obtain()
@@ -168,7 +171,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     private fun setCurrentItemField(position: Int) {
         try {
-            val field = ViewPager::class.java.getDeclaredField("mRestoredCurItem")//No I18N
+            val field = ViewPager::class.java.getDeclaredField("mRestoredCurItem")
             field.isAccessible = true
             field.set(this, position)
         } catch (e: NoSuchFieldException) {
@@ -229,6 +232,10 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.isBoldTextOnSelectionEnabled = isEnabled
     }
 
+    fun setRangeMode(mode: Boolean) {
+        EventsCalendarUtil.RANGE_MODE = mode
+    }
+
     fun addEvent(date: String) {
         Events.add(date)
     }
@@ -275,6 +282,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean = if (this.isPagingEnabled) super.onInterceptTouchEvent(event) else false
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean = if (this.isPagingEnabled) super.onTouchEvent(event) else false
 
     fun invalidateColors() {
@@ -285,7 +293,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             if (childCount > 0) {
-                if (doFocus) if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter!!.getItem(position)!!.onFocus(position)
+                if (doFocus) if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter.getItem(position)?.onFocus(position)
                 else doFocus = true
             }
         }
@@ -297,30 +305,32 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     }
 
     fun setCurrentSelectedDate(selectedDate: Calendar?) {
-        val position: Int
-        if (isPagingEnabled) {
-            doFocus = false
-            if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
-                position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
-                setCurrentItem(position, false)
-                if (mCalendarMonthsAdapter != null) {
+        if (!EventsCalendarUtil.RANGE_MODE) {
+            val position: Int
+            if (isPagingEnabled) {
+                doFocus = false
+                if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
+                    position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
+                    setCurrentItem(position, false)
                     post {
                         EventsCalendarUtil.monthPos = currentItem
                         EventsCalendarUtil.selectedDate = selectedDate
-                        mCalendarMonthsAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        mCalendarMonthsAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
                         doFocus = true
                     }
-                }
-            } else {
-                position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
-                setCurrentItem(position, false)
-                if (mCalendarWeekPagerAdapter != null) {
+                } else {
+                    position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
+                    setCurrentItem(position, false)
                     post {
-                        mCalendarWeekPagerAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        mCalendarWeekPagerAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
                         doFocus = true
                     }
                 }
             }
+        } else {
+            if (selectedDate != null) EventsCalendarUtil.updateMinMaxDateInRange(selectedDate)
+            reset()
+            refreshTodayDate()
         }
     }
 

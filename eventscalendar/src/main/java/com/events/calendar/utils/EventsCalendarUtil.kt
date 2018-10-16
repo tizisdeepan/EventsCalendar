@@ -2,10 +2,13 @@ package com.events.calendar.utils
 
 import android.graphics.Typeface
 import android.text.format.DateFormat
+import android.util.Log
 import android.util.MonthDisplayHelper
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
 import kotlin.collections.LinkedHashSet
+import kotlin.properties.Delegates
 
 object EventsCalendarUtil {
     const val WEEK_MODE = 0
@@ -18,9 +21,11 @@ object EventsCalendarUtil {
     const val YYYY_MM = 100
     var today: Calendar = Calendar.getInstance()
 
+    var RANGE_MODE = false
+
     var currentMode = MONTH_MODE
     var weekStartDay = Calendar.MONDAY
-    private var currentSelectedDate: Calendar? = Calendar.getInstance()
+    private var currentSelectedDate: Calendar = Calendar.getInstance()
     var tobeSelectedDate = 1
     const val DEFAULT_NO_OF_MONTHS = 480
     var primaryTextColor: Int = 0
@@ -37,10 +42,59 @@ object EventsCalendarUtil {
     var weekHeaderTypeface: Typeface? = null
     var isBoldTextOnSelectionEnabled: Boolean = false
 
+    val datesInSelectedRange: ArrayList<String> = ArrayList()
+    var minDateInRange: Calendar? = null
+    var maxDateInRange: Calendar? = null
+
+    fun updateMinMaxDateInRange(c: Calendar) {
+        when {
+            areDatesSame(minDateInRange, c) -> {
+                minDateInRange = null
+                maxDateInRange = null
+                Log.e("MIN1", getDateString(minDateInRange, DD_MM_YYYY))
+                Log.e("MAX1", getDateString(maxDateInRange, DD_MM_YYYY))
+            }
+            areDatesSame(maxDateInRange, c) -> {
+                minDateInRange = null
+                maxDateInRange = null
+                Log.e("MIN2", getDateString(minDateInRange, DD_MM_YYYY))
+                Log.e("MAX2", getDateString(maxDateInRange, DD_MM_YYYY))
+            }
+            c.before(minDateInRange) || areDatesSame(c, minDateInRange) || minDateInRange == null -> {
+                minDateInRange = c
+                maxDateInRange = null
+                Log.e("MIN3", getDateString(minDateInRange, DD_MM_YYYY))
+                Log.e("MAX3", getDateString(maxDateInRange, DD_MM_YYYY))
+            }
+            else -> {
+                maxDateInRange = c
+                Log.e("MIN4", getDateString(minDateInRange, DD_MM_YYYY))
+                Log.e("MAX4", getDateString(maxDateInRange, DD_MM_YYYY))
+            }
+        }
+        refreshRange()
+    }
+
+    fun refreshRange() {
+        if (minDateInRange == null || maxDateInRange == null) datesInSelectedRange.clear()
+        else {
+            if (minDateInRange != null && maxDateInRange != null) {
+                val min = minDateInRange!!.clone() as Calendar
+                val max = maxDateInRange!!.clone() as Calendar
+                datesInSelectedRange.clear()
+                while (min.before(max) || areDatesSame(min, max)) {
+                    datesInSelectedRange.add(getDateString(min, DD_MM_YYYY))
+                    min.add(Calendar.DAY_OF_YEAR, 1)
+                }
+            } else datesInSelectedRange.clear()
+        }
+        Log.e("RANGE SIZE", datesInSelectedRange.size.toString())
+    }
+
     val disabledDates: ArrayList<Calendar> = ArrayList()
     val disabledDays: LinkedHashSet<Int> = LinkedHashSet()
 
-    fun areDatesSame(date1: Calendar?, date2: Calendar?): Boolean = date1 != null && date2 != null && date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) && date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) && date1.get(Calendar.DATE) == date2.get(Calendar.DATE)
+    fun areDatesSame(date1: Calendar?, date2: Calendar?): Boolean = date1 != null && date2 != null && date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) && date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH) && date1.get(Calendar.DAY_OF_MONTH) == date2.get(Calendar.DAY_OF_MONTH)
 
     fun areMonthsSame(date1: Calendar?, date2: Calendar?): Boolean = date1 != null && date2 != null && date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR) && date1.get(Calendar.MONTH) == date2.get(Calendar.MONTH)
 
@@ -169,39 +223,41 @@ object EventsCalendarUtil {
         }
     }
 
-    fun getDateString(calendar: Calendar, format: Int): String? {
+    fun getDateString(calendar: Calendar?, format: Int): String {
         val buffer = StringBuffer()
-        when (format) {
-            YYYY_MM_DD -> {
-                buffer.append(calendar.get(Calendar.YEAR))
-                buffer.append("/")
-                val month = calendar.get(Calendar.MONTH) + 1
-                if (month < 10) buffer.append("0")
-                buffer.append(month)
-                buffer.append("/")
-                val date = calendar.get(Calendar.DATE)
-                if (date < 10) buffer.append("0")
-                buffer.append(date)
-                return buffer.toString()
+        if (calendar != null) {
+            when (format) {
+                YYYY_MM_DD -> {
+                    buffer.append(calendar.get(Calendar.YEAR))
+                    buffer.append("/")
+                    val month = calendar.get(Calendar.MONTH) + 1
+                    if (month < 10) buffer.append("0")
+                    buffer.append(month)
+                    buffer.append("/")
+                    val date = calendar.get(Calendar.DATE)
+                    if (date < 10) buffer.append("0")
+                    buffer.append(date)
+                    return buffer.toString()
+                }
+                DD_MM_YYYY -> {
+                    buffer.append(calendar.get(Calendar.DATE))
+                    buffer.append("/")
+                    buffer.append(calendar.get(Calendar.MONTH) + 1)
+                    buffer.append("/")
+                    buffer.append(calendar.get(Calendar.YEAR))
+                    return buffer.toString()
+                }
+                MM_DD_YYYY -> {
+                    buffer.append(calendar.get(Calendar.MONTH) + 1)
+                    buffer.append("/")
+                    buffer.append(calendar.get(Calendar.DATE))
+                    buffer.append("/")
+                    buffer.append(calendar.get(Calendar.YEAR))
+                    return buffer.toString()
+                }
+                else -> return "NULL"
             }
-            DD_MM_YYYY -> {
-                buffer.append(calendar.get(Calendar.DATE))
-                buffer.append("/")
-                buffer.append(calendar.get(Calendar.MONTH) + 1)
-                buffer.append("/")
-                buffer.append(calendar.get(Calendar.YEAR))
-                return buffer.toString()
-            }
-            MM_DD_YYYY -> {
-                buffer.append(calendar.get(Calendar.MONTH) + 1)
-                buffer.append("/")
-                buffer.append(calendar.get(Calendar.DATE))
-                buffer.append("/")
-                buffer.append(calendar.get(Calendar.YEAR))
-                return buffer.toString()
-            }
-            else -> return null
-        }
+        } else return "NULL"
     }
 
     fun getMonthString(monthCalendar: Calendar, format: Int): String? {

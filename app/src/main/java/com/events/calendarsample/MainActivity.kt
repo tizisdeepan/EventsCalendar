@@ -34,7 +34,16 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
+        eventsCalendar.setRangeMode(true)
         eventsCalendar.setCallback(this)
+
+
+//        val min = Calendar.getInstance()
+//        min.add(Calendar.MONTH, 1)
+//        val max = Calendar.getInstance()
+//        max.add(Calendar.MONTH, 1)
+//        max.add(Calendar.DAY_OF_YEAR, 5)
+//        eventsCalendar.selectDateRange(min, max)
 
 
         val c = Calendar.getInstance()
@@ -55,8 +64,8 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
 
         val dc = Calendar.getInstance()
         dc.add(Calendar.DAY_OF_MONTH, 2)
-        eventsCalendar.disableDate(dc)
-        eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
+//        eventsCalendar.disableDate(dc)
+//        eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
     }
 
     fun getDateString(time: Long?): String {

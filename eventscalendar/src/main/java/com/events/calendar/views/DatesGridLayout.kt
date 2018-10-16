@@ -23,26 +23,25 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
     private lateinit var mContext: Context
     private lateinit var mLayoutInflater: LayoutInflater
     private var mAttrs: AttributeSet? = null
-    private var mDefStyleAttr: Int = 0
-    private var mDefStyleRes: Int = 0
-
-    private var mMonth: Int = 0
-    private var mYear: Int = 0
-    private var mSelectedWeekNo: Int = 0
+    private var mDefStyleAttr = 0
+    private var mDefStyleRes = 0
+    private var mMonth = 0
+    private var mYear = 0
+    private var mSelectedWeekNo = 0
     private lateinit var mCurrentCalendar: Calendar
     private lateinit var mMonthDisplayHelper: MonthDisplayHelper
-    private var mNoOfWeeks: Int = 0
-    private var mNoOfCurrentMonthDays: Int = 0
-    private var mMonthStartDayOffset: Int = 0
-    private var mTotalNoOfDays: Int = 0
+    private var mNoOfWeeks = 0
+    private var mNoOfCurrentMonthDays = 0
+    private var mMonthStartDayOffset = 0
+    private var mTotalNoOfDays = 0
 
-    private var mDateTextWidth: Float = 0.toFloat()
-    private var mDateTextHeight: Float = 0.toFloat()
-    private var mWidth: Int = 0
-    private var mHeight: Int = 0
+    private var mDateTextWidth = 0f
+    private var mDateTextHeight = 0f
+    private var mWidth = 0
+    private var mHeight = 0
 
     private var isLoadingFirstTime = true
-    private var mTranslationDistance: Float = 0.toFloat()
+    private var mTranslationDistance= 0f
     private var mCallback: CallBack? = null
     private var mSelectedDatePosition: Int = 0
     private var mPreviousMonthDots: EventDots? = null
@@ -384,6 +383,11 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
     fun selectDate(date: Calendar) {
         val selectedDate = getChildAt(mMonthStartDayOffset - 1 + date.get(Calendar.DATE)) as DateText
         selectedDate.select(true)
+    }
+
+    fun selectDateRange(date: Calendar) {
+        val selectedDate = getChildAt(mMonthStartDayOffset - 1 + date.get(Calendar.DATE)) as DateText
+        selectedDate.selectRange()
     }
 
     fun setShowOnlyCurrentMonthWeeks(showOnlyCurrentMonthWeeks: Boolean) {
