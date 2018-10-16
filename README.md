@@ -40,7 +40,7 @@ allprojects {
     app:selectionColor="#ffe600"
     app:weekHeaderColor="#c6c6c6" />
 ```
-### [5] Implement EventCalendar.Callback on your Activity/ Fragment
+### [4] Implement EventCalendar.Callback on your Activity/ Fragment
 ```kotlin
 class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
     ...
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
     }
 }
 ```
-### [6] Create instances and set default values for the EventsCalendar in your Activity/ Fragment
+### [5] Create instances and set default values for the EventsCalendar in your Activity/ Fragment
 ```kotlin
 //set today's date [today: Calendar]
 eventsCalendar.setToday(today)
@@ -82,7 +82,7 @@ eventsCalendar.disableDate(dc)
 //disable days in a week on the whole EventsCalendar [varargs days: Int]
 eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
 ```
-### [7] You can change selection mode of the calendar as you wish
+### [6] You can change selection mode of the calendar as you wish
 ```kotlin
 eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 ```
