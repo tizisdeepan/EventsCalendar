@@ -20,14 +20,20 @@ import com.events.calendar.utils.EventDots
 import com.events.calendar.utils.Events
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
+import kotlin.collections.ArrayList
 
 class EventsCalendar : ViewPager, MonthView.Callback {
+
     lateinit var mMinMonth: Calendar
     lateinit var mMaxMonth: Calendar
     var isPagingEnabled = true
 
     val WEEK_MODE = 0
     val MONTH_MODE = 1
+
+    val SINGLE_SELECTION = 0
+    val RANGE_SELECTION = 1
+    val MULTIPLE_SELECTION = 2
 
     private lateinit var mContext: Context
     private var mAttrs: AttributeSet? = null
@@ -223,6 +229,11 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.selectionColor = color
     }
 
+    fun getDatesFromSelectedRange(): ArrayList<Calendar> {
+        val dates: ArrayList<Calendar> = ArrayList()
+        return dates
+    }
+
     fun setMonthTitleColor(color: Int) {
         EventsCalendarUtil.monthTitleColor = color
     }
@@ -247,8 +258,8 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.isBoldTextOnSelectionEnabled = isEnabled
     }
 
-    fun setRangeMode(mode: Boolean) {
-        EventsCalendarUtil.RANGE_MODE = mode
+    fun setSelectionMode(mode: Int) {
+        EventsCalendarUtil.SELECTION_MODE = mode
     }
 
     fun addEvent(date: String) {
@@ -320,7 +331,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     }
 
     fun setCurrentSelectedDate(selectedDate: Calendar?) {
-        if (!EventsCalendarUtil.RANGE_MODE) {
+        if (EventsCalendarUtil.SELECTION_MODE != RANGE_SELECTION) {
             val position: Int
             if (isPagingEnabled) {
                 doFocus = false
@@ -377,6 +388,10 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             changeAdapter()
             mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
         }
+    }
+
+    fun setOnDateLongClickListener(onLongClickListener: OnLongClickListener) {
+        EventsCalendarUtil.onDateLongClickListener = onLongClickListener
     }
 
 }

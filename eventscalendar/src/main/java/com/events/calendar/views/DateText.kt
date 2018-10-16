@@ -48,6 +48,8 @@ class DateText : View {
     private var mDownX = 0f
     private var mDownY = 0f
 
+    private val listenerAdapter = InternalListener()
+
     var date: Calendar
         get() = mDate.clone() as Calendar
         set(date) {
@@ -82,6 +84,11 @@ class DateText : View {
         this.isClickable = true
         mDate = Calendar.getInstance()
         mDotRadius = resources.getDimension(R.dimen.radius_event_dot)
+
+        if (EventsCalendarUtil.onDateLongClickListener != null) setCustomOnLongClickListener(EventsCalendarUtil.onDateLongClickListener!!)
+
+        setOnLongClickListener(listenerAdapter)
+
         val attributes = mContext.theme.obtainStyledAttributes(attrs, R.styleable.DateText, defStyleAttr, defStyleRes)
         try {
             isCurrentMonth = attributes.getBoolean(R.styleable.DateText_isCurrentMonth, false)
@@ -180,19 +187,19 @@ class DateText : View {
                 when {
                     EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) && !isDisabled -> {
                         when {
-                            EventsCalendarUtil.datesInSelectedRange.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == 0 -> {
+                            EventsCalendarUtil.datesInSelectedRange.keys.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == 0 -> {
                                 mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                 mDateTextPaint.color = selectedTextColor
                                 canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mRangeSelectionStartPaint)
-                                canvas.drawRect(RectF((mWidth/2).toFloat(),0f,mWidth.toFloat(),mHeight.toFloat()), mRangeSelectionStartPaint)
+                                canvas.drawRect(RectF((mWidth / 2).toFloat(), 0f, mWidth.toFloat(), mHeight.toFloat()), mRangeSelectionStartPaint)
                                 RectF(1f, 2f, 3f, 4f)
 //                                canvas.drawColor(eventDotColor)
                             }
-                            EventsCalendarUtil.datesInSelectedRange.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == EventsCalendarUtil.datesInSelectedRange.size - 1 -> {
+                            EventsCalendarUtil.datesInSelectedRange.keys.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == EventsCalendarUtil.datesInSelectedRange.size - 1 -> {
                                 mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                 mDateTextPaint.color = selectedTextColor
                                 canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mRangeSelectionEndPaint)
-                                canvas.drawRect(RectF(0f,0f,(mWidth/2).toFloat(),mHeight.toFloat()), mRangeSelectionEndPaint)
+                                canvas.drawRect(RectF(0f, 0f, (mWidth / 2).toFloat(), mHeight.toFloat()), mRangeSelectionEndPaint)
 //                                canvas.drawColor(eventDotColor)
                             }
                             else -> {
@@ -223,7 +230,7 @@ class DateText : View {
 
     private fun drawDot(canvas: Canvas) {
         if (isCurrentMonth && !isDisabled) {
-            if (isSelected) {
+            if (isSelected || EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY))) {
                 mDotPaint.color = selectedTextColor
                 canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint)
                 mDotPaint.color = EventsCalendarUtil.selectionColor
@@ -362,5 +369,23 @@ class DateText : View {
         fun invalidateColors() {
             doInitializeStaticVariables = true
         }
+    }
+
+    fun setCustomOnLongClickListener(newListener: OnLongClickListener) {
+        listenerAdapter.setLongClickListener(newListener)
+    }
+
+    private class InternalListener : View.OnLongClickListener {
+        private var longClickListener: OnLongClickListener? = null
+
+        fun setLongClickListener(newListener: OnLongClickListener) {
+            longClickListener = newListener
+        }
+
+        override fun onLongClick(p0: View?): Boolean {
+            longClickListener?.onLongClick(p0)
+            return true
+        }
+
     }
 }

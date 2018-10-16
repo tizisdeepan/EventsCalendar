@@ -14,6 +14,7 @@ import java.text.DateFormatSymbols
 import java.util.*
 
 class MonthView : ViewGroup, DatesGridLayout.CallBack {
+
     private lateinit var mContext: Context
     private var sWeekStartDay = Calendar.MONDAY
     private var mMonth = 0

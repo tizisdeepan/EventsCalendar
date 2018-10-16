@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.util.Log
 import android.util.MonthDisplayHelper
+import android.view.View
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
@@ -21,7 +22,7 @@ object EventsCalendarUtil {
     const val YYYY_MM = 100
     var today: Calendar = Calendar.getInstance()
 
-    var RANGE_MODE = false
+    var SELECTION_MODE = 0
 
     var currentMode = MONTH_MODE
     var weekStartDay = Calendar.MONDAY
@@ -45,9 +46,11 @@ object EventsCalendarUtil {
     var weekHeaderTypeface: Typeface? = null
     var isBoldTextOnSelectionEnabled: Boolean = false
 
-    val datesInSelectedRange: ArrayList<String> = ArrayList()
+    val datesInSelectedRange: LinkedHashMap<String, Calendar> = LinkedHashMap()
     var minDateInRange: Calendar? = null
     var maxDateInRange: Calendar? = null
+
+    var onDateLongClickListener: View.OnLongClickListener? = null
 
     fun updateMinMaxDateInRange(c: Calendar) {
         when {
@@ -86,7 +89,7 @@ object EventsCalendarUtil {
                 val max = maxDateInRange!!.clone() as Calendar
                 datesInSelectedRange.clear()
                 while (min.before(max) || areDatesSame(min, max)) {
-                    datesInSelectedRange.add(getDateString(min, DD_MM_YYYY))
+                    datesInSelectedRange[getDateString(min, DD_MM_YYYY)] = min
                     min.add(Calendar.DAY_OF_YEAR, 1)
                 }
             } else datesInSelectedRange.clear()
