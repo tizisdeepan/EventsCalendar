@@ -97,6 +97,9 @@ eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 |`app:secondaryTextColor`|`setSecondaryTextColor(color: Int)`|**Secondary Text** color of the calendar (disabled dates)|
 |`app:selectedTextColor`|`setSelectedTextColor(color: Int)`|Text color of the **Selected** date|
 |`app:selectionColor`|`setSelectionColor(color: Int)`|Color for the **Selection Circle**|
+|`app:rangeSelectionColor`|`setRangeSelectionColor(color: Int)`|Color for the **Selection Background**|
+|`app:rangeSelectionStartColor`|`setRangeSelectionStartColor(color: Int)`|Color for the **Range Start Selection Background**|
+|`app:rangeSelectionEndColor`|`setRangeSelectionEndColor(color: Int)`|Color for the **Range End Selection Background**|
 |`app:weekHeaderColor`|`setWeekHeaderColor(color: Int)`|Text color for the **Week Header** labels|
 |`app:monthTitleColor`|`setMonthTitleColor(color: Int)`|Text color for the **Month Title** in the calendar view|
 |`app:eventDotColor`|`setEventDotColor(color: Int)`|Color for the **Event Dots** marked in the calendar view|
