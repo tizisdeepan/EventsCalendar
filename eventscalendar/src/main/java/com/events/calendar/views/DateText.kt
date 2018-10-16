@@ -59,6 +59,7 @@ class DateText : View {
 
     interface DateSelectListener {
         fun onDateTextViewSelected(dateText: DateText, isClick: Boolean)
+        fun onDateTextViewLongSelected(dateText: DateText, isClick: Boolean)
     }
 
     constructor(context: Context) : super(context) {
@@ -84,10 +85,6 @@ class DateText : View {
         this.isClickable = true
         mDate = Calendar.getInstance()
         mDotRadius = resources.getDimension(R.dimen.radius_event_dot)
-
-        if (EventsCalendarUtil.onDateLongClickListener != null) setCustomOnLongClickListener(EventsCalendarUtil.onDateLongClickListener!!)
-
-        setOnLongClickListener(listenerAdapter)
 
         val attributes = mContext.theme.obtainStyledAttributes(attrs, R.styleable.DateText, defStyleAttr, defStyleRes)
         try {
@@ -145,6 +142,13 @@ class DateText : View {
 
             doInitializeStaticVariables = false
         }
+
+        listenerAdapter.setCustomLongClickListener(OnLongClickListener {
+            mDateSelectListener.onDateTextViewLongSelected(this@DateText, true)
+            true
+        })
+
+        setOnLongClickListener(listenerAdapter.longClickListener)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -371,14 +375,10 @@ class DateText : View {
         }
     }
 
-    fun setCustomOnLongClickListener(newListener: OnLongClickListener) {
-        listenerAdapter.setLongClickListener(newListener)
-    }
-
     private class InternalListener : View.OnLongClickListener {
-        private var longClickListener: OnLongClickListener? = null
+        var longClickListener: OnLongClickListener? = null
 
-        fun setLongClickListener(newListener: OnLongClickListener) {
+        fun setCustomLongClickListener(newListener: OnLongClickListener) {
             longClickListener = newListener
         }
 

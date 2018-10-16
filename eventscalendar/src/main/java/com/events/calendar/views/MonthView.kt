@@ -50,6 +50,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     interface Callback {
         fun onDaySelected(isClick: Boolean)
+        fun onDayLongSelected(date: Calendar, isClick: Boolean)
     }
 
     constructor(context: Context) : super(context) {
@@ -163,6 +164,10 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     override fun onDaySelected(date: Calendar?, isClick: Boolean) {
         mCallback.onDaySelected(isClick)
+    }
+
+    override fun onDayLongSelected(date: Calendar?, isClick: Boolean) {
+        if (date != null) mCallback.onDayLongSelected(date, isClick)
     }
 
     fun setCallback(callBack: Callback) {

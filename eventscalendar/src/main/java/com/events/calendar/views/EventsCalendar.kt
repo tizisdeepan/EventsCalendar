@@ -10,7 +10,6 @@ import android.os.Parcel
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.events.calendar.R
@@ -155,6 +154,10 @@ class EventsCalendar : ViewPager, MonthView.Callback {
                 } else mCallback?.onMonthChanged(EventsCalendarUtil.getCurrentSelectedDate())
             }
         }
+    }
+
+    override fun onDayLongSelected(date: Calendar, isClick: Boolean) {
+        mCallback?.onDayLongPressed(date)
     }
 
     @SuppressLint("Recycle")
@@ -327,6 +330,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     interface Callback {
         fun onDaySelected(selectedDate: Calendar?)
+        fun onDayLongPressed(selectedDate: Calendar?)
         fun onMonthChanged(monthStartDate: Calendar?)
     }
 
@@ -388,10 +392,6 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             changeAdapter()
             mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
         }
-    }
-
-    fun setOnDateLongClickListener(onLongClickListener: OnLongClickListener) {
-        EventsCalendarUtil.onDateLongClickListener = onLongClickListener
     }
 
 }

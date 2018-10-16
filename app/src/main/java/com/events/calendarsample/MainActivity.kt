@@ -4,18 +4,23 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
 
+    override fun onDayLongPressed(selectedDate: Calendar?) {
+        Log.e("LONG CLICKED", EventsCalendarUtil.getDateString(selectedDate, EventsCalendarUtil.DD_MM_YYYY))
+    }
+
     override fun onMonthChanged(monthStartDate: Calendar?) {
         Log.e("MON", "CHANGED")
     }
 
     override fun onDaySelected(selectedDate: Calendar?) {
-        Log.e("DAY", "SELECTED")
+        Log.e("CLICKED", EventsCalendarUtil.getDateString(selectedDate, EventsCalendarUtil.DD_MM_YYYY))
         selected.text = getDateString(selectedDate?.timeInMillis)
     }
 
@@ -36,11 +41,6 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
-
-        eventsCalendar.setOnDateLongClickListener(View.OnLongClickListener {
-            Log.e("DAY", "LONG CLICKED")
-            true
-        })
         eventsCalendar.setCallback(this)
 
 

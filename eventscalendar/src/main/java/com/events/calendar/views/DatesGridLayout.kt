@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.util.MonthDisplayHelper
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +55,7 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
 
     interface CallBack {
         fun onDaySelected(date: Calendar?, isClick: Boolean)
+        fun onDayLongSelected(date: Calendar?, isClick: Boolean)
     }
 
     constructor(context: Context) : super(context) {
@@ -316,6 +318,10 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
             mTranslationDistance = (dateViewLocation[1] - layoutLocation[1]).toFloat()
             if (EventsCalendarUtil.currentMode == EventsCalendarUtil.WEEK_MODE) translationY = -mTranslationDistance
         }
+    }
+
+    override fun onDateTextViewLongSelected(dateText: DateText, isClick: Boolean) {
+        mCallback?.onDayLongSelected(dateText.date, isClick)
     }
 
     fun resetWeekStartDay(weekStartDay: Int) {

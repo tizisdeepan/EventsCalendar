@@ -50,8 +50,6 @@ object EventsCalendarUtil {
     var minDateInRange: Calendar? = null
     var maxDateInRange: Calendar? = null
 
-    var onDateLongClickListener: View.OnLongClickListener? = null
-
     fun updateMinMaxDateInRange(c: Calendar) {
         when {
             areDatesSame(minDateInRange, c) -> {
