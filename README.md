@@ -2,8 +2,8 @@
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/tizisdeepan/eventscalendar.svg)](https://jitpack.io/#tizisdeepan/eventscalendar)
 
-![Screenshot 2](https://github.com/tizisdeepan/eventscalendar/blob/master/screenshots/ss2.png | width=100)
-<img src="https://github.com/tizisdeepan/eventscalendar/blob/master/screenshots/ss2.png" alt="Single Selection Mode" width="600" height="600">
+![Screenshot 2](https://github.com/tizisdeepan/eventscalendar/blob/master/screenshots/ss2.png | width=183)
+<img src="https://github.com/tizisdeepan/eventscalendar/blob/master/screenshots/ss2.png" alt="Single Selection Mode" width="183">
 
 ## What is Events Calendar?
 Events Calendar is a user-friendly library that helps you achieve a cool Calendar UI with events mapping. You can customise every pixel of the calendar as per your wish and still achieve in implementing all the functionalities of the native android calendar in addition with adding dots to the calendar which represents the presence of an event on the respective dates. Events Calendar also has multi-lingual support. You are just a few steps away from implementing your own badass looking Calendar for your very own project!
