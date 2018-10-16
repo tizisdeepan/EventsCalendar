@@ -87,8 +87,8 @@ eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
 eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 ```
 **Available Selection modes are,**
-1. **Single Selection** -> can select single day at a time
-2. **Range Selection** -> can select range of days at a time
+1. **SINGLE_SELECTION** -> can select single day at a time
+2. **RANGE_SELECTION** -> can select range of days at a time
 ### Documentation
 
 |XML|Kotlin/Java|Description|
