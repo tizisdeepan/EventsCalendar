@@ -89,6 +89,7 @@ eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 **Available Selection modes are,**
 1. **SINGLE_SELECTION** -> can select single day at a time
 2. **RANGE_SELECTION** -> can select range of days at a time
+2. **MULTIPLE_SELECTION** -> can select multiple days at a time (not necessary that the selected days be consequtive)
 ### Documentation
 
 |XML|Kotlin/Java|Description|
