@@ -234,7 +234,6 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     fun getDatesFromSelectedRange(): ArrayList<Calendar> {
         val dates: ArrayList<Calendar> = ArrayList()
-        dates.addAll(EventsCalendarUtil.datesInSelectedRange.values)
         return dates
     }
 
@@ -336,42 +335,32 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     }
 
     fun setCurrentSelectedDate(selectedDate: Calendar?) {
-        when (EventsCalendarUtil.SELECTION_MODE) {
-            SINGLE_SELECTION -> {
-                val position: Int
-                if (isPagingEnabled) {
-                    doFocus = false
-                    if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
-                        position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
-                        setCurrentItem(position, false)
-                        post {
-                            EventsCalendarUtil.monthPos = currentItem
-                            EventsCalendarUtil.selectedDate = selectedDate
-                            mCalendarMonthsAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
-                            doFocus = true
-                        }
-                    } else {
-                        position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
-                        setCurrentItem(position, false)
-                        post {
-                            mCalendarWeekPagerAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
-                            doFocus = true
-                        }
+        if (EventsCalendarUtil.SELECTION_MODE != RANGE_SELECTION) {
+            val position: Int
+            if (isPagingEnabled) {
+                doFocus = false
+                if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
+                    position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
+                    setCurrentItem(position, false)
+                    post {
+                        EventsCalendarUtil.monthPos = currentItem
+                        EventsCalendarUtil.selectedDate = selectedDate
+                        mCalendarMonthsAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        doFocus = true
+                    }
+                } else {
+                    position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
+                    setCurrentItem(position, false)
+                    post {
+                        mCalendarWeekPagerAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        doFocus = true
                     }
                 }
             }
-            RANGE_SELECTION -> {
-                if (selectedDate != null) EventsCalendarUtil.updateMinMaxDateInRange(selectedDate)
-                reset()
-                refreshTodayDate()
-            }
-            MULTIPLE_SELECTION -> {
-                if (selectedDate != null) EventsCalendarUtil.updateSelectedDates(selectedDate)
-                reset()
-                refreshTodayDate()
-            }
-            else -> {
-            }
+        } else {
+            if (selectedDate != null) EventsCalendarUtil.updateMinMaxDateInRange(selectedDate)
+            reset()
+            refreshTodayDate()
         }
     }
 

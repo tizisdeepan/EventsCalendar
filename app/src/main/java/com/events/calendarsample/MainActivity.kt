@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         val today = Calendar.getInstance()
         val end = Calendar.getInstance()
         end.add(Calendar.YEAR, 2)
-        eventsCalendar.setSelectionMode(eventsCalendar.MULTIPLE_SELECTION)
+        eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
         eventsCalendar.setToday(today)
         eventsCalendar.setMonthRange(today, end)
         eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
@@ -42,6 +42,15 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setCallback(this)
+
+
+//        val min = Calendar.getInstance()
+//        min.add(Calendar.MONTH, 1)
+//        val max = Calendar.getInstance()
+//        max.add(Calendar.MONTH, 1)
+//        max.add(Calendar.DAY_OF_YEAR, 5)
+//        eventsCalendar.selectDateRange(min, max)
+
 
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, 2)
@@ -54,9 +63,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.addEvent(c)
 
         selected.setOnClickListener {
-            val dates = eventsCalendar.getDatesFromSelectedRange()
-            Log.e("SELECTED SIZE", dates.size.toString())
-//            eventsCalendar.setCurrentSelectedDate(eventsCalendar.getCurrentSelectedDate())
+            eventsCalendar.setCurrentSelectedDate(eventsCalendar.getCurrentSelectedDate())
         }
 
         selected.typeface = FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this)
