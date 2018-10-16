@@ -11,7 +11,7 @@ Events Calendar is a user-friendly library that helps you achieve a cool Calenda
 ### [1] In your app module gradle file
 ```gradle
 dependencies {
-    implementation 'com.github.tizisdeepan:eventscalendar:1.5.1'
+    implementation 'com.github.tizisdeepan:eventscalendar:1.1.1'
 }
 ```
 
@@ -44,16 +44,12 @@ allprojects {
 ```kotlin
 class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
     ...
-    override fun onDayLongPressed(selectedDate: Calendar?) {
-        Log.e("LONG", "CLICKED")
-    }
-    
     override fun onMonthChanged(monthStartDate: Calendar?) {
         Log.e("MON", "CHANGED")
     }
 
     override fun onDaySelected(selectedDate: Calendar?) {
-        Log.e("SHORT", "CLICKED")
+        Log.e("DAY", "SELECTED")
     }
 }
 ```
@@ -82,13 +78,6 @@ eventsCalendar.disableDate(dc)
 //disable days in a week on the whole EventsCalendar [varargs days: Int]
 eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
 ```
-### [7] You can change selection mode of the calendar as you wish
-```kotlin
-eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
-```
-**Available Selection modes are,**
-1. **SINGLE_SELECTION** -> can select single day at a time
-2. **RANGE_SELECTION** -> can select range of days at a time
 ### Documentation
 
 |XML|Kotlin/Java|Description|
@@ -97,9 +86,6 @@ eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 |`app:secondaryTextColor`|`setSecondaryTextColor(color: Int)`|**Secondary Text** color of the calendar (disabled dates)|
 |`app:selectedTextColor`|`setSelectedTextColor(color: Int)`|Text color of the **Selected** date|
 |`app:selectionColor`|`setSelectionColor(color: Int)`|Color for the **Selection Circle**|
-|`app:rangeSelectionColor`|`setRangeSelectionColor(color: Int)`|Color for the **Selection Background**|
-|`app:rangeSelectionStartColor`|`setRangeSelectionStartColor(color: Int)`|Color for the **Range Start Selection Background**|
-|`app:rangeSelectionEndColor`|`setRangeSelectionEndColor(color: Int)`|Color for the **Range End Selection Background**|
 |`app:weekHeaderColor`|`setWeekHeaderColor(color: Int)`|Text color for the **Week Header** labels|
 |`app:monthTitleColor`|`setMonthTitleColor(color: Int)`|Text color for the **Month Title** in the calendar view|
 |`app:eventDotColor`|`setEventDotColor(color: Int)`|Color for the **Event Dots** marked in the calendar view|
