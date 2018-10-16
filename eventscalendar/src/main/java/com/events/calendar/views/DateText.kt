@@ -304,10 +304,6 @@ class DateText : View {
         }
     }
 
-    fun selectRange() {
-        selectAction()
-    }
-
     fun selectOnPageChange(isClick: Boolean) {
         val isClick = false
         if (!isSelected && !isDisabled) {

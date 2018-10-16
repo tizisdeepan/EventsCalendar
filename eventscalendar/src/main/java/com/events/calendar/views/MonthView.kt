@@ -176,8 +176,4 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     fun setSelectedDate(date: Calendar) {
         gridLayout.selectDate(date)
     }
-
-    fun setSelectedDateRange(date: Calendar) {
-        gridLayout.selectDateRange(date)
-    }
 }

@@ -385,11 +385,6 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
         selectedDate.select(true)
     }
 
-    fun selectDateRange(date: Calendar) {
-        val selectedDate = getChildAt(mMonthStartDayOffset - 1 + date.get(Calendar.DATE)) as DateText
-        selectedDate.selectRange()
-    }
-
     fun setShowOnlyCurrentMonthWeeks(showOnlyCurrentMonthWeeks: Boolean) {
         DatesGridLayout.showOnlyCurrentMonthWeeks = showOnlyCurrentMonthWeeks
     }
