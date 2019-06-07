@@ -124,8 +124,8 @@ Developed By
 * Deepan Elango - <tizisdeepan@gmail.com>
 
 <a href="https://twitter.com/tizisdeepan">
-  <img alt="Follow me on Twitter" src="./art/twitter.png" />
+  <img alt="Follow me on Twitter" src="./screenshots/twitter.png" />
 </a>
 <a href="https://www.linkedin.com/in/tizisdeepan/">
-  <img alt="Add me to Linkedin" src="./art/linkedin.png" />
+  <img alt="Add me to Linkedin" src="./screenshots/linkedin.png" />
 </a>
