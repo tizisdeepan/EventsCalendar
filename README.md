@@ -117,3 +117,15 @@ eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 |`app:isBoldTextOnSelectionEnabled`|`setIsBoldTextOnSelectionEnabled(isEnabled: Boolean)`|Sets whether the dates should be **highlighted** or not|
 
 Voila! You have implemented an awesome Events Calendar for your Android Project now!
+
+Developed By
+------------
+
+* Deepan Elango - <tizisdeepan@gmail.com>
+
+<a href="https://twitter.com/tizisdeepan">
+  <img alt="Follow me on Twitter" src="./art/twitter.png" />
+</a>
+<a href="https://www.linkedin.com/in/tizisdeepan/">
+  <img alt="Add me to Linkedin" src="./art/linkedin.png" />
+</a>
