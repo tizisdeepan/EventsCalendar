@@ -5,16 +5,16 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnLongClickListener
 import com.events.calendar.R
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
+import kotlin.math.min
 
 @Suppress("NAME_SHADOWING")
 class DateText : View {
@@ -357,12 +357,12 @@ class DateText : View {
     }
 
     private fun getMeasurement(measureSpec: Int, contentSize: Int): Int {
-        val specMode = View.MeasureSpec.getMode(measureSpec)
-        val specSize = View.MeasureSpec.getSize(measureSpec)
+        val specMode = MeasureSpec.getMode(measureSpec)
+        val specSize = MeasureSpec.getSize(measureSpec)
         return when (specMode) {
-            View.MeasureSpec.UNSPECIFIED -> contentSize
-            View.MeasureSpec.AT_MOST -> Math.min(specSize, contentSize)
-            View.MeasureSpec.EXACTLY -> specSize
+            MeasureSpec.UNSPECIFIED -> contentSize
+            MeasureSpec.AT_MOST -> min(specSize, contentSize)
+            MeasureSpec.EXACTLY -> specSize
             else -> 0
         }
     }
@@ -389,7 +389,7 @@ class DateText : View {
         }
     }
 
-    private class InternalListener : View.OnLongClickListener {
+    private class InternalListener : OnLongClickListener {
         var longClickListener: OnLongClickListener? = null
 
         fun setCustomLongClickListener(newListener: OnLongClickListener) {

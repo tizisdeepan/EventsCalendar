@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.util.MonthDisplayHelper
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +16,7 @@ import com.events.calendar.utils.Events
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.ceil
 
 @Suppress("NAME_SHADOWING")
 class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
@@ -118,7 +118,7 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
         mMonthDisplayHelper = MonthDisplayHelper(mYear, mMonth, sWeekStartDay)
         mNoOfCurrentMonthDays = mMonthDisplayHelper.numberOfDaysInMonth
         mMonthStartDayOffset = mMonthDisplayHelper.offset
-        mNoOfWeeks = if (showOnlyCurrentMonthWeeks) Math.ceil(((mNoOfCurrentMonthDays + mMonthStartDayOffset).toFloat() / 7.0f).toDouble()).toInt() else 6
+        mNoOfWeeks = if (showOnlyCurrentMonthWeeks) ceil(((mNoOfCurrentMonthDays + mMonthStartDayOffset).toFloat() / 7.0f).toDouble()).toInt() else 6
         mTotalNoOfDays = 7 * mNoOfWeeks
         mTranslationDistance = (mSelectedWeekNo - 1) * mContext.resources.getDimension(R.dimen.dimen_date_text_view)
         translationY = -mTranslationDistance
@@ -254,11 +254,11 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthConstraints: Int = paddingLeft + paddingRight
 //        val heightConstraints: Int = paddingTop + paddingBottom
-        val dateWidthSpec: Int = View.MeasureSpec.makeMeasureSpec(mDateTextWidth.toInt(), View.MeasureSpec.EXACTLY)
-        val dateHeightSpec: Int = View.MeasureSpec.makeMeasureSpec(mDateTextHeight.toInt(), View.MeasureSpec.EXACTLY)
+        val dateWidthSpec: Int = MeasureSpec.makeMeasureSpec(mDateTextWidth.toInt(), MeasureSpec.EXACTLY)
+        val dateHeightSpec: Int = MeasureSpec.makeMeasureSpec(mDateTextHeight.toInt(), MeasureSpec.EXACTLY)
         mWidth = View.getDefaultSize(0, widthMeasureSpec)
         mDateTextWidth = (mWidth - widthConstraints) / 7f
-        mDateTextHeight = if (View.MeasureSpec.getMode(heightMeasureSpec) == View.MeasureSpec.EXACTLY) (View.MeasureSpec.getSize(heightMeasureSpec).toFloat() - resources.getDimension(R.dimen.dimen_date_text_view) / 1.5f - resources.getDimension(R.dimen.height_week_day_header)) / mNoOfWeeks
+        mDateTextHeight = if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) (View.MeasureSpec.getSize(heightMeasureSpec).toFloat() - resources.getDimension(R.dimen.dimen_date_text_view) / 1.5f - resources.getDimension(R.dimen.height_week_day_header)) / mNoOfWeeks
         else mContext.resources.getDimension(R.dimen.dimen_date_text_view)
         mHeight = (mNoOfWeeks * mDateTextHeight).toInt()
         val childCount = childCount
@@ -354,10 +354,9 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
         }
     }
 
-    fun selectDefaultDateOnPageChanged(defaultDate: Int, isUserClick: Boolean?) {
+    fun selectDefaultDateOnPageChanged(defaultDate: Int) {
         var defaultDate = defaultDate
-        var isUserClick = isUserClick
-        isUserClick = false
+        val isUserClick = false
         if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
             if (defaultDate < 29) (getChildAt(mMonthStartDayOffset - 1 + defaultDate) as DateText).selectOnPageChange(isUserClick)
             else {

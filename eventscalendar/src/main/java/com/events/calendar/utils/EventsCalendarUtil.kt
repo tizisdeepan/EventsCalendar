@@ -4,23 +4,22 @@ import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.util.Log
 import android.util.MonthDisplayHelper
-import android.view.View
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.collections.LinkedHashSet
-import kotlin.properties.Delegates
+import kotlin.math.ceil
 
 object EventsCalendarUtil {
     const val WEEK_MODE = 0
     const val MONTH_MODE = 1
-    val SINGLE_SELECTION = 0
-    val RANGE_SELECTION = 1
-    val MULTIPLE_SELECTION = 2
+    const val SINGLE_SELECTION = 0
+    const val RANGE_SELECTION = 1
+    const val MULTIPLE_SELECTION = 2
     private const val MONTHS_IN_YEAR = 12
     const val YYYY_MM_DD = 10
     const val DD_MM_YYYY = 20
-    const val MM_DD_YYYY = 30
+    private const val MM_DD_YYYY = 30
     const val DISPLAY_STRING = 200
     const val YYYY_MM = 100
     var today: Calendar = Calendar.getInstance()
@@ -42,7 +41,7 @@ object EventsCalendarUtil {
     var eventDotColor: Int = 0
     var monthTitleColor: Int = 0
     var weekHeaderColor: Int = 0
-    var selectedDate = Calendar.getInstance()
+    var selectedDate: Calendar = Calendar.getInstance()
     var monthPos = 0
     var datesTypeface: Typeface? = null
     var monthTitleTypeface: Typeface? = null
@@ -121,7 +120,7 @@ object EventsCalendarUtil {
     }
 
     fun setCurrentSelectedDate(selectedDate: Calendar): Boolean {
-        if (!EventsCalendarUtil.areDatesSame(currentSelectedDate, selectedDate) || currentSelectedDate == null) {
+        if (!areDatesSame(currentSelectedDate, selectedDate)) {
             currentSelectedDate = selectedDate.clone() as Calendar
             return true
         }
@@ -139,7 +138,7 @@ object EventsCalendarUtil {
         var finished = false
         val helper = MonthDisplayHelper(startDay.get(Calendar.YEAR), startDay.get(Calendar.MONTH), weekStartDay)
         while (!finished) {
-            noOfWeeks += Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
+            noOfWeeks += ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
             if (endDay.get(Calendar.MONTH) == helper.month && endDay.get(Calendar.YEAR) == helper.year) finished = true
             helper.nextMonth()
         }
@@ -160,7 +159,7 @@ object EventsCalendarUtil {
         var offsetForPreviousMonth: Int
         val month = Calendar.getInstance()
         while (!finished) {
-            offsetForPreviousMonth = Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
+            offsetForPreviousMonth = ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
             noOfWeeks += offsetForPreviousMonth
             if (position + 1 <= noOfWeeks) {
                 month.set(helper.year, helper.month, 1)
@@ -177,7 +176,7 @@ object EventsCalendarUtil {
         var noOfWeeks = 0
         var offsetForPreviousMonth = 0
         while (!finished) {
-            offsetForPreviousMonth = Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
+            offsetForPreviousMonth = ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
             noOfWeeks += offsetForPreviousMonth
             if (position + 1 <= noOfWeeks) finished = true
             helper.nextMonth()
@@ -193,13 +192,13 @@ object EventsCalendarUtil {
             if (helper.month == day?.get(Calendar.MONTH) && helper.year == day.get(Calendar.YEAR)) {
                 noOfWeeks += helper.getRowOf(day.get(Calendar.DATE))
                 finished = true
-            } else noOfWeeks += Math.ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
+            } else noOfWeeks += ceil(((helper.offset + helper.numberOfDaysInMonth).toFloat() / 7.0f).toDouble()).toInt()
             helper.nextMonth()
         }
         return noOfWeeks
     }
 
-    fun getCurrentSelectedDate(): Calendar? = currentSelectedDate
+    fun getCurrentSelectedDate(): Calendar = currentSelectedDate
 
     fun getCalendar(dateStr: String, format: Int): Calendar {
         val calendar = Calendar.getInstance()

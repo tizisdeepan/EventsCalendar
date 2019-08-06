@@ -145,11 +145,11 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mMonthTitleTextView.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_month_title).toInt(), View.MeasureSpec.EXACTLY))
-        mWeekDaysHeader.measure(widthMeasureSpec, View.MeasureSpec.makeMeasureSpec(mContext.resources.getDimension(R.dimen.height_week_day_header).toInt(), View.MeasureSpec.EXACTLY))
+        mMonthTitleTextView.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.height_month_title).toInt(), MeasureSpec.EXACTLY))
+        mWeekDaysHeader.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(mContext.resources.getDimension(R.dimen.height_week_day_header).toInt(), MeasureSpec.EXACTLY))
         mMonthGridContainer.measure(widthMeasureSpec, heightMeasureSpec)
         val height = mMonthTitleTextView.measuredHeight + mWeekDaysHeader.measuredHeight + mMonthGridContainer.measuredHeight
-        setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), height)
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), height)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -176,7 +176,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     fun onFocus(pos: Int) {
         if (pos == EventsCalendarUtil.monthPos) gridLayout.selectDefaultDate(EventsCalendarUtil.selectedDate.get(Calendar.DAY_OF_MONTH))
-        else gridLayout.selectDefaultDateOnPageChanged(EventsCalendarUtil.tobeSelectedDate, false)
+        else gridLayout.selectDefaultDateOnPageChanged(EventsCalendarUtil.tobeSelectedDate)
     }
 
     fun setSelectedDate(date: Calendar) {

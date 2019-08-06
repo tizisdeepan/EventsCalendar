@@ -44,8 +44,8 @@ object Events {
     }
 
     fun add(c: Calendar) {
-        val date = EventsCalendarUtil.getDateString(c, EventsCalendarUtil.YYYY_MM_DD) ?: ""
-        if (!date.isEmpty()) {
+        val date = EventsCalendarUtil.getDateString(c, EventsCalendarUtil.YYYY_MM_DD)
+        if (date.isNotEmpty()) {
             val dots = mDotsMap[date.substring(0, 7)]
             dots?.add(c[Calendar.DAY_OF_MONTH])
         }

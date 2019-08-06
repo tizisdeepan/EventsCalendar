@@ -122,7 +122,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             e.printStackTrace()
         }
 
-        setMeasuredDimension(View.MeasureSpec.getSize(widthMeasureSpec), mCurrentItemHeight)
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), mCurrentItemHeight)
     }
 
     fun setCurrentMonthTranslationFraction(fraction: Float) {
@@ -143,7 +143,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     override fun onDaySelected(isClick: Boolean) {
         if (mCallback != null) {
             if (!DatesGridLayout.selectedDateText?.isCurrentMonth!!) {
-                val itemNo = if (EventsCalendarUtil.getCurrentSelectedDate()!!.get(Calendar.DATE) < 8) currentItem + 1 else currentItem - 1
+                val itemNo = if (EventsCalendarUtil.getCurrentSelectedDate().get(Calendar.DATE) < 8) currentItem + 1 else currentItem - 1
                 if (itemNo >= 0 && itemNo <= EventsCalendarUtil.getWeekCount(mMinMonth, mMaxMonth)) {
                     setCurrentSelectedDate(EventsCalendarUtil.getCurrentSelectedDate())
                 }
@@ -335,7 +335,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         fun onMonthChanged(monthStartDate: Calendar?)
     }
 
-    fun setCurrentSelectedDate(selectedDate: Calendar?) {
+    fun setCurrentSelectedDate(selectedDate: Calendar) {
         when (EventsCalendarUtil.SELECTION_MODE) {
             SINGLE_SELECTION -> {
                 val position: Int
@@ -361,12 +361,12 @@ class EventsCalendar : ViewPager, MonthView.Callback {
                 }
             }
             RANGE_SELECTION -> {
-                if (selectedDate != null) EventsCalendarUtil.updateMinMaxDateInRange(selectedDate)
+                EventsCalendarUtil.updateMinMaxDateInRange(selectedDate)
                 reset()
                 refreshTodayDate()
             }
             MULTIPLE_SELECTION -> {
-                if (selectedDate != null) EventsCalendarUtil.updateSelectedDates(selectedDate)
+                EventsCalendarUtil.updateSelectedDates(selectedDate)
                 reset()
                 refreshTodayDate()
             }
@@ -377,13 +377,13 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     fun getCurrentSelectedDate(): Calendar? = EventsCalendarUtil.selectedDate
 
-    fun reset() {
+    private fun reset() {
         for (i in 0 until childCount) {
             (getChildAt(i) as MonthView).reset(false)
         }
     }
 
-    fun refreshTodayDate() {
+    private fun refreshTodayDate() {
         for (i in 0 until childCount) {
             (getChildAt(i) as MonthView).refreshDates()
         }
@@ -398,7 +398,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.weekStartDay = weekStartDay
         if (doReset) {
             mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
-            mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate()!!, mMinMonth)
+            mSelectedWeekPosition = EventsCalendarUtil.getWeekPosition(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
             doChangeAdapter = true
             changeAdapter()
             mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
