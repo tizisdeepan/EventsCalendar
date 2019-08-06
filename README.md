@@ -69,28 +69,21 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
 ```
 ### [5] Create instances and set default values for the EventsCalendar in your Activity/ Fragment
 ```kotlin
-//set today's date [today: Calendar]
-eventsCalendar.setToday(today)
-//set starting month [start: Calendar] and ending month [end: Calendar]
-eventsCalendar.setMonthRange(start, end)
-//set start day of the week as you wish [startday: Int, doReset: Boolean]
-eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
-//set current date and scrolls the calendar to the corresponding month of the selected date [today: Calendar]
-eventsCalendar.setCurrentSelectedDate(today)
-//set font for dates
-eventsCalendar.setDatesTypeface(typeface)
-//set font for title of the calendar
-eventsCalendar.setMonthTitleTypeface(typeface)
-//set font for week names
-eventsCalendar.setWeekHeaderTypeface(typeface)
-//set the callback for EventsCalendar
-eventsCalendar.setCallback(this)
-//set events on the EventsCalendar [c: Calendar]
-eventsCalendar.addEvent(c)
-//disable a specific day on the EventsCalendar [c: Calendar]
-eventsCalendar.disableDate(dc)
-//disable days in a week on the whole EventsCalendar [varargs days: Int]
-eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
+eventsCalendar.setSelectionMode(eventsCalendar.MULTIPLE_SELECTION) //set mode of Calendar
+              .setToday(today) //set today's date [today: Calendar]
+              .setMonthRange(start, end) //set starting month [start: Calendar] and ending month [end: Calendar]
+              .setWeekStartDay(Calendar.SUNDAY, false) //set start day of the week as you wish [startday: Int, doReset: Boolean]
+              .setCurrentSelectedDate(today) //set current date and scrolls the calendar to the corresponding month of the selected date [today: Calendar]
+              .setDatesTypeface(typeface) //set font for dates
+              .setDateTextFontSize(16f) //set font size for dates
+              .setMonthTitleTypeface(typeface) //set font for title of the calendar
+              .setMonthTitleFontSize(16f) //set font size for title of the calendar
+              .setWeekHeaderTypeface(typeface) //set font for week names
+              .setWeekHeaderFontSize(16f) //set font size for week names
+              .setCallback(this) //set the callback for EventsCalendar
+              .addEvent(c) //set events on the EventsCalendar [c: Calendar]
+              .disableDate(dc) //disable a specific day on the EventsCalendar [c: Calendar]
+              .disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY) //disable days in a week on the whole EventsCalendar [varargs days: Int]
 ```
 ### [6] You can change selection mode of the calendar as you wish
 ```kotlin
@@ -112,7 +105,10 @@ eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
 |`app:rangeSelectionStartColor`|`setRangeSelectionStartColor(color: Int)`|Color for the **Range Start Selection Background**|
 |`app:rangeSelectionEndColor`|`setRangeSelectionEndColor(color: Int)`|Color for the **Range End Selection Background**|
 |`app:weekHeaderColor`|`setWeekHeaderColor(color: Int)`|Text color for the **Week Header** labels|
+|`app:weekHeaderTextSize`|`setWeekHeaderFontSize(size: Float)`|Text size for the **Week Header** labels|
+|`app:datesTextSize`|`setDateTextFontSize(size: Float)`|Text size for the **Date** labels|
 |`app:monthTitleColor`|`setMonthTitleColor(color: Int)`|Text color for the **Month Title** in the calendar view|
+|`app:monthTitleTextSize`|`setMonthTitleFontSize(size: Float)`|Text size for the **Month Title** in the calendar view|
 |`app:eventDotColor`|`setEventDotColor(color: Int)`|Color for the **Event Dots** marked in the calendar view|
 |`app:isBoldTextOnSelectionEnabled`|`setIsBoldTextOnSelectionEnabled(isEnabled: Boolean)`|Sets whether the dates should be **highlighted** or not|
 
