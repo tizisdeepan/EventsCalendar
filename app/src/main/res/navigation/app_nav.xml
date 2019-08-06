@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/app_nav"
+        app:startDestination="@id/mainFragment">
+
+    <fragment
+            android:id="@+id/mainFragment"
+            android:name="com.events.calendarsample.nav.MainFragment"
+            android:label="Reminder"
+            tools:layout="@layout/navmain_fragment">
+
+        <action
+            android:id="@+id/action_mainFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.events.calendarsample.nav.CalendarFragment"
+        android:label="CalendarFragment" />
+
+</navigation>

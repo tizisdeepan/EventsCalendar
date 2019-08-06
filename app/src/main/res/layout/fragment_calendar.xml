@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181818"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <com.events.calendar.views.EventsCalendar
+        android:id="@+id/eventsCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#181818"
+        android:overScrollMode="never"
+        app:eventDotColor="#F9C23B"
+        app:isBoldTextOnSelectionEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:monthTitleColor="@android:color/white"
+        app:primaryTextColor="@android:color/white"
+        app:rangeSelectionColor="#F9C23B"
+        app:rangeSelectionEndColor="#F9C23B"
+        app:rangeSelectionStartColor="#F9C23B"
+        app:secondaryTextColor="@android:color/white"
+        app:selectedTextColor="@android:color/white"
+        app:selectionColor="#FF416C"
+        app:weekHeaderColor="#FF416C" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
