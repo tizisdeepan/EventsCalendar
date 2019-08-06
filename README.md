@@ -38,9 +38,11 @@ allprojects {
     android:layout_height="wrap_content"
     android:background="#000000"
     android:overScrollMode="never"
+    app:datesTextSize="16sp"
     app:eventDotColor="#ff0000"
     app:isBoldTextOnSelectionEnabled="true"
     app:monthTitleColor="#ffffff"
+    app:monthTitleTextSize="16sp"
     app:primaryTextColor="#c4c4c4"
     app:secondaryTextColor="#666666"
     app:selectedTextColor="#000000"
@@ -48,7 +50,8 @@ allprojects {
     app:weekHeaderColor="#c6c6c6"
     app:rangeSelectionColor="#ffe600"
     app:rangeSelectionStartColor="#c1ae01"
-    app:rangeSelectionEndColor="#c1ae01" />
+    app:rangeSelectionEndColor="#c1ae01"
+    app:weekHeaderTextSize="16sp" />
 ```
 ### [4] Implement EventCalendar.Callback on your Activity/ Fragment
 ```kotlin
