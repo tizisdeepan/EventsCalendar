@@ -90,10 +90,6 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     }
 
     fun build() {
-//    }
-//    override fun onAttachedToWindow() {
-//        super.onAttachedToWindow()
-
         var startMonth = Calendar.getInstance()
         var endMonth = Calendar.getInstance()
         if (mCallback != null) {
