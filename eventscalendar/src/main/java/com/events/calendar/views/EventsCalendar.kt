@@ -200,6 +200,18 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         Events.initialize(mMinMonth, mMaxMonth)
     }
 
+    fun setDateTextFontSize(size: Float) {
+        EventsCalendarUtil.dateTextFontSize = size
+    }
+
+    fun setWeekHeaderFontSize(size: Float) {
+        EventsCalendarUtil.weekHeaderFontSize = size
+    }
+
+    fun setMonthTitleFontSize(size: Float) {
+        EventsCalendarUtil.monthTitleFontSize = size
+    }
+
     fun setPrimaryTextColor(color: Int) {
         EventsCalendarUtil.primaryTextColor = color
     }

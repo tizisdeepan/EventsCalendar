@@ -99,6 +99,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         mMonthTitleTextView.setTextColor(EventsCalendarUtil.primaryTextColor)
         if (EventsCalendarUtil.monthTitleTypeface != null) mMonthTitleTextView.typeface = EventsCalendarUtil.monthTitleTypeface
         mMonthTitleTextView.setTextColor(EventsCalendarUtil.monthTitleColor)
+        mMonthTitleTextView.textSize = EventsCalendarUtil.monthTitleFontSize
         addView(mMonthTitleTextView)
     }
 
@@ -124,6 +125,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
 
     private fun setWeekDayHeaderString(header: TextView, calendarConstant: Int) {
         header.setTextColor(EventsCalendarUtil.weekHeaderColor)
+        header.textSize = EventsCalendarUtil.weekHeaderFontSize
         if (EventsCalendarUtil.weekHeaderTypeface != null) header.typeface = EventsCalendarUtil.weekHeaderTypeface
         val namesOfDays = DateFormatSymbols.getInstance().shortWeekdays
         when (calendarConstant) {

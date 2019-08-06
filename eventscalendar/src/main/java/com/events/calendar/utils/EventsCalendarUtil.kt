@@ -31,6 +31,9 @@ object EventsCalendarUtil {
     private var currentSelectedDate: Calendar = Calendar.getInstance()
     var tobeSelectedDate = 1
     const val DEFAULT_NO_OF_MONTHS = 480
+    var dateTextFontSize: Float = 0f
+    var weekHeaderFontSize: Float = 0f
+    var monthTitleFontSize: Float = 0f
     var primaryTextColor: Int = 0
     var secondaryTextColor: Int = 0
     var selectedTextColor: Int = 0

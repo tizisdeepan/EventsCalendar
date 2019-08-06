@@ -41,6 +41,9 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
+        eventsCalendar.setMonthTitleFontSize(24f)
+        eventsCalendar.setDateTextFontSize(16f)
+        eventsCalendar.setWeekHeaderFontSize(24f)
         eventsCalendar.setCallback(this)
 
         val c = Calendar.getInstance()
@@ -67,7 +70,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
 //        eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
     }
 
-    fun getDateString(time: Long?): String {
+    private fun getDateString(time: Long?): String {
         if (time != null) {
             val cal = Calendar.getInstance()
             cal.timeInMillis = time
