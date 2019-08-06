@@ -54,11 +54,12 @@ class CalendarFragment : Fragment(), EventsCalendar.Callback {
         eventsCalendar.post {
             eventsCalendar.setCurrentSelectedDate(today)
         }
+
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
 
-        //eventsCalendar.setup()
+        eventsCalendar.setup()
 
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, 2)
