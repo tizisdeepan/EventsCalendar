@@ -1,19 +1,20 @@
 package com.events.calendar.utils
 
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 object Events {
     private var startMonth: Calendar = Calendar.getInstance()
     private var endMonth: Calendar = Calendar.getInstance()
     private var totalNoOfMonths: Int = 0
-    private lateinit var mDotsMap: HashMap<String, EventDots>
+    private var mDotsMap: LinkedHashMap<String, EventDots> = LinkedHashMap()
 
 
     fun initialize(startMonth: Calendar, endMonth: Calendar) {
         Events.startMonth = startMonth
         Events.endMonth = endMonth
         totalNoOfMonths = EventsCalendarUtil.getMonthCount(startMonth, endMonth)
-        mDotsMap = HashMap(totalNoOfMonths)
+        mDotsMap = LinkedHashMap(totalNoOfMonths)
         createEventsDotsStorage()
     }
 
