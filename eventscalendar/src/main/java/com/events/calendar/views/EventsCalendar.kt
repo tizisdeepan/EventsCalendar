@@ -7,11 +7,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Parcel
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.ViewPager
 import com.events.calendar.R
 import com.events.calendar.adapters.MonthsAdapter
 import com.events.calendar.adapters.WeeksAdapter
@@ -39,7 +38,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
     private var mCurrentItem: MonthView? = null
     private var mCurrentItemHeight = 0
     private var mCallback: Callback? = null
-    private lateinit var mCalendarMonthsAdapter: MonthsAdapter
+    private var mCalendarMonthsAdapter: MonthsAdapter? = null
     private var doChangeAdapter = false
     private lateinit var mCalendarWeekPagerAdapter: WeeksAdapter
     private var mSelectedMonthPosition = 0
@@ -86,8 +85,10 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.setCurrentSelectedDate(Calendar.getInstance())
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    fun build() {
+//    }
+//    override fun onAttachedToWindow() {
+//        super.onAttachedToWindow()
 
         var startMonth = Calendar.getInstance()
         var endMonth = Calendar.getInstance()
@@ -136,8 +137,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         }
     }
 
-    fun setCallback(callback: Callback) {
+    fun setCallback(callback: Callback): EventsCalendar {
         mCallback = callback
+        return this
     }
 
     override fun onDaySelected(isClick: Boolean) {
@@ -194,10 +196,11 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     }
 
-    fun setMonthRange(minMonth: Calendar, maxMonth: Calendar) {
+    fun setMonthRange(minMonth: Calendar, maxMonth: Calendar): EventsCalendar {
         mMinMonth = minMonth
         mMaxMonth = maxMonth
         Events.initialize(mMinMonth, mMaxMonth)
+        return this
     }
 
     fun setDateTextFontSize(size: Float) {
@@ -258,24 +261,28 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.weekHeaderColor = color
     }
 
-    fun setDatesTypeface(typeface: Typeface) {
+    fun setDatesTypeface(typeface: Typeface): EventsCalendar {
         EventsCalendarUtil.datesTypeface = typeface
+        return this
     }
 
-    fun setMonthTitleTypeface(typeface: Typeface) {
+    fun setMonthTitleTypeface(typeface: Typeface): EventsCalendar {
         EventsCalendarUtil.monthTitleTypeface = typeface
+        return this
     }
 
-    fun setWeekHeaderTypeface(typeface: Typeface) {
+    fun setWeekHeaderTypeface(typeface: Typeface): EventsCalendar {
         EventsCalendarUtil.weekHeaderTypeface = typeface
+        return this
     }
 
     fun setIsBoldTextOnSelectionEnabled(isEnabled: Boolean) {
         EventsCalendarUtil.isBoldTextOnSelectionEnabled = isEnabled
     }
 
-    fun setSelectionMode(mode: Int) {
+    fun setSelectionMode(mode: Int): EventsCalendar {
         EventsCalendarUtil.SELECTION_MODE = mode
+        return this
     }
 
     fun addEvent(date: String) {
@@ -335,7 +342,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             if (childCount > 0) {
-                if (doFocus) if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter.getItem(position)?.onFocus(position)
+                if (doFocus) if (EventsCalendarUtil.currentMode != EventsCalendarUtil.WEEK_MODE) mCalendarMonthsAdapter?.getItem(position)?.onFocus(position)
                 else doFocus = true
             }
         }
@@ -347,7 +354,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         fun onMonthChanged(monthStartDate: Calendar?)
     }
 
-    fun setCurrentSelectedDate(selectedDate: Calendar) {
+    fun setCurrentSelectedDate(selectedDate: Calendar): EventsCalendar {
         when (EventsCalendarUtil.SELECTION_MODE) {
             SINGLE_SELECTION -> {
                 val position: Int
@@ -356,12 +363,12 @@ class EventsCalendar : ViewPager, MonthView.Callback {
                     if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
                         position = EventsCalendarUtil.getMonthPositionForDay(selectedDate, mMinMonth)
                         setCurrentItem(position, false)
-                        post {
-                            EventsCalendarUtil.monthPos = currentItem
-                            EventsCalendarUtil.selectedDate = selectedDate
-                            mCalendarMonthsAdapter.getItem(currentItem)?.setSelectedDate(selectedDate!!)
-                            doFocus = true
-                        }
+                        // post {
+                        EventsCalendarUtil.monthPos = currentItem
+                        EventsCalendarUtil.selectedDate = selectedDate
+                        mCalendarMonthsAdapter?.getItem(currentItem)?.setSelectedDate(selectedDate!!)
+                        doFocus = true
+                        //}
                     } else {
                         position = EventsCalendarUtil.getWeekPosition(selectedDate, mMinMonth)
                         setCurrentItem(position, false)
@@ -385,6 +392,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             else -> {
             }
         }
+        return this
     }
 
     fun getCurrentSelectedDate(): Calendar? = EventsCalendarUtil.selectedDate
@@ -401,12 +409,13 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         }
     }
 
-    fun setToday(c: Calendar) {
+    fun setToday(c: Calendar): EventsCalendar {
         EventsCalendarUtil.today = c
         EventsCalendarUtil.setCurrentSelectedDate(c)
+        return this
     }
 
-    fun setWeekStartDay(weekStartDay: Int, doReset: Boolean) {
+    fun setWeekStartDay(weekStartDay: Int, doReset: Boolean): EventsCalendar {
         EventsCalendarUtil.weekStartDay = weekStartDay
         if (doReset) {
             mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
@@ -415,6 +424,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             changeAdapter()
             mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
         }
+        return this
     }
 
 }

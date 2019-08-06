@@ -1,9 +1,9 @@
 package com.events.calendar.adapters
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import com.events.calendar.utils.EventsCalendarUtil
 import com.events.calendar.views.EventsCalendar
 import com.events.calendar.views.MonthView
