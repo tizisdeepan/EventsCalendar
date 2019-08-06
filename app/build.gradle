@@ -27,4 +27,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation project(':eventscalendar')
+
+    def nav_dep = "2.1.0-beta02"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_dep"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_dep"
 }

@@ -7,11 +7,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Parcel
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.viewpager.widget.ViewPager
 import com.events.calendar.R
 import com.events.calendar.adapters.MonthsAdapter
 import com.events.calendar.adapters.WeeksAdapter
