@@ -18,7 +18,7 @@ Events Calendar is a user-friendly library that helps you achieve a cool Calenda
 ### [1] In your app module gradle file
 ```gradle
 dependencies {
-    implementation 'com.github.tizisdeepan:eventscalendar:1.6.0'
+    implementation 'com.github.tizisdeepan:eventscalendar:1.6.1'
 }
 ```
 
