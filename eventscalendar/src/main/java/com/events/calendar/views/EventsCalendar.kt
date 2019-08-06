@@ -203,48 +203,59 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         return this
     }
 
-    fun setDateTextFontSize(size: Float) {
+    fun setDateTextFontSize(size: Float): EventsCalendar {
         EventsCalendarUtil.dateTextFontSize = size
+        return this
     }
 
-    fun setWeekHeaderFontSize(size: Float) {
+    fun setWeekHeaderFontSize(size: Float): EventsCalendar {
         EventsCalendarUtil.weekHeaderFontSize = size
+        return this
     }
 
-    fun setMonthTitleFontSize(size: Float) {
+    fun setMonthTitleFontSize(size: Float): EventsCalendar {
         EventsCalendarUtil.monthTitleFontSize = size
+        return this
     }
 
-    fun setPrimaryTextColor(color: Int) {
+    fun setPrimaryTextColor(color: Int): EventsCalendar {
         EventsCalendarUtil.primaryTextColor = color
+        return this
     }
 
-    fun setSecondaryTextColor(color: Int) {
+    fun setSecondaryTextColor(color: Int): EventsCalendar {
         EventsCalendarUtil.secondaryTextColor = color
+        return this
     }
 
-    fun setEventDotColor(color: Int) {
+    fun setEventDotColor(color: Int): EventsCalendar {
         EventsCalendarUtil.eventDotColor = color
+        return this
     }
 
-    fun setSelectedTextColor(color: Int) {
+    fun setSelectedTextColor(color: Int): EventsCalendar {
         EventsCalendarUtil.selectedTextColor = color
+        return this
     }
 
-    fun setSelectionColor(color: Int) {
+    fun setSelectionColor(color: Int): EventsCalendar {
         EventsCalendarUtil.selectionColor = color
+        return this
     }
 
-    fun setRangeSelectionColor(color: Int) {
+    fun setRangeSelectionColor(color: Int): EventsCalendar {
         EventsCalendarUtil.selectionColor = color
+        return this
     }
 
-    fun setRangeSelectionStartColor(color: Int) {
+    fun setRangeSelectionStartColor(color: Int): EventsCalendar {
         EventsCalendarUtil.selectionColor = color
+        return this
     }
 
-    fun setRangeSelectionEndColor(color: Int) {
+    fun setRangeSelectionEndColor(color: Int): EventsCalendar {
         EventsCalendarUtil.selectionColor = color
+        return this
     }
 
     fun getDatesFromSelectedRange(): ArrayList<Calendar> {
@@ -253,12 +264,14 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         return dates
     }
 
-    fun setMonthTitleColor(color: Int) {
+    fun setMonthTitleColor(color: Int): EventsCalendar {
         EventsCalendarUtil.monthTitleColor = color
+        return this
     }
 
-    fun setWeekHeaderColor(color: Int) {
+    fun setWeekHeaderColor(color: Int): EventsCalendar {
         EventsCalendarUtil.weekHeaderColor = color
+        return this
     }
 
     fun setDatesTypeface(typeface: Typeface): EventsCalendar {
@@ -276,8 +289,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         return this
     }
 
-    fun setIsBoldTextOnSelectionEnabled(isEnabled: Boolean) {
+    fun setIsBoldTextOnSelectionEnabled(isEnabled: Boolean): EventsCalendar {
         EventsCalendarUtil.isBoldTextOnSelectionEnabled = isEnabled
+        return this
     }
 
     fun setSelectionMode(mode: Int): EventsCalendar {
@@ -315,11 +329,12 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.disabledDates.add(c)
     }
 
-    fun disableDaysInWeek(vararg days: Int) {
+    fun disableDaysInWeek(vararg days: Int): EventsCalendar {
         EventsCalendarUtil.disabledDays.clear()
         for (day in days) {
             EventsCalendarUtil.disabledDays.add(day)
         }
+        return this
     }
 
     fun hasEvent(c: Calendar): Boolean = Events.hasEvent(c)
