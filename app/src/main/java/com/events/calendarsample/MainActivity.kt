@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         if (time != null) {
             val cal = Calendar.getInstance()
             cal.timeInMillis = time
-            val month = when (cal[java.util.Calendar.MONTH]) {
+            val month = when (cal[Calendar.MONTH]) {
                 Calendar.JANUARY -> "January"
                 Calendar.FEBRUARY -> "February"
                 Calendar.MARCH -> "March"
