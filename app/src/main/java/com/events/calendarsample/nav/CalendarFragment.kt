@@ -46,20 +46,19 @@ class CalendarFragment : Fragment(), EventsCalendar.Callback {
         val end = Calendar.getInstance()
         end.add(Calendar.YEAR, 20)
 
-        eventsCalendar.setCallback(this)
         eventsCalendar.setSelectionMode(eventsCalendar.SINGLE_SELECTION)
-        eventsCalendar.setToday(today)
-        eventsCalendar.setMonthRange(start, end)
-        eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
+                .setToday(today)
+                .setMonthRange(today, end)
+                .setWeekStartDay(Calendar.SUNDAY, false)
+                .setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
+                .setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, requireContext()))
+                .setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, requireContext()))
+                .setCallback(this)
+                .build()
+
         eventsCalendar.post {
             eventsCalendar.setCurrentSelectedDate(today)
         }
-
-        eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
-        eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
-        eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, requireContext()))
-
-        eventsCalendar.setup()
 
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, 2)

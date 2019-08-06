@@ -85,7 +85,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.setCurrentSelectedDate(Calendar.getInstance())
     }
 
-    fun setup() {
+    fun build() {
 //    }
 //    override fun onAttachedToWindow() {
 //        super.onAttachedToWindow()
@@ -137,8 +137,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         }
     }
 
-    fun setCallback(callback: Callback) {
+    fun setCallback(callback: Callback): EventsCalendar {
         mCallback = callback
+        return this
     }
 
     override fun onDaySelected(isClick: Boolean) {
@@ -195,10 +196,11 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     }
 
-    fun setMonthRange(minMonth: Calendar, maxMonth: Calendar) {
+    fun setMonthRange(minMonth: Calendar, maxMonth: Calendar): EventsCalendar {
         mMinMonth = minMonth
         mMaxMonth = maxMonth
         Events.initialize(mMinMonth, mMaxMonth)
+        return this
     }
 
     fun setPrimaryTextColor(color: Int) {
@@ -247,24 +249,28 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         EventsCalendarUtil.weekHeaderColor = color
     }
 
-    fun setDatesTypeface(typeface: Typeface) {
+    fun setDatesTypeface(typeface: Typeface): EventsCalendar {
         EventsCalendarUtil.datesTypeface = typeface
+        return this
     }
 
-    fun setMonthTitleTypeface(typeface: Typeface) {
+    fun setMonthTitleTypeface(typeface: Typeface): EventsCalendar {
         EventsCalendarUtil.monthTitleTypeface = typeface
+        return this
     }
 
-    fun setWeekHeaderTypeface(typeface: Typeface) {
+    fun setWeekHeaderTypeface(typeface: Typeface): EventsCalendar {
         EventsCalendarUtil.weekHeaderTypeface = typeface
+        return this
     }
 
     fun setIsBoldTextOnSelectionEnabled(isEnabled: Boolean) {
         EventsCalendarUtil.isBoldTextOnSelectionEnabled = isEnabled
     }
 
-    fun setSelectionMode(mode: Int) {
+    fun setSelectionMode(mode: Int): EventsCalendar {
         EventsCalendarUtil.SELECTION_MODE = mode
+        return this
     }
 
     fun addEvent(date: String) {
@@ -336,7 +342,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         fun onMonthChanged(monthStartDate: Calendar?)
     }
 
-    fun setCurrentSelectedDate(selectedDate: Calendar) {
+    fun setCurrentSelectedDate(selectedDate: Calendar): EventsCalendar {
         when (EventsCalendarUtil.SELECTION_MODE) {
             SINGLE_SELECTION -> {
                 val position: Int
@@ -374,6 +380,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             else -> {
             }
         }
+        return this
     }
 
     fun getCurrentSelectedDate(): Calendar? = EventsCalendarUtil.selectedDate
@@ -390,12 +397,13 @@ class EventsCalendar : ViewPager, MonthView.Callback {
         }
     }
 
-    fun setToday(c: Calendar) {
+    fun setToday(c: Calendar): EventsCalendar {
         EventsCalendarUtil.today = c
         EventsCalendarUtil.setCurrentSelectedDate(c)
+        return this
     }
 
-    fun setWeekStartDay(weekStartDay: Int, doReset: Boolean) {
+    fun setWeekStartDay(weekStartDay: Int, doReset: Boolean): EventsCalendar {
         EventsCalendarUtil.weekStartDay = weekStartDay
         if (doReset) {
             mSelectedMonthPosition = EventsCalendarUtil.getMonthPositionForDay(EventsCalendarUtil.getCurrentSelectedDate(), mMinMonth)
@@ -404,6 +412,7 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             changeAdapter()
             mCallback?.onDaySelected(EventsCalendarUtil.getCurrentSelectedDate())
         }
+        return this
     }
 
 }

@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setCallback(this)
-        eventsCalendar.setup() //Better implement builder pattern
+        eventsCalendar.build()
 
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, 2)
