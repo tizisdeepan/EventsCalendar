@@ -35,6 +35,9 @@
         <attr name="monthTitleColor" format="color" />
         <attr name="weekHeaderColor" format="color" />
         <attr name="isBoldTextOnSelectionEnabled" format="boolean" />
+        <attr name="datesTextSize" format="dimension"/>
+        <attr name="weekHeaderTextSize" format="dimension"/>
+        <attr name="monthTitleTextSize" format="dimension"/>
         <attr name="selectedDateLabelGravity">
             <flag name="bottom" value="80" />
             <flag name="center" value="17" />

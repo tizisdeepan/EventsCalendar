@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,6 +101,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         if (EventsCalendarUtil.monthTitleTypeface != null) mMonthTitleTextView.typeface = EventsCalendarUtil.monthTitleTypeface
         mMonthTitleTextView.setTextColor(EventsCalendarUtil.monthTitleColor)
         mMonthTitleTextView.textSize = EventsCalendarUtil.monthTitleFontSize
+        Log.e("MONTH TEXT SIZE", EventsCalendarUtil.monthTitleFontSize.toString())
         addView(mMonthTitleTextView)
     }
 

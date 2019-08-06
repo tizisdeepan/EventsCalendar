@@ -1,5 +1,6 @@
 package com.events.calendar.utils
 
+import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.util.Log
@@ -9,6 +10,8 @@ import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.collections.LinkedHashSet
 import kotlin.math.ceil
+import android.util.DisplayMetrics
+
 
 object EventsCalendarUtil {
     const val WEEK_MODE = 0
@@ -279,4 +282,6 @@ object EventsCalendarUtil {
             else -> null
         }
     }
+
+    fun convertPixelsToDp(px: Float, context: Context): Float = px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }

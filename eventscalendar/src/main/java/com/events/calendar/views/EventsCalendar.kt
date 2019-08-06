@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Parcel
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
@@ -77,6 +78,9 @@ class EventsCalendar : ViewPager, MonthView.Callback {
             EventsCalendarUtil.monthTitleColor = attributes.getColor(R.styleable.EventsCalendar_monthTitleColor, EventsCalendarUtil.secondaryTextColor)
             EventsCalendarUtil.weekHeaderColor = attributes.getColor(R.styleable.EventsCalendar_weekHeaderColor, EventsCalendarUtil.secondaryTextColor)
             EventsCalendarUtil.isBoldTextOnSelectionEnabled = attributes.getBoolean(R.styleable.EventsCalendar_isBoldTextOnSelectionEnabled, false)
+            EventsCalendarUtil.dateTextFontSize = EventsCalendarUtil.convertPixelsToDp(attributes.getDimension(R.styleable.EventsCalendar_datesTextSize, mContext.resources.getDimension(R.dimen.text_calendar_date)), mContext)
+            EventsCalendarUtil.weekHeaderFontSize = EventsCalendarUtil.convertPixelsToDp(attributes.getDimension(R.styleable.EventsCalendar_weekHeaderTextSize, mContext.resources.getDimension(R.dimen.text_week_day_header)), mContext)
+            EventsCalendarUtil.monthTitleFontSize = EventsCalendarUtil.convertPixelsToDp(attributes.getDimension(R.styleable.EventsCalendar_monthTitleTextSize, mContext.resources.getDimension(R.dimen.text_month_title)), mContext)
         } finally {
             attributes.recycle()
         }

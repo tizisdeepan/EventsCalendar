@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
         eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
         eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
-        eventsCalendar.setMonthTitleFontSize(24f)
-        eventsCalendar.setDateTextFontSize(16f)
-        eventsCalendar.setWeekHeaderFontSize(24f)
+//        eventsCalendar.setMonthTitleFontSize(24f)
+//        eventsCalendar.setDateTextFontSize(16f)
+//        eventsCalendar.setWeekHeaderFontSize(24f)
         eventsCalendar.setCallback(this)
         eventsCalendar.build()
 
