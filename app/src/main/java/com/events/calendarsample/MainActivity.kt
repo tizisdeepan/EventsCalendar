@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         eventsCalendar.addEvent(c)
         c.add(Calendar.DAY_OF_MONTH, 7)
         eventsCalendar.addEvent(c)
+        c.add(Calendar.MONTH, 1)
+        c[Calendar.DAY_OF_MONTH] = 1
+        eventsCalendar.addEvent(c)
 
         selected.setOnClickListener {
             val dates = eventsCalendar.getDatesFromSelectedRange()

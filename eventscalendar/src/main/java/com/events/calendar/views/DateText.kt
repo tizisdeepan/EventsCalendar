@@ -87,7 +87,6 @@ class DateText : View {
             isCurrentMonth = attributes.getBoolean(R.styleable.DateText_isCurrentMonth, false)
             isSelected = attributes.getBoolean(R.styleable.DateText_isSelected, false)
             hasEvent = attributes.getBoolean(R.styleable.DateText_hasEvent, false)
-            isToday = attributes.getBoolean(R.styleable.DateText_isToday, false)
             isPast = attributes.getBoolean(R.styleable.DateText_isPast, false)
         } finally {
             attributes.recycle()
@@ -280,7 +279,7 @@ class DateText : View {
     }
 
     fun setIsToday(isToday: Boolean) {
-        this.isToday = isToday
+        if (EventsCalendarUtil.isToday(mDate)) this.isToday = isToday
         invalidate()
     }
 

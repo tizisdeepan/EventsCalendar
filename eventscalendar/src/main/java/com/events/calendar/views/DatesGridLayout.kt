@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.AsyncTask
 import android.util.AttributeSet
+import android.util.Log
 import android.util.MonthDisplayHelper
 import android.view.LayoutInflater
 import android.view.View
@@ -40,7 +41,7 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
     private var mHeight = 0
 
     private var isLoadingFirstTime = true
-    private var mTranslationDistance= 0f
+    private var mTranslationDistance = 0f
     private var mCallback: CallBack? = null
     private var mSelectedDatePosition: Int = 0
     private var mPreviousMonthDots: EventDots? = null
