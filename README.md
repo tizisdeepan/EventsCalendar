@@ -87,6 +87,7 @@ eventsCalendar.setSelectionMode(eventsCalendar.MULTIPLE_SELECTION) //set mode of
               .addEvent(c) //set events on the EventsCalendar [c: Calendar]
               .disableDate(dc) //disable a specific day on the EventsCalendar [c: Calendar]
               .disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY) //disable days in a week on the whole EventsCalendar [varargs days: Int]
+              .build()
 ```
 ### [6] You can change selection mode of the calendar as you wish
 ```kotlin
