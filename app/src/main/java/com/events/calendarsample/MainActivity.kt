@@ -33,15 +33,15 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         val end = Calendar.getInstance()
         end.add(Calendar.YEAR, 2)
         eventsCalendar.setSelectionMode(eventsCalendar.MULTIPLE_SELECTION)
-        eventsCalendar.setToday(today)
-        eventsCalendar.setMonthRange(today, end)
-        eventsCalendar.setWeekStartDay(Calendar.SUNDAY, false)
-        eventsCalendar.setCurrentSelectedDate(today)
-        eventsCalendar.setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
-        eventsCalendar.setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
-        eventsCalendar.setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
-        eventsCalendar.setCallback(this)
-        eventsCalendar.build()
+                .setToday(today)
+                .setMonthRange(today, end)
+                .setWeekStartDay(Calendar.SUNDAY, false)
+                .setCurrentSelectedDate(today)
+                .setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
+                .setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
+                .setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
+                .setCallback(this)
+                .build()
 
         val c = Calendar.getInstance()
         c.add(Calendar.DAY_OF_MONTH, 2)
@@ -56,22 +56,19 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
         selected.setOnClickListener {
             val dates = eventsCalendar.getDatesFromSelectedRange()
             Log.e("SELECTED SIZE", dates.size.toString())
-//            eventsCalendar.setCurrentSelectedDate(eventsCalendar.getCurrentSelectedDate())
         }
 
         selected.typeface = FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this)
 
         val dc = Calendar.getInstance()
         dc.add(Calendar.DAY_OF_MONTH, 2)
-//        eventsCalendar.disableDate(dc)
-//        eventsCalendar.disableDaysInWeek(Calendar.SATURDAY, Calendar.SUNDAY)
     }
 
-    fun getDateString(time: Long?): String {
+    private fun getDateString(time: Long?): String {
         if (time != null) {
             val cal = Calendar.getInstance()
             cal.timeInMillis = time
-            val month = when (cal[java.util.Calendar.MONTH]) {
+            val month = when (cal[Calendar.MONTH]) {
                 Calendar.JANUARY -> "January"
                 Calendar.FEBRUARY -> "February"
                 Calendar.MARCH -> "March"

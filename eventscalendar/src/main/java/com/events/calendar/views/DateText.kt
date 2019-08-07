@@ -15,6 +15,7 @@ import com.events.calendar.R
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 import kotlin.math.min
+import android.util.TypedValue
 
 @Suppress("NAME_SHADOWING")
 class DateText : View {
@@ -136,7 +137,8 @@ class DateText : View {
             mDateTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 textAlign = Paint.Align.CENTER
                 color = EventsCalendarUtil.primaryTextColor
-                mDateTextSize = mContext.resources.getDimension(R.dimen.text_calendar_date)
+                mDateTextSize = if (EventsCalendarUtil.dateTextFontSize == 0f) mContext.resources.getDimension(R.dimen.text_calendar_date)
+                else TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, EventsCalendarUtil.dateTextFontSize, resources.displayMetrics)
                 textSize = mDateTextSize
             }
 
@@ -162,20 +164,22 @@ class DateText : View {
         mWidth = w
         mHeight = h
 
-        mDateTextSize = mHeight * (3.2f / 10f)
+        mDateTextSize = if (EventsCalendarUtil.dateTextFontSize == 0f) mHeight * (3.2f / 10f)
+        else TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, EventsCalendarUtil.dateTextFontSize, resources.displayMetrics)
         mDateTextPaint.textSize = mDateTextSize
         mDateTextX = mWidth / 2
         mDateTextY = mHeight / 2 - (mDateTextPaint.ascent() + mDateTextPaint.descent()) / 2
 
-        mBgCircleRadius = Math.min(mHeight - mHeight * 0.6f, mWidth - mWidth * 0.6f)
-        mFullCircleRadius = Math.min(mHeight - mHeight * 0.5f, mWidth - mWidth * 0.5f)
+        mBgCircleRadius = min(mHeight - mHeight * 0.6f, mWidth - mWidth * 0.6f)
+        mFullCircleRadius = min(mHeight - mHeight * 0.5f, mWidth - mWidth * 0.5f)
         mTodayCircleRadius = mBgCircleRadius - resources.getDimension(R.dimen.width_circle_stroke) / 2
         mCircleX = mWidth / 2
         mCircleY = mHeight / 2
 
         mDotRadius = mHeight * (0.75f / 20f)
         mDotX = mWidth / 2
-        mDotY = (mHeight * (7.5f / 10f)).toInt()
+        val diff = mHeight - (mHeight / 2 + mDateTextSize / 2)
+        mDotY = (mHeight - diff / 1.5).toInt()//(mHeight * (7.5f / 10f)).toInt()
     }
 
     @SuppressLint("DrawAllocation")

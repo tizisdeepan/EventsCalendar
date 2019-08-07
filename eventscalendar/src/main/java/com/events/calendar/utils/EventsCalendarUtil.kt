@@ -1,5 +1,6 @@
 package com.events.calendar.utils
 
+import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.util.Log
@@ -9,6 +10,8 @@ import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.collections.LinkedHashSet
 import kotlin.math.ceil
+import android.util.DisplayMetrics
+
 
 object EventsCalendarUtil {
     const val WEEK_MODE = 0
@@ -31,6 +34,9 @@ object EventsCalendarUtil {
     private var currentSelectedDate: Calendar = Calendar.getInstance()
     var tobeSelectedDate = 1
     const val DEFAULT_NO_OF_MONTHS = 480
+    var dateTextFontSize: Float = 0f
+    var weekHeaderFontSize: Float = 0f
+    var monthTitleFontSize: Float = 0f
     var primaryTextColor: Int = 0
     var secondaryTextColor: Int = 0
     var selectedTextColor: Int = 0
@@ -276,4 +282,6 @@ object EventsCalendarUtil {
             else -> null
         }
     }
+
+    fun convertPixelsToDp(px: Float, context: Context): Float = px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
