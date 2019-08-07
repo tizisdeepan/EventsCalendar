@@ -1,10 +1,8 @@
 package com.events.calendar.views
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.os.AsyncTask
-import android.os.Build
 import android.util.AttributeSet
 import android.util.MonthDisplayHelper
 import android.view.LayoutInflater
@@ -68,11 +66,6 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context, attrs, defStyleAttr, -1, true)
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init(context, attrs, defStyleAttr, defStyleRes, true)
     }
 
     constructor(context: Context, month: Int, year: Int, weekStartDay: Int, selectedWeekNo: Int) : super(context) {
@@ -356,12 +349,11 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
 
     fun selectDefaultDateOnPageChanged(defaultDate: Int) {
         var defaultDate = defaultDate
-        val isUserClick = false
         if (EventsCalendarUtil.currentMode == EventsCalendarUtil.MONTH_MODE) {
-            if (defaultDate < 29) (getChildAt(mMonthStartDayOffset - 1 + defaultDate) as DateText).selectOnPageChange(isUserClick)
+            if (defaultDate < 29) (getChildAt(mMonthStartDayOffset - 1 + defaultDate) as DateText).selectOnPageChange()
             else {
                 val dateTextView = getChildAt(mMonthStartDayOffset - 1 + defaultDate) as DateText
-                if (!dateTextView.isCurrentMonth) selectDefaultDate(--defaultDate) else dateTextView.selectOnPageChange(isUserClick)
+                if (!dateTextView.isCurrentMonth) selectDefaultDate(--defaultDate) else dateTextView.selectOnPageChange()
             }
         } else {
             var finished = false
@@ -369,7 +361,7 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
             while (!finished) {
                 val dateTextView = getChildAt(position) as DateText
                 if (dateTextView.isCurrentMonth) {
-                    dateTextView.selectOnPageChange(isUserClick)
+                    dateTextView.selectOnPageChange()
                     finished = true
                 } else position++
             }
@@ -388,10 +380,6 @@ class DatesGridLayout : ViewGroup, DateText.DateSelectListener {
     fun selectDate(date: Calendar) {
         val selectedDate = getChildAt(mMonthStartDayOffset - 1 + date.get(Calendar.DATE)) as DateText
         selectedDate.select(true)
-    }
-
-    fun setShowOnlyCurrentMonthWeeks(showOnlyCurrentMonthWeeks: Boolean) {
-        DatesGridLayout.showOnlyCurrentMonthWeeks = showOnlyCurrentMonthWeeks
     }
 
     companion object {

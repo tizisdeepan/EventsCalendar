@@ -1,5 +1,6 @@
 package com.events.calendar.views
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
@@ -67,15 +68,6 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         init(context, -1, -1, sWeekStartDay, 1)
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init(context, -1, -1, sWeekStartDay, 1)
-    }
-
-    constructor(context: Context, month: Int, year: Int, weekStartDay: Int, selectedWeekNo: Int) : super(context) {
-        init(context, month, year, weekStartDay, selectedWeekNo)
-    }
-
     constructor(context: Context, month: Calendar, weekStartDay: Int, selectedWeekNo: Int) : super(context) {
         init(context, month.get(Calendar.MONTH), month.get(Calendar.YEAR), weekStartDay, selectedWeekNo)
     }
@@ -92,6 +84,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         setMonthGridLayout()
     }
 
+    @SuppressLint("InflateParams")
     private fun initMonthTitle() {
         mMonthTitleTextView = mLayoutInflater.inflate(R.layout.zmail_layout_month_title, null) as TextView
         val calendar = Calendar.getInstance()
@@ -105,6 +98,7 @@ class MonthView : ViewGroup, DatesGridLayout.CallBack {
         addView(mMonthTitleTextView)
     }
 
+    @SuppressLint("InflateParams")
     private fun initWeekDayHeader() {
         mWeekDaysHeader = mLayoutInflater.inflate(R.layout.zmail_layout_weekday_header, null)
         mFirstDay = mWeekDaysHeader.findViewById(R.id.first_day)

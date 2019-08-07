@@ -8,7 +8,6 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Parcel
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
@@ -426,7 +425,6 @@ class EventsCalendar : ViewPager, MonthView.Callback {
 
     fun setToday(c: Calendar): EventsCalendar {
         EventsCalendarUtil.today = c
-        EventsCalendarUtil.setCurrentSelectedDate(c)
         return this
     }
 

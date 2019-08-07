@@ -1,12 +1,10 @@
 package com.events.calendar.views
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -38,13 +36,13 @@ class DateText : View {
     internal var isCurrentMonth = false
     internal var hasEvent = false
     internal var isSelected = false
-    internal var isToday = false
-    internal var isPast = false
+    private var isToday = false
+    private var isPast = false
     private var mWidth = 0
     private var mHeight = 0
     private var mBgCircleRadius = 0f
     private var mFullCircleRadius = 0f
-    private var isDisabled = false
+    var isDisabled = false
     private var touchDown = false
     private var mDownX = 0f
     private var mDownY = 0f
@@ -74,9 +72,6 @@ class DateText : View {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context, attrs, defStyleAttr, -1)
     }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         mContext = context
@@ -195,7 +190,6 @@ class DateText : View {
                 when (EventsCalendarUtil.SELECTION_MODE) {
                     EventsCalendarUtil.SINGLE_SELECTION -> {
                         if (isSelected) {
-                            mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                             mDateTextPaint.color = selectedTextColor
                             canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint)
                         } else mDateTextPaint.color = defaultTextColor
@@ -204,25 +198,21 @@ class DateText : View {
                         when {
                             EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) -> when {
                                 EventsCalendarUtil.datesInSelectedRange.keys.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == 0 -> {
-                                    mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                     mDateTextPaint.color = selectedTextColor
                                     canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mRangeSelectionStartPaint)
                                     canvas.drawRect(RectF((mWidth / 2).toFloat(), 0f, mWidth.toFloat(), mHeight.toFloat()), mRangeSelectionStartPaint)
                                 }
                                 EventsCalendarUtil.datesInSelectedRange.keys.indexOf(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) == EventsCalendarUtil.datesInSelectedRange.size - 1 -> {
-                                    mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                     mDateTextPaint.color = selectedTextColor
                                     canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mFullCircleRadius, mRangeSelectionEndPaint)
                                     canvas.drawRect(RectF(0f, 0f, (mWidth / 2).toFloat(), mHeight.toFloat()), mRangeSelectionEndPaint)
                                 }
                                 else -> {
-                                    mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                     mDateTextPaint.color = selectedTextColor
                                     canvas.drawColor(mRangeSelectionPaint.color)
                                 }
                             }
                             isSelected -> {
-                                mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
                                 mDateTextPaint.color = selectedTextColor
                                 canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint)
                             }
@@ -230,13 +220,15 @@ class DateText : View {
                         }
                     }
                     EventsCalendarUtil.MULTIPLE_SELECTION -> {
-                        if (EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY))) {
-                            mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
+                        if (EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY)) && !isDisabled) {
                             mDateTextPaint.color = selectedTextColor
                             canvas.drawCircle(mCircleX.toFloat(), mCircleY.toFloat(), mBgCircleRadius, mSelectionPaint)
                         } else mDateTextPaint.color = defaultTextColor
                     }
                 }
+                if (!isDisabled && EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY))) {
+                    mDateTextPaint.isFakeBoldText = EventsCalendarUtil.isBoldTextOnSelectionEnabled
+                } else mDateTextPaint.isFakeBoldText = false
                 canvas.drawText("" + mDate.get(Calendar.DATE), mDateTextX.toFloat(), mDateTextY, mDateTextPaint)
             } else {
                 mDateTextPaint.color = disabledTextColor
@@ -244,9 +236,7 @@ class DateText : View {
             }
         }
         super.onDraw(canvas)
-        if (hasEvent) {
-            drawDot(canvas)
-        }
+        if (hasEvent) drawDot(canvas)
     }
 
     private fun drawDot(canvas: Canvas) {
@@ -254,7 +244,6 @@ class DateText : View {
             if (isSelected || EventsCalendarUtil.datesInSelectedRange.contains(EventsCalendarUtil.getDateString(mDate, EventsCalendarUtil.DD_MM_YYYY))) {
                 mDotPaint.color = selectedTextColor
                 canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint)
-                mDotPaint.color = EventsCalendarUtil.selectionColor
             } else {
                 mDotPaint.color = eventDotColor
                 canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint)
@@ -262,7 +251,6 @@ class DateText : View {
         } else {
             mDotPaint.color = disabledTextColor
             canvas.drawCircle(mDotX.toFloat(), mDotY.toFloat(), mDotRadius, mDotPaint)
-            mDotPaint.color = EventsCalendarUtil.selectionColor
         }
     }
 
@@ -291,18 +279,8 @@ class DateText : View {
         invalidate()
     }
 
-    fun setIsSelected(isSelected: Boolean) {
-        this.isSelected = isSelected
-        invalidate()
-    }
-
     fun setIsToday(isToday: Boolean) {
         this.isToday = isToday
-        invalidate()
-    }
-
-    fun setIsPast(isPast: Boolean) {
-        this.isPast = isPast
         invalidate()
     }
 
@@ -334,30 +312,30 @@ class DateText : View {
     }
 
     private fun selectAction() {
-        setIsSelected(true)
+        isSelected = true
     }
 
-    private fun unselectAction() {
-        setIsSelected(false)
+    private fun unSelectAction() {
+        isSelected = false
     }
 
     fun select(isClick: Boolean) {
         if ((!isSelected && !isDisabled) || EventsCalendarUtil.SELECTION_MODE == EventsCalendarUtil.MULTIPLE_SELECTION) {
-            if (isClick) selectAction() else setIsSelected(true)
+            if (isClick) selectAction() else isSelected = true
             mDateSelectListener.onDateTextViewSelected(this, isClick)
         }
     }
 
-    fun selectOnPageChange(isClick: Boolean) {
+    fun selectOnPageChange() {
         val isClick = false
         if (!isSelected && !isDisabled) {
-            setIsSelected(false)
+            isSelected = false
             mDateSelectListener.onDateTextViewSelected(this, isClick)
         }
     }
 
     fun unSelect(isClick: Boolean) {
-        if (isClick && isCurrentMonth && !isDisabled) unselectAction() else setIsSelected(false)
+        if (isClick && isCurrentMonth && !isDisabled) unSelectAction() else isSelected = false
     }
 
     private fun getMeasurement(measureSpec: Int, contentSize: Int): Int {

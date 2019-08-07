@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), EventsCalendar.Callback {
                 .setToday(today)
                 .setMonthRange(today, end)
                 .setWeekStartDay(Calendar.SUNDAY, false)
-                .setCurrentSelectedDate(today)
+                .setIsBoldTextOnSelectionEnabled(true)
                 .setDatesTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_REGULAR, this))
                 .setMonthTitleTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
                 .setWeekHeaderTypeface(FontsManager.getTypeface(FontsManager.OPENSANS_SEMIBOLD, this))
