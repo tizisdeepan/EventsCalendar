@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -13,7 +14,6 @@ import com.events.calendar.R
 import com.events.calendar.utils.EventsCalendarUtil
 import java.util.*
 import kotlin.math.min
-import android.util.TypedValue
 
 @Suppress("NAME_SHADOWING")
 class DateText : View {
@@ -87,6 +87,7 @@ class DateText : View {
             isCurrentMonth = attributes.getBoolean(R.styleable.DateText_isCurrentMonth, false)
             isSelected = attributes.getBoolean(R.styleable.DateText_isSelected, false)
             hasEvent = attributes.getBoolean(R.styleable.DateText_hasEvent, false)
+            isToday = attributes.getBoolean(R.styleable.DateText_isToday, false)
             isPast = attributes.getBoolean(R.styleable.DateText_isPast, false)
         } finally {
             attributes.recycle()
