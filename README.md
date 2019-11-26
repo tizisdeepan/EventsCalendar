@@ -1,6 +1,7 @@
 # Events Calendar
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![](https://jitpack.io/v/tizisdeepan/eventscalendar.svg)](https://jitpack.io/#tizisdeepan/eventscalendar)
+[![Github All Releases](https://img.shields.io/github/downloads/tizisdeepan/EventsCalendar/total.svg)]()
 
 <table>
     <tr><td align="center"><img src="https://github.com/tizisdeepan/eventscalendar/blob/master/screenshots/ss1.png" alt="Single Selection Mode" width="100%"></td>
